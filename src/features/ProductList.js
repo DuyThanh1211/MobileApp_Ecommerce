@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const apiUrl =
   "https://classyschool.backendless.app/api/data/SanPham?pageSize=20";
@@ -29,8 +30,16 @@ const ProductList = () => {
     getDataAPI();
   }, []);
 
+  const navigation = useNavigation();
+  const navigateToProductDetails = (item) => {
+    navigation.navigate("Product Details", { product: item }); // Pass the product details as route parameters
+  };
   const renderProductItem = ({ item }) => (
-    <TouchableOpacity key={item.objectId} style={styles.productContainer}>
+    <TouchableOpacity
+      key={item.objectId}
+      style={styles.productContainer}
+      onPress={() => navigateToProductDetails(item)}
+    >
       <Image source={{ uri: item.Image }} style={styles.image} />
       <View style={styles.productNamePrice}>
         <View style={styles.productNameView}>
