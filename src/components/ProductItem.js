@@ -1,13 +1,9 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
-import ProductList from "../features/getAPI/getProduct";
+import ProductList from "../features/ProductList";
 
 const ProductItem = () => {
-  return (
-    <ScrollView style={styles.container}>
-      <ProductList />
-    </ScrollView>
-  );
+  return <ProductList />;
 };
 
 export default ProductItem;
