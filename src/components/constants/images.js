@@ -1,5 +1,5 @@
 const logo = require("../../../assets/images/logo.png");
-const shirtDetails = require("../../../assets/images/shirt-details.png");
+const shirtDetails = require("../../../assets/shirt-details.png");
 const shirt1 = require("../../../assets/images/shirt1.png");
 const shirt2 = require("../../../assets/images/shirt2.png");
 const shoes1 = require("../../../assets/images/shoes1.png");
