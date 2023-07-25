@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { AntDesign, Entypo } from "@expo/vector-icons";
-import { api, app } from "../features/urlApi";
+import { apiApp, apiKey } from "../features/ApiKey";
 
 const { width, height } = Dimensions.get("screen");
 const Register = () => {
@@ -22,7 +22,7 @@ const Register = () => {
   const [getconfirmpassword, setconfirmpasswordvi] = useState(false);
 
   const handleRegister = () => {
-    if (!username || !password || !confirmPassword) {
+    if (!fullname ||!username || !password || !confirmPassword) {
       Alert.alert(
         "Lỗi",
         "Vui lòng điền đầy đủ thông tin và mật khẩu để đăng ký."
@@ -43,7 +43,7 @@ const Register = () => {
     }
 
     fetch(
-      `https://api.backendless.com/${app}/${api}/data/Users?where=gmail%3D'${username}'`,
+      `https://api.backendless.com/${apiApp}/${apiKey}/data/Users?where=gmail%3D'${username}'`,
       {
         method: "GET",
         headers: {
@@ -59,7 +59,7 @@ const Register = () => {
           console.log("Tài Khoảng đã Tồn Tại");
           Alert.alert("Lỗi", "Email đã tồn tại");
         } else {
-          fetch(`https://api.backendless.com/${app}/${api}/users/register`, {
+          fetch(`https://api.backendless.com/${apiApp}/${apiKey}/users/register`, {
             method: "POST",
             headers: {
               Accept: "application/json",
@@ -69,6 +69,7 @@ const Register = () => {
               gmail: username,
               password: password,
               confirmPassword: confirmPassword,
+              name: fullname,
             }),
           })
             .then((response) => response.json())
@@ -107,7 +108,9 @@ const Register = () => {
 
       <View style={styles.body}>
         <View style={styles.bodyUser}>
-          <TextInput style={styles.textinput} placeholder=" Full Name" />
+          <TextInput style={styles.textinput} placeholder=" Full Name" 
+          value={fullname}
+          onChangeText={(text) => setFullname(text)}/>
         </View>
         <View style={styles.bodyUser}>
           <TextInput
