@@ -1,10 +1,27 @@
 import { FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
-import ProductList from "../features/ProductList";
-const ProductPage = () => {
+
+const ProductPage = ({ route }) => {
+  const { data } = route.params;
+
+  const renderItem = ({ item }) => {
+    return (
+      <View style={styles.item}>
+        <Text>{item.TenSanPham}</Text>
+        <Text>{item.GiaTien}</Text>
+      </View>
+    );
+  };
+
   return (
     <>
-      <ProductList />
+      <View style={styles.container}>
+        <FlatList
+          data={data}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.objectId}
+        />
+      </View>
     </>
   );
 };

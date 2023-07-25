@@ -11,16 +11,24 @@ const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    // <>
-    //   <ProductDetails />
-    // </>
-
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="List Product" component={ProductPage} />
+        <Stack.Screen name="Home" component={HomePage} />
         <Stack.Screen name="Product Details" component={ProductDetails} />
+        <Stack.Screen name="List Product" component={ProductPage} />
       </Stack.Navigator>
     </NavigationContainer>
+
+    // <>
+    //   <HomePage/>
+    // </>
+
+    //    <NavigationContainer>
+    //      <Stack.Navigator>
+    //        <Stack.Screen name="List Product" component={ProductPage} />
+    //        <Stack.Screen name="Product Details" component={ProductDetails} />
+    //      </Stack.Navigator>
+    //    </NavigationContainer>
   );
 }
 
