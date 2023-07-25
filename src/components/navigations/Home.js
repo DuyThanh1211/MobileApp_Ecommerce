@@ -59,10 +59,10 @@ const Home = ({ navigation }) => {
             backgroundColor: COLORS.gray,
             borderRadius: 20,
             marginTop: SIZES.padding,
-            width: SIZES.width - 44
+            width: SIZES.width - 44,
+            height: SIZES.height - 200,
           }}>
-
-           
+            
             <FlatList
               horizontal={true}
               data={shoesList1}
@@ -72,20 +72,10 @@ const Home = ({ navigation }) => {
                     <Image
                       source={item.shoes}
                       resizeMode="contain"
-                    />
-                )
-              }
-            />
-
-            <FlatList
-              horizontal={true}
-              data={shoesList2}
-              keyExtractor={item=>item.id}
-              renderItem={
-                ({ item, index })=> (
-                    <Image
-                      source={item.shoes}
-                      resizeMode="contain"
+                      style={{
+                        width: SIZES.width - 44,
+                        height: SIZES.height - 200,
+                      }}
                     />
                 )
               }
@@ -103,13 +93,12 @@ const Home = ({ navigation }) => {
             </View>
 
             <View style={{
-                marginBottom: 120
+                marginBottom: 50
             }}>
                 <Text style={{
                     ...FONTS.h3,
                     marginVertical: SIZES.padding *2
-                }}>The Latest and Greatest</Text>
-
+                }}>Our Product</Text>
                 <FlatList
                   horizontal={true}
                   data={latestList}
@@ -126,7 +115,7 @@ const Home = ({ navigation }) => {
                                  source={item.image}
                                  style={{
                                     height: 140,
-                                    width: 140
+                                    width: 140,
                                  }}
                                 />
                             </TouchableOpacity>
@@ -178,10 +167,169 @@ const Home = ({ navigation }) => {
                   }
                 />
             </View>
+
+            <View style={{
+                marginBottom: 50
+            }}>
+                <Text style={{
+                    ...FONTS.h3,
+                    marginVertical: SIZES.padding *2
+                }}>For Men</Text>
+
+                <FlatList
+                  horizontal={true}
+                  data={latestList}
+                  keyExtractor={item=>item.id}
+                  renderItem={
+                    ({ item, index })=>(
+                        <View style={{
+                            marginRight: SIZES.padding
+                        }}>
+                            <TouchableOpacity
+                             onPress={()=>navigation.navigate("Details")}
+                            >
+                                <Image
+                                 source={item.image}
+                                 style={{
+                                    height: 140,
+                                    width: 140,
+                                 }}
+                                />
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                              onPress={()=>navigation.navigate("Details")}
+                            >
+                                <Text style={{
+                                    fontSize: 14,
+                                    color: COLORS.black,
+                                    fontWeight: "bold"
+                                }}>
+                                    {item.name}
+                                </Text>
+                            </TouchableOpacity>
+                            <Text style={{
+                                fontSize: 10,
+                                color: COLORS.black
+                            }}>
+                                {item.category}
+                            </Text>
+
+                            <View style={{
+                                flexDirection: "row"
+                            }}>
+                                {
+                                    item.oldPrice !== item.price && (
+                                        <Text style={{
+                                            fontSize: 12,
+                                            marginVertical: 4,
+                                            marginRight: 6,
+                                            textDecorationColor: COLORS.black,
+                                            textDecorationLine: "line-through"
+                                        }}>
+                                            ${item.oldPrice}
+                                        </Text>
+                                    )
+                                }
+
+                                <Text style={{
+                                     fontSize: 12,
+                                     marginVertical: 4
+                                }}>
+                                    ${item.price}
+                                </Text>
+                            </View>
+                        </View>
+                    )
+                  }
+                />
+            </View>
+            <View style={{
+                marginBottom: 50
+            }}>
+                <Text style={{
+                    ...FONTS.h3,
+                    marginVertical: SIZES.padding *2
+                }}>For Women</Text>
+
+                <FlatList
+                  horizontal={true}
+                  data={latestList}
+                  keyExtractor={item=>item.id}
+                  renderItem={
+                    ({ item, index })=>(
+                        <View style={{
+                            marginRight: SIZES.padding
+                        }}>
+                            <TouchableOpacity
+                             onPress={()=>navigation.navigate("Details")}
+                            >
+                                <Image
+                                 source={item.image}
+                                 style={{
+                                    height: 140,
+                                    width: 140,
+                                 }}
+                                />
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                              onPress={()=>navigation.navigate("Details")}
+                            >
+                                <Text style={{
+                                    fontSize: 14,
+                                    color: COLORS.black,
+                                    fontWeight: "bold"
+                                }}>
+                                    {item.name}
+                                </Text>
+                            </TouchableOpacity>
+                            <Text style={{
+                                fontSize: 10,
+                                color: COLORS.black
+                            }}>
+                                {item.category}
+                            </Text>
+
+                            <View style={{
+                                flexDirection: "row"
+                            }}>
+                                {
+                                    item.oldPrice !== item.price && (
+                                        <Text style={{
+                                            fontSize: 12,
+                                            marginVertical: 4,
+                                            marginRight: 6,
+                                            textDecorationColor: COLORS.black,
+                                            textDecorationLine: "line-through"
+                                        }}>
+                                            ${item.oldPrice}
+                                        </Text>
+                                    )
+                                }
+
+                                <Text style={{
+                                     fontSize: 12,
+                                     marginVertical: 4
+                                }}>
+                                    ${item.price}
+                                </Text>
+                            </View>
+                        </View>
+                    )
+                  }
+                />
+
+            </View>
+            <View style={{
+                marginBottom: 50
+            }}>
+            </View>
         </ScrollView>
      </View>
    </SafeAreaView>
   )
 }
+
 
 export default Home

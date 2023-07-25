@@ -37,22 +37,7 @@ const BottomTabNavigation = () => {
             }
            }}
         />
-         <Tab.Screen
-           name="Search"
-           component={Search}
-           options={{
-            tabBarIcon: ({ focused })=>{
-                return (
-                    <Ionicons
-                      name="search-sharp"
-                      size={24}
-                      color={COLORS.black}
-                    />
-                )
-            }
-           }}
-        />
-
+       
 <Tab.Screen
            name="Favourite"
            component={Favourite}
