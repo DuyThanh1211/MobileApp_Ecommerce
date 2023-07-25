@@ -1,5 +1,6 @@
 import {
   ScrollView,
+  Alert,
   StyleSheet,
   Text,
   View,
@@ -9,10 +10,76 @@ import {
   Image,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Entypo } from "@expo/vector-icons";
+import { app, api } from "../features/urlApi";
 
 const { width, height } = Dimensions.get("screen");
 const Login = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [getpassword, setpasswordvi] = useState(false);
+
+  const handleLogin = () => {
+    if (!username || !password) {
+      Alert.alert("Lỗi", "Bạn hãy điền đầy đủ thông tin!");
+      return;
+    } else if (!username.endsWith("@gmail.com")) {
+      Alert.alert(
+        "Lỗi",
+        "Bạn hãy điền email hợp lệ(ví dụ: abcxyz@gmail.com)!"
+      );
+      return;
+    }
+
+    fetch(
+      `https://api.backendless.com/${app}/${api}/data/Users?where=gmail%3D'${username}'`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.length > 0) {
+          fetch(`https://api.backendless.com/${app}/${api}/users/login`, {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              login: username,
+              password: password,
+            }),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.objectId) {
+                console.log("objectId:", data.objectId);
+              } else {
+                console.log("Sai Mật Khẩu");
+                Alert.alert("Lỗi", "Sai Mật Khẩu");
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
+        } else {
+          console.log("Tài Khoảng Không Tồn Tại");
+          Alert.alert(
+            "Lỗi",
+            "Tài khoảng không tồn tại. Bạn hãy tạo tài khoảng để đặt hàng "
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -31,20 +98,51 @@ const Login = () => {
 
       <View style={styles.body}>
         <View style={styles.bodyUser}>
-          <TextInput style={styles.textinput} placeholder=" Enter your email" />
+          <TextInput
+            style={styles.textinput}
+            placeholder=" Enter your email"
+            value={username}
+            onChangeText={(text) => setUsername(text)}
+          />
         </View>
         <View style={styles.bodyPassword}>
           <TextInput
             style={styles.textinput}
             placeholder=" Enter your password"
-          ></TextInput>
+            autoCapitalize="none"
+            secureTextEntry={getpassword ? false : true}
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+          />
+          <TouchableOpacity
+            style={{ left: -5, top: 30 }}
+            onPress={() => {
+              setpasswordvi(!getpassword);
+            }}
+          >
+            {getpassword ? (
+              <Entypo
+                name="eye-with-line"
+                size={26}
+                color="black"
+                style={styles.noiconeye}
+              />
+            ) : (
+              <Entypo
+                name="eye"
+                size={26}
+                color="black"
+                style={styles.iconeye}
+              />
+            )}
+          </TouchableOpacity>
         </View>
         <View style={styles.bodyForgot}>
           <TouchableOpacity>
             <Text style={styles.bodyTextFor}> Forgot Password?</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleLogin}>
           <View style={styles.bodyButton}>
             <Text style={styles.bodyLogin}> Login</Text>
           </View>
@@ -84,7 +182,10 @@ const Login = () => {
           <View style={styles.footerTextBot}>
             <Text style={styles.Textbot}> Dont't have an account?</Text>
             <TouchableOpacity>
-              <Text style={[styles.Textbot, {color: '#35C2C1'}]}> Register Now</Text>
+              <Text style={[styles.Textbot, { color: "#35C2C1" }]}>
+                {" "}
+                Register Now
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -213,5 +314,13 @@ const styles = StyleSheet.create({
   Textbot: {
     fontSize: 17,
     fontWeight: "500",
+  },
+  iconeye: {
+    left: 300,
+    top: -73,
+  },
+  noiconeye: {
+    left: 300,
+    top: -73,
   },
 });

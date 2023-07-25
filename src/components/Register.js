@@ -1,6 +1,7 @@
 import {
   StyleSheet,
   Text,
+  Alert,
   View,
   Dimensions,
   TouchableOpacity,
@@ -8,10 +9,88 @@ import {
   Image,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Entypo } from "@expo/vector-icons";
+import { api, app } from "../features/urlApi";
 
 const { width, height } = Dimensions.get("screen");
 const Register = () => {
+  const [fullname, setFullname] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setconfirmPassword] = useState("");
+  const [getpassword, setpasswordvi] = useState(false);
+  const [getconfirmpassword, setconfirmpasswordvi] = useState(false);
+
+  const handleRegister = () => {
+    if (!username || !password || !confirmPassword) {
+      Alert.alert(
+        "Lỗi",
+        "Vui lòng điền đầy đủ thông tin và mật khẩu để đăng ký."
+      );
+      return;
+    } else if (!username.endsWith("@gmail.com")) {
+      Alert.alert(
+        "Lỗi",
+        "Vui lòng điền email hợp lệ (ví dụ: abcxyz@gmail.com)."
+      );
+      return;
+    } else if (password != confirmPassword ){
+      Alert.alert(
+        "Lỗi",
+        "Vui lòng điền mật khẩu giống nhau."
+      );
+      return;
+    }
+
+    fetch(
+      `https://api.backendless.com/${app}/${api}/data/Users?where=gmail%3D'${username}'`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data.length > 0) {
+          console.log("Tài Khoảng đã Tồn Tại");
+          Alert.alert("Lỗi", "Email đã tồn tại");
+        } else {
+          fetch(`https://api.backendless.com/${app}/${api}/users/register`, {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              gmail: username,
+              password: password,
+              confirmPassword: confirmPassword,
+            }),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data);
+              if (data.objectId) {
+                console.log("objectId:", data.objectId);
+                // navigation.navigate('Login');
+                Alert.alert("Thông báo:", "Đăng Ký Thành Công");
+              } else {
+                Alert.alert("Lỗi", "Đăng Ký Không Thành Công.");
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -28,23 +107,84 @@ const Register = () => {
 
       <View style={styles.body}>
         <View style={styles.bodyUser}>
-          <TextInput style={styles.textinput} placeholder=" Username" />
+          <TextInput style={styles.textinput} placeholder=" Full Name" />
         </View>
         <View style={styles.bodyUser}>
-          <TextInput style={styles.textinput} placeholder=" Email" />
+          <TextInput
+            style={styles.textinput}
+            placeholder="Email"
+            value={username}
+            onChangeText={(text) => setUsername(text)}
+          />
         </View>
         <View style={styles.bodyUser}>
-          <TextInput style={styles.textinput} placeholder=" Password" />
+          <TextInput
+            style={styles.textinput}
+            placeholder=" Password"
+            autoCapitalize="none"
+            secureTextEntry={getpassword ? false : true}
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+          />
+
+          <TouchableOpacity
+            style={{ position: "absolute", left: 300, top: 18 }}
+            onPress={() => {
+              setpasswordvi(!getpassword);
+            }}
+          >
+            {getpassword ? (
+              <Entypo
+                name="eye-with-line"
+                size={26}
+                color="black"
+                style={styles.noiconeye}
+              />
+            ) : (
+              <Entypo
+                name="eye"
+                size={26}
+                color="black"
+                style={styles.iconeye}
+              />
+            )}
+          </TouchableOpacity>
         </View>
         <View style={styles.bodyPassword}>
           <TextInput
             style={styles.textinput}
-            placeholder=" Confrim password"
-          ></TextInput>
+            placeholder=" Confirm password"
+            autoCapitalize="none"
+            secureTextEntry={getconfirmpassword ? false : true}
+            value={confirmPassword}
+            onChangeText={(text) => setconfirmPassword(text)}
+          />
+           <TouchableOpacity
+            style={{ position: "absolute", left: 300, top: 18 }}
+            onPress={() => {
+              setconfirmpasswordvi(!getconfirmpassword);
+            }}
+          >
+            {getconfirmpassword ? (
+              <Entypo
+                name="eye-with-line"
+                size={26}
+                color="black"
+                style={styles.noiconeye}
+              />
+            ) : (
+              <Entypo
+                name="eye"
+                size={26}
+                color="black"
+                style={styles.iconeye}
+              />
+            )}
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleRegister}>
           <View style={styles.bodyButton}>
-            <Text style={styles.bodyLogin}> Login</Text>
+            <Text style={styles.bodyLogin}> Signin</Text>
           </View>
         </TouchableOpacity>
       </View>
