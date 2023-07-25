@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { AntDesign, Entypo } from "@expo/vector-icons";
-import { app, api } from "../features/urlApi";
+import { apiApp, apiKey } from "../features/ApiKey";
 
 const { width, height } = Dimensions.get("screen");
 const Login = () => {
@@ -32,7 +32,7 @@ const Login = () => {
     }
 
     fetch(
-      `https://api.backendless.com/${app}/${api}/data/Users?where=gmail%3D'${username}'`,
+      `https://api.backendless.com/${apiApp}/${apiKey}/data/Users?where=gmail%3D'${username}'`,
       {
         method: "GET",
         headers: {
@@ -44,7 +44,7 @@ const Login = () => {
       .then((response) => response.json())
       .then((data) => {
         if (data.length > 0) {
-          fetch(`https://api.backendless.com/${app}/${api}/users/login`, {
+          fetch(`https://api.backendless.com/${apiApp}/${apiKey}/users/login`, {
             method: "POST",
             headers: {
               Accept: "application/json",
