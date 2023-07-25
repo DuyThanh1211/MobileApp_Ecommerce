@@ -13,12 +13,25 @@ export default function App() {
   const Stack = createStackNavigator();
   return (
     <NavigationContainer>
-    <Stack.Navigator>
-      <Stack.Screen name="List Product" component={ProductPage} />
-      <Stack.Screen name="Product Details" component={ProductDetails} />
-    </Stack.Navigator>
-  </NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={HomePage} />
+        <Stack.Screen name="Product Details" component={ProductDetails} />
+        <Stack.Screen name="List Product" component={ProductPage} />
+      </Stack.Navigator>
+    </NavigationContainer>
 
-  );}
+    // <>
+    //   <HomePage/>
+    // </>
+
+    //    <NavigationContainer>
+    //      <Stack.Navigator>
+    //        <Stack.Screen name="List Product" component={ProductPage} />
+    //        <Stack.Screen name="Product Details" component={ProductDetails} />
+    //      </Stack.Navigator>
+    //    </NavigationContainer>
+  );
+}
+
 
 const styles = StyleSheet.create({})
