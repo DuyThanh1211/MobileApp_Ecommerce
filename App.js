@@ -8,7 +8,8 @@ import ProductPage from "./src/components/ProductPage";
 import { createStackNavigator } from "@react-navigation/stack";
 import ProductDetails from "./src/components/ProductDetails";
 import { NavigationContainer } from "@react-navigation/native";
-// import HomePage from "./src/components/HomePage";
+import HomePage from "./src/components/HomePage";
+
 export default function App() {
   const Stack = createStackNavigator();
   return (
@@ -33,5 +34,4 @@ export default function App() {
   );
 }
 
-
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

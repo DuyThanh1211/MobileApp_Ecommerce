@@ -102,6 +102,9 @@ const HomePage = () => {
 
         <View>
           <Text>For women</Text>
+          <TouchableOpacity onPress={() => navigateToProductPage(data)}>
+            <Text>view all</Text>
+          </TouchableOpacity>
           <FlatList
             horizontal={true}
             data={women}
