@@ -11,7 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import { apiUrl } from "./ApiLink";
 
-const ProductList = () => {
+const HomePage = () => {
   const [data, setData] = useState([]);
 
   const getDataAPI = () => {
@@ -33,10 +33,6 @@ const ProductList = () => {
 
   const navigateToProductDetails = (item) => {
     navigation.navigate("Product Details", { item: item });
-  };
-
-  const navigateToHomePage = (item) => {
-    navigation.navigate("HomePage", { item: item });
   };
 
   const renderProductItem = ({ item }) => {
@@ -75,8 +71,6 @@ const ProductList = () => {
   );
 };
 
-export default ProductList;
-
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
@@ -112,3 +106,5 @@ const styles = StyleSheet.create({
     color: "#858585",
   },
 });
+
+export default HomePage;

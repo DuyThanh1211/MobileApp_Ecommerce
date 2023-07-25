@@ -2,12 +2,13 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import React from "react";
 
 const ProductDetails = ({ route }) => {
-  const { product } = route.params;
+  const { item } = route.params;
   return (
     <View>
-      <Image source={{ uri: product.Image }} style={styles.image} />
-      <Text>{product.TenSanPham}</Text>
-      <Text>{product.GiaTien}</Text>
+      <Image source={{ uri: item.Image }} style={styles.image} />
+      <Text>{item.TenSanPham}</Text>
+      <Text>{item.MoTa}</Text>
+      <Text>{item.GiaTien}</Text>
     </View>
   );
 };
