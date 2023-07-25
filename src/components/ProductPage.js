@@ -1,4 +1,4 @@
-import { FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
+import { FlatList, ScrollView, StyleSheet, Text, View, TextInput } from "react-native";
 import React, { useEffect, useState } from "react";
 
 const ProductPage = ({ route }) => {
@@ -33,3 +33,4 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
 });
+  
