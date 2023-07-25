@@ -11,8 +11,9 @@ import { useNavigation } from "@react-navigation/native";
 
 import { apiUrl } from "./ApiLink";
 
-const ProductList = () => {
-  const [data, setData] = useState([]);
+const ProductList = ({ data, searchQuery }) => {
+  const navigations = useNavigation();
+  const [filteredData, setFilteredData] = useState([]);
 
   const getDataAPI = () => {
     fetch(apiUrl)
@@ -26,8 +27,13 @@ const ProductList = () => {
   };
 
   useEffect(() => {
+    const formattedQuery = searchQuery.toLowerCase();
+    const filteredData = data.filter((item) =>
+      item.TenSanPham.toLowerCase().includes(formattedQuery)
+    );
+    setFilteredData(filteredData);
     getDataAPI();
-  }, []);
+  }, [data, searchQuery]);
 
   const navigation = useNavigation();
 
@@ -65,7 +71,7 @@ const ProductList = () => {
   return (
     <>
       <FlatList
-        data={data}
+         data={filteredData}
         numColumns={2}
         renderItem={renderProductItem}
         keyExtractor={(item) => item.objectId}
