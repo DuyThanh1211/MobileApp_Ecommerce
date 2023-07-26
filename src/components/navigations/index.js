@@ -1,11 +1,11 @@
 import Home from "./Home";
 import Favourite from "./Favourite";
-import logout from "./logout";
+import Profile from "./Profile";
 import Details from "./Details";
 
 export {
     Home,
-    logout,
+    Profile,
     Favourite,
     Details
 }
