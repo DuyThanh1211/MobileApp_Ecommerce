@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants";
-import { Favourite, Home, Profile, Search } from "../navigations";
+import { Favourite, Home, Profile } from "../navigations";
 
 const Tab = createBottomTabNavigator();
 
