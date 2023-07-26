@@ -22,7 +22,7 @@ const Register = () => {
   const [getconfirmpassword, setconfirmpasswordvi] = useState(false);
 
   const handleRegister = () => {
-    if (!fullname ||!username || !password || !confirmPassword) {
+    if (!fullname || !username || !password || !confirmPassword) {
       Alert.alert(
         "Lỗi",
         "Vui lòng điền đầy đủ thông tin và mật khẩu để đăng ký."
@@ -34,11 +34,8 @@ const Register = () => {
         "Vui lòng điền email hợp lệ (ví dụ: abcxyz@gmail.com)."
       );
       return;
-    } else if (password != confirmPassword ){
-      Alert.alert(
-        "Lỗi",
-        "Vui lòng điền mật khẩu giống nhau."
-      );
+    } else if (password != confirmPassword) {
+      Alert.alert("Lỗi", "Vui lòng điền mật khẩu giống nhau.");
       return;
     }
 
@@ -59,19 +56,22 @@ const Register = () => {
           console.log("Tài Khoảng đã Tồn Tại");
           Alert.alert("Lỗi", "Email đã tồn tại");
         } else {
-          fetch(`https://api.backendless.com/${apiApp}/${apiKey}/users/register`, {
-            method: "POST",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              gmail: username,
-              password: password,
-              confirmPassword: confirmPassword,
-              name: fullname,
-            }),
-          })
+          fetch(
+            `https://api.backendless.com/${apiApp}/${apiKey}/users/register`,
+            {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                gmail: username,
+                password: password,
+                confirmPassword: confirmPassword,
+                name: fullname,
+              }),
+            }
+          )
             .then((response) => response.json())
             .then((data) => {
               console.log(data);
@@ -108,9 +108,12 @@ const Register = () => {
 
       <View style={styles.body}>
         <View style={styles.bodyUser}>
-          <TextInput style={styles.textinput} placeholder=" Full Name" 
-          value={fullname}
-          onChangeText={(text) => setFullname(text)}/>
+          <TextInput
+            style={styles.textinput}
+            placeholder=" Full Name"
+            value={fullname}
+            onChangeText={(text) => setFullname(text)}
+          />
         </View>
         <View style={styles.bodyUser}>
           <TextInput
@@ -162,7 +165,7 @@ const Register = () => {
             value={confirmPassword}
             onChangeText={(text) => setconfirmPassword(text)}
           />
-           <TouchableOpacity
+          <TouchableOpacity
             style={{ position: "absolute", left: 300, top: 18 }}
             onPress={() => {
               setconfirmpasswordvi(!getconfirmpassword);

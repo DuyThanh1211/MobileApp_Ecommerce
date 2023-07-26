@@ -4,10 +4,4 @@ import Favourite from "./Favourite";
 import Search from "./Search";
 import Details from "./Details";
 
-export {
-    Home,
-    Profile,
-    Favourite,
-    Search,
-    Details
-}
+export { Home, Profile, Favourite, Search, Details };
