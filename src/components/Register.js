@@ -22,11 +22,11 @@ const Register = () => {
   const [getconfirmpassword, setconfirmpasswordvi] = useState(false);
 
   const handleRegister = () => {
-    if (!fullname ||!username || !password || !confirmPassword) {
-      Alert.alert(
-        "Lỗi",
-        "Vui lòng điền đầy đủ thông tin và mật khẩu để đăng ký."
-      );
+    if (!fullname || !username || !password || !confirmPassword) {
+      Alert.alert("Lỗi", "Vui lòng không để trống thông tin và mật khẩu.");
+      return;
+    } else if (!username || !password || !confirmPassword) {
+      Alert.alert("Lỗi", "Vui lòng không để trống mật khẩu.");
       return;
     } else if (!username.endsWith("@gmail.com")) {
       Alert.alert(
@@ -34,11 +34,14 @@ const Register = () => {
         "Vui lòng điền email hợp lệ (ví dụ: abcxyz@gmail.com)."
       );
       return;
-    } else if (password != confirmPassword ){
-      Alert.alert(
-        "Lỗi",
-        "Vui lòng điền mật khẩu giống nhau."
-      );
+    } else if (password != confirmPassword) {
+      Alert.alert("Lỗi", "Vui lòng điền mật khẩu trùng khớp.");
+      return;
+    } else if (!fullname) {
+      Alert.alert("Lỗi", "Bạn Điền tên không hợp lệ(ví dụ: Anh Phat)");
+      return;
+    } else if (!username) {
+      Alert.alert("Lỗi", "Vui lòng không để trống tên email");
       return;
     }
 
@@ -59,25 +62,28 @@ const Register = () => {
           console.log("Tài Khoảng đã Tồn Tại");
           Alert.alert("Lỗi", "Email đã tồn tại");
         } else {
-          fetch(`https://api.backendless.com/${apiApp}/${apiKey}/users/register`, {
-            method: "POST",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              gmail: username,
-              password: password,
-              confirmPassword: confirmPassword,
-              name: fullname,
-            }),
-          })
+          fetch(
+            `https://api.backendless.com/${apiApp}/${apiKey}/users/register`,
+            {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                gmail: username,
+                password: password,
+                confirmPassword: confirmPassword,
+                name: fullname,
+              }),
+            }
+          )
             .then((response) => response.json())
             .then((data) => {
               console.log(data);
               if (data.objectId) {
                 console.log("objectId:", data.objectId);
-                // navigation.navigate('Login');
+                // navigation.navigate("Login");
                 Alert.alert("Thông báo:", "Đăng Ký Thành Công");
               } else {
                 Alert.alert("Lỗi", "Đăng Ký Không Thành Công.");
@@ -108,9 +114,12 @@ const Register = () => {
 
       <View style={styles.body}>
         <View style={styles.bodyUser}>
-          <TextInput style={styles.textinput} placeholder=" Full Name" 
-          value={fullname}
-          onChangeText={(text) => setFullname(text)}/>
+          <TextInput
+            style={styles.textinput}
+            placeholder=" Full Name"
+            value={fullname}
+            onChangeText={(text) => setFullname(text)}
+          />
         </View>
         <View style={styles.bodyUser}>
           <TextInput
@@ -162,7 +171,7 @@ const Register = () => {
             value={confirmPassword}
             onChangeText={(text) => setconfirmPassword(text)}
           />
-           <TouchableOpacity
+          <TouchableOpacity
             style={{ position: "absolute", left: 300, top: 18 }}
             onPress={() => {
               setconfirmpasswordvi(!getconfirmpassword);
@@ -337,7 +346,7 @@ const styles = StyleSheet.create({
   },
   borderimg: {
     borderWidth: 1,
-    borderColor: "#E8ECF4",
+    borderColor: "#5F9EA0",
     borderRadius: 10,
   },
   footerTextBot: {
