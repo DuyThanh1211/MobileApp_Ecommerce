@@ -1,5 +1,5 @@
-import React from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import React from 'react';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 
 const Profile = () => {
   return (
@@ -7,7 +7,7 @@ const Profile = () => {
       <View style={styles.header}></View>
       <Image
         style={styles.avatar}
-        source={{ uri: "https://bootdey.com/img/Content/avatar/avatar6.png" }}
+        source={{ uri: 'https://bootdey.com/img/Content/avatar/avatar6.png' }}
       />
       <View style={styles.body}>
         <View style={styles.bodyContent}>
@@ -25,10 +25,10 @@ export default Profile;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f2f2f2",
+    backgroundColor: '#f2f2f2',
   },
   header: {
-    backgroundColor: "#000000",
+    backgroundColor: '#000000',
     height: 200,
   },
   avatar: {
@@ -36,10 +36,10 @@ const styles = StyleSheet.create({
     height: 130,
     borderRadius: 63,
     borderWidth: 4,
-    borderColor: "white",
+    borderColor: 'white',
     marginBottom: 10,
-    alignSelf: "center",
-    position: "absolute",
+    alignSelf: 'center',
+    position: 'absolute',
     marginTop: 130,
   },
   body: {
@@ -47,34 +47,34 @@ const styles = StyleSheet.create({
   },
   bodyContent: {
     flex: 1,
-    alignItems: "center",
+    alignItems: 'center',
     padding: 30,
   },
   name: {
     fontSize: 28,
-    color: "#FFFFFF",
-    fontWeight: "600",
+    color: '#FFFFFF',
+    fontWeight: '600',
   },
   info: {
     fontSize: 16,
-    color: "#FFFFFF",
+    color: '#FFFFFF',
     marginTop: 10,
   },
   description: {
     fontSize: 16,
-    color: "#696969",
+    color: '#696969',
     marginTop: 10,
-    textAlign: "center",
+    textAlign: 'center',
   },
   buttonContainer: {
     marginTop: 20,
     height: 45,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 20,
     width: 250,
     borderRadius: 30,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: '#FFFFFF',
   },
 });

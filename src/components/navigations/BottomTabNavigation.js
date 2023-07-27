@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants";
-import { Favourite, Home, Profile } from "../navigations";
+import { Favourite, Home, Profile, Profilelogout } from "../navigations";
 
 const Tab = createBottomTabNavigator();
 
@@ -56,7 +56,7 @@ const BottomTabNavigation = () => {
 
       <Tab.Screen
         name="Profile"
-        component={Profile}
+        component={Profilelogout}
         options={{
           tabBarIcon: ({ focused }) => {
             return (
