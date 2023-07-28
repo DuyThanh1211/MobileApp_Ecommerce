@@ -5,20 +5,16 @@ import Login from "./src/components/Login";
 import Register from "./src/components/Register";
 import ProductPage from "./src/components/ProductPage";
 import { createStackNavigator } from "@react-navigation/stack";
-import ProductDetails from "./src/components/ProductDetails";
 import { NavigationContainer } from "@react-navigation/native";
-import HomePage from "./src/components/HomePage";
-
+import Profile from "./src/components/navigations/Profile";
+import Profilelogout from "./src/components/navigations/Profilelogout";
+import Home from "./src/components/navigations/Home";
+import EditProfile from "./src/components/navigations/EditProfile";
+import { Profiler } from "react/cjs/react.production.min";
 export default function App() {
   const Stack = createStackNavigator();
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={Register} />
-        <Stack.Screen name="Product Details" component={ProductDetails} />
-        <Stack.Screen name="List Product" component={ProductPage} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    < EditProfile/>
 
     // <>
     //   <HomePage/>
