@@ -8,7 +8,7 @@ import {
   Dimensions,
   TextInput,
 } from "react-native";
-import { AntDesign, FontAwesome, Feather } from "@expo/vector-icons";
+import { AntDesign} from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -27,10 +27,9 @@ const EditProfile = () => {
           </TouchableOpacity>
           <Text style={styles.textHeader}> Edit Profile</Text>
         </View>
-        <Image
-          style={styles.avatar}
-          source={{ uri: "https://bootdey.com/img/Content/avatar/avatar6.png" }}
-        />
+        <View style={styles.headerTitles}>
+          <Text style={styles.headerText}> ✌️ Hello Thang </Text>
+        </View>
       </View>
 
       <View style={styles.body}>
@@ -57,17 +56,26 @@ const EditProfile = () => {
         </View>
         <View style={styles.bodyItem}>
           <View style={styles.bodyText}>
-            <Text style={styles.bodyTextTitle}> Password</Text>
-            <TextInput placeholder="Password" style={styles.bodyTextInput} />
+            <Text style={styles.bodyTextTitle}> Password New</Text>
+            <TextInput
+              placeholder="Password New"
+              style={styles.bodyTextInput}
+            />
           </View>
         </View>
         <View style={styles.bodyItem}>
           <View style={styles.bodyText}>
-            <Text style={styles.bodyTextTitle}> Confirm Password</Text>
+            <Text style={styles.bodyTextTitle}> Confrim Password</Text>
             <TextInput
-              placeholder="Confirm Password"
+              placeholder=" Confirm Password"
               style={styles.bodyTextInput}
             />
+          </View>
+        </View>
+        <View style={styles.bodyItem}>
+          <View style={styles.bodyText}>
+            <Text style={styles.bodyTextTitle}> Password</Text>
+            <TextInput placeholder=" Password" style={styles.bodyTextInput} />
           </View>
         </View>
         <TouchableOpacity>
@@ -89,7 +97,7 @@ const styles = StyleSheet.create({
   },
   header: {
     width: width,
-    height: (height * 28) / 100,
+    height: (height * 20) / 100,
   },
   headerTitle: {
     flexDirection: "row",
@@ -118,15 +126,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
-  avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 63,
-    borderColor: "#25CBF5",
-    borderWidth: 6,
-    alignSelf: "center",
-    position: "absolute",
-    marginTop: 90,
+  headerTitles: {
+    height: (height * 10) / 100,
+    marginLeft: 20,
+    marginRight: 10,
+    alignItems: 'center',
+  },
+  headerText: {
+    fontSize: 30,
+    fontWeight: '900'
   },
 
   body: {
@@ -149,9 +157,11 @@ const styles = StyleSheet.create({
     height: 40,
     marginLeft: 15,
     marginRight: 15,
-    backgroundColor: "#CCD2E8",
+    backgroundColor: "white",
     padding: 10,
     borderRadius: 20,
+    borderColor: "black",
+    borderWidth: 1,
   },
   bodyButton: {
     marginTop: 20,
@@ -159,14 +169,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignSelf: "center",
     borderWidth: 1,
-    borderColor: '#CCD2E8',
+    borderColor: "#CCD2E8",
     width: 170,
     height: 35,
     borderRadius: 20,
+    backgroundColor: "black",
   },
-  bodyTextButton:{
-      fontSize: 20,
-      fontWeight: 'bold',
-      color: '#A9ACEB'
+  bodyTextButton: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "white",
   },
 });

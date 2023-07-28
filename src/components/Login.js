@@ -24,7 +24,10 @@ const Login = () => {
       Alert.alert("Lỗi", "Bạn hãy điền đầy đủ thông tin!");
       return;
     } else if (!username.endsWith("@gmail.com")) {
-      Alert.alert("Lỗi", "Bạn hãy điền email hợp lệ(ví dụ: abcxyz@gmail.com)!");
+      Alert.alert("Lỗi", "Bạn hãy điền email hợp lệ(phải bao gồm: @gmail.com)!");
+      return;
+    }else if (username.trim() || !password.trim()) {
+      Alert.alert("Lỗi", "Bạn hãy điền đầy đủ thông tin!");
       return;
     }
 
