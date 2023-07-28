@@ -20,11 +20,6 @@ const Home = ({ navigation }) => {
   const [women, setWomen] = useState();
   const [men, setMen] = useState();
 
-  const limitValue = 6;
-  //   const limitedDataArray = data.slice(0, limitValue);
-  //   const limitedWomenArray = women.slice(0, limitValue);
-  //   const limitedMenArray = men.slice(0, limitValue);
-
   const apiUrl = `https://api.backendless.com/${apiApp}/${apiKey}/data/SanPham?pageSize=40`;
   const getDataAPI = () => {
     fetch(apiUrl)
@@ -62,9 +57,9 @@ const Home = ({ navigation }) => {
     navigation.navigate("Details", { item: item });
   };
 
-  //   const navigateToProductPage = () => {
-  //     navigations.navigate("List Product", { data: data });
-  //   };
+  const navigateToProductPage = () => {
+    navigation.navigate("List Product", { data: data });
+  };
 
   const renderProductItem = ({ item }) => {
     return (
@@ -229,9 +224,12 @@ const Home = ({ navigation }) => {
           >
             Our Product
           </Text>
+          <TouchableOpacity onPress={navigateToProductPage}>
+            <Text>View All</Text>
+          </TouchableOpacity>
           <FlatList
             horizontal={true}
-            data={data}
+            data={data.slice(0, 5)}
             renderItem={renderProductItem}
             keyExtractor={(item) => item.objectId}
           />

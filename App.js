@@ -42,7 +42,7 @@ import { useFonts } from "expo-font";
 import { Details } from "./src/components/navigations";
 import { useCallback } from "react";
 import BottomTabNavigation from "./src/components/navigations/BottomTabNavigation";
-
+import ProductPage from "./src/components/screen/ProductPage";
 const Stack = createNativeStackNavigator();
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -78,7 +78,9 @@ export default function App() {
             headerShown: false,
           }}
         />
+        <Stack.Screen name="List Product" component={ProductPage} />
       </Stack.Navigator>
     </NavigationContainer>
+    // <ProductPage />
   );
 }
