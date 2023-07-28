@@ -1,7 +1,6 @@
-import Home from "./Home";
-import Profile from "./Profile";
-import Favourite from "./Favourite";
-import Search from "./Search";
-import Details from "./Details";
+import Home from "../screen/Home";
+import Profile from "../screen/Profile";
+import Cart from "../screen/Cart";
+import Details from "../screen/Details";
 
-export { Home, Profile, Favourite, Search, Details };
+export { Home, Profile, Cart, Details };

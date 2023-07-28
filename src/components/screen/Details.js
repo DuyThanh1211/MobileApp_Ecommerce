@@ -1,26 +1,41 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-  // SafeAreaView,
-} from "react-native";
-import React, { useState } from "react";
-// import { SafeAreaView } from "react-native-safe-area-context";
-import { COLORS, FONTS, SIZES, images } from "../constants";
+import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import { COLORS, FONTS, SIZES } from "../constants";
 import { MaterialIcons, Ionicons, Feather } from "@expo/vector-icons";
+import { apiApp, apiKey } from "../../features/ApiKey";
+import Cart from "./Cart";
+// import { SafeAreaView } from "react-native-safe-area-context";
 
 const Details = ({ navigation, route }) => {
   const [isFavourite, setIsFavourite] = useState(false);
-  const [selectedSize, setSelectedSize] = useState(null);
+  const [selectedSize, setSelectedSize] = useState("S");
   const [quantity, setQuantity] = useState(1);
-
   const { item } = route.params;
+  const [cartItems, setCartItems] = useState([]);
+
+  const handleAddToBag = () => {
+    const newItem = {
+      objectId: item.objectId,
+      TenSanPham: item?.TenSanPham || "",
+      GiaTien: item?.GiaTien || 0,
+      Image: item?.Image,
+      selectedSize: selectedSize,
+      quantity: quantity,
+    };
+
+    setCartItems([...cartItems, newItem]);
+  };
+
   const handleSizeSelection = (size) => {
     setSelectedSize(size);
   };
-  console.log(item.Image);
+
+  useEffect(() => {
+    if (cartItems.length > 0) {
+      navigation.navigate("Cart", { cartItems: cartItems });
+    }
+  }, [cartItems]);
+
   return (
     // <SafeAreaView
     //   style={{
@@ -204,7 +219,7 @@ const Details = ({ navigation, route }) => {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={handleAddToBag}>
           <Feather name="shopping-bag" size={24} color={COLORS.white} />
 
           <Text
