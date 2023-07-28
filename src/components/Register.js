@@ -21,21 +21,43 @@ const Register = () => {
   const [getpassword, setpasswordvi] = useState(false);
   const [getconfirmpassword, setconfirmpasswordvi] = useState(false);
 
+  function validateEmail(email) {
+    const emailRegex = /^[a-zA-Z]+[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    return emailRegex.test(email);
+  }
+
   const handleRegister = () => {
     if (!fullname || !username || !password || !confirmPassword) {
+      Alert.alert("Lỗi", "Vui lòng không để trống thông tin.");
+      return;
+    } else if (fullname.length < 10 || fullname.length > 50) {
+      Alert.alert("Lỗi", "Tên của bạn phải có từ 10 đến 50 ký tự.");
+      return;
+    } else if (fullname.trim().length === 0) {
+      Alert.alert("Lỗi", "Vui lòng nhập tên đầy đủ");
+      return;
+    } else if (!/^[a-zA-Z0-9\s]+$/.test(fullname)) {
+      Alert.alert("Lỗi", "Tên của bạn không được chứa ký tự đặc biệt.");
+      return;
+    } else if (!validateEmail(username)) {
       Alert.alert(
         "Lỗi",
-        "Vui lòng điền đầy đủ thông tin và mật khẩu để đăng ký."
+        "Vui lòng điền email hợp lệ (phải bao gồm chữ cái và kết thúc bằng: @gmail.com)."
       );
       return;
-    } else if (!username.endsWith("@gmail.com")) {
-      Alert.alert(
-        "Lỗi",
-        "Vui lòng điền email hợp lệ (ví dụ: abcxyz@gmail.com)."
-      );
+    } else if (password.length < 8 || password.length > 20) {
+      Alert.alert("Lỗi", "Mật khẩu của bạn phải có từ 10 đến 20 ký tự.");
       return;
-    } else if (password != confirmPassword) {
-      Alert.alert("Lỗi", "Vui lòng điền mật khẩu giống nhau.");
+    } 
+    else if (password != confirmPassword) {
+      Alert.alert("Lỗi", "Vui lòng điền mật khẩu trùng khớp.");
+      return;
+    } else if (
+      username.includes(" ") ||
+      password.includes(" ") ||
+      confirmPassword.includes(" ")
+    ) {
+      Alert.alert("Lỗi", "Vui lòng không nhập space");
       return;
     }
 
@@ -77,7 +99,7 @@ const Register = () => {
               console.log(data);
               if (data.objectId) {
                 console.log("objectId:", data.objectId);
-                // navigation.navigate('Login');
+                // navigation.navigate("Login");
                 Alert.alert("Thông báo:", "Đăng Ký Thành Công");
               } else {
                 Alert.alert("Lỗi", "Đăng Ký Không Thành Công.");
@@ -340,7 +362,7 @@ const styles = StyleSheet.create({
   },
   borderimg: {
     borderWidth: 1,
-    borderColor: "#E8ECF4",
+    borderColor: "#5F9EA0",
     borderRadius: 10,
   },
   footerTextBot: {

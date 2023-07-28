@@ -144,34 +144,8 @@ const Home = ({ navigation }) => {
             height: 22,
           }}
         />
-
-        {/* <View>
-          <View
-            style={{
-              position: "absolute",
-              bottom: 16,
-              width: 16,
-              height: 16,
-              borderRadius: 8,
-              backgroundColor: COLORS.black,
-              alignItems: "center",
-              justifyContent: "center",
-              zIndex: 999,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 10,
-                color: COLORS.white,
-              }}
-            >
-              8
-            </Text>
-          </View>
-          <Feather name="shopping-bag" size={24} color={COLORS.black} />
-        </View> */}
       </View>
-
+      
       <ScrollView>
         <View
           style={{
