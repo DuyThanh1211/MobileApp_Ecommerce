@@ -77,8 +77,8 @@ const Home = ({ navigation }) => {
             <Image
               source={{ uri: item.Image }}
               style={{
-                height: 140,
-                width: 140,
+                height: 200,
+                width: 180,
               }}
             />
           </TouchableOpacity>
@@ -86,7 +86,7 @@ const Home = ({ navigation }) => {
           <TouchableOpacity onPress={() => navigateToProductDetails(item)}>
             <Text
               style={{
-                fontSize: 14,
+                fontSize: 15,
                 color: COLORS.black,
                 fontWeight: "bold",
               }}
@@ -96,7 +96,7 @@ const Home = ({ navigation }) => {
           </TouchableOpacity>
           <Text
             style={{
-              fontSize: 10,
+              fontSize: 13,
               color: COLORS.black,
             }}
           >
@@ -110,7 +110,7 @@ const Home = ({ navigation }) => {
           >
             <Text
               style={{
-                fontSize: 12,
+                fontSize: 13,
                 marginVertical: 4,
               }}
             >
@@ -190,19 +190,34 @@ const Home = ({ navigation }) => {
           </View>
         </View>
 
+
         <View
           style={{
             marginBottom: 50,
           }}
         >
+          
           <Text
             style={{
               ...FONTS.h3,
-              marginVertical: SIZES.padding * 2,
             }}
           >
             Our Product
           </Text>
+          <TouchableOpacity onPress={() => navigateToProductDetails()}>
+            <Text
+              style={{
+                color: COLORS.black,
+                fontWeight: "bold",
+                alignSelf: 'flex-end', // Để nút nằm bên trái (trên cùng)
+                paddingHorizontal: 10,
+                borderRadius: 5,
+                marginVertical: 12, // Khoảng cách từ texthello tới các thành phần khác
+              }}
+            >
+              View all
+            </Text>
+            </TouchableOpacity>
           <FlatList
             horizontal={true}
             data={data}
@@ -219,11 +234,24 @@ const Home = ({ navigation }) => {
           <Text
             style={{
               ...FONTS.h3,
-              marginVertical: SIZES.padding * 2,
             }}
           >
             For Men
           </Text>
+          <TouchableOpacity onPress={() => navigateToProductDetails()}>
+            <Text
+              style={{
+                color: COLORS.black,
+                fontWeight: "bold",
+                alignSelf: 'flex-end', // Để nút nằm bên trái (trên cùng)
+                paddingHorizontal: 10,
+                borderRadius: 5,
+                marginVertical: 12, // Khoảng cách từ texthello tới các thành phần khác
+              }}
+            >
+              View all
+            </Text>
+            </TouchableOpacity>
 
           <FlatList
             horizontal={true}
@@ -240,11 +268,24 @@ const Home = ({ navigation }) => {
           <Text
             style={{
               ...FONTS.h3,
-              marginVertical: SIZES.padding * 2,
             }}
           >
             For Women
           </Text>
+          <TouchableOpacity onPress={() => navigateToProductDetails()}>
+            <Text
+              style={{
+                color: COLORS.black,
+                fontWeight: "bold",
+                alignSelf: 'flex-end', // Để nút nằm bên trái (trên cùng)
+                paddingHorizontal: 10,
+                borderRadius: 5,
+                marginVertical: 12, // Khoảng cách từ texthello tới các thành phần khác
+              }}
+            >
+              View all
+            </Text>
+            </TouchableOpacity>
 
           <FlatList
             horizontal={true}
