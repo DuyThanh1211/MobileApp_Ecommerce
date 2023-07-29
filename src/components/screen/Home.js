@@ -1,19 +1,74 @@
-import {
-  View,
-  Text,
-  Image,
-  ScrollView,
-  FlatList,
-  TouchableOpacity,
-  //   SafeAreaView,
-} from "react-native";
 import React, { useState, useEffect } from "react";
-// import { SafeAreaView } from "react-native-safe-area-context";
+import { View, Text, Image, ScrollView, FlatList, TouchableOpacity, StyleSheet } from "react-native";
 import { COLORS, images, SIZES, FONTS } from "../constants";
 import { Feather } from "@expo/vector-icons";
 import { latestList, shoesList1, shoesList2 } from "../constants/data";
 import { apiKey, apiApp } from "../../features/ApiKey";
 import { useNavigation } from "@react-navigation/native";
+import BottomTab from "../navigations/BottomTab";
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'red'
+  },
+  logoContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  logo: {
+    width: 58,
+    height: 22,
+  },
+  sectionContainer: {
+    backgroundColor: COLORS.gray,
+    borderRadius: 20,
+    marginTop: SIZES.padding,
+    width: SIZES.width - 44,
+    height: SIZES.height - 200,
+  },
+  sectionTextContainer: {
+    marginHorizontal: 12,
+    marginVertical: SIZES.padding,
+  },
+  sectionTitle: {
+    ...FONTS.h3,
+  },
+  sectionDescription: {
+    ...FONTS.body4,
+    marginVertical: 10,
+  },
+  productListContainer: {
+    marginBottom: 50,
+  },
+  productListTitle: {
+    ...FONTS.h3,
+    marginVertical: SIZES.padding * 2,
+  },
+  viewAllButton: {
+    // Style your "View All" button here
+  },
+  productItemContainer: {
+    marginRight: SIZES.padding,
+  },
+  productImage: {
+    height: 140,
+    width: 140,
+  },
+  productName: {
+    // Style your product name here
+  },
+  productCategory: {
+    // Style your product category here
+  },
+  productPrice: {
+    fontSize: 12,
+    marginVertical: 4,
+  },
+  bottomTab: {
+    // Style your BottomTab component here
+  },
+});
 
 const Home = ({ navigation }) => {
   const [data, setData] = useState([]);
@@ -21,6 +76,7 @@ const Home = ({ navigation }) => {
   const [men, setMen] = useState();
 
   const apiUrl = `https://api.backendless.com/${apiApp}/${apiKey}/data/SanPham?pageSize=40`;
+
   const getDataAPI = () => {
     fetch(apiUrl)
       .then((response) => response.json())
@@ -31,10 +87,11 @@ const Home = ({ navigation }) => {
         console.error("Fetch error:", error);
       });
   };
+
   const fetchData = async () => {
     try {
-      const respone = await fetch(apiUrl);
-      const json = await respone.json();
+      const response = await fetch(apiUrl);
+      const json = await response.json();
       setData(json);
 
       const womenItems = json.filter((item) => item.GioiTinh === "Women");
@@ -63,101 +120,34 @@ const Home = ({ navigation }) => {
 
   const renderProductItem = ({ item }) => {
     return (
-      <>
-        <View style={{ marginRight: SIZES.padding }}>
-          <TouchableOpacity
-            key={item.objectId}
-            onPress={() => navigateToProductDetails(item)}
-          >
-            <Image
-              source={{ uri: item.Image }}
-              style={{
-                height: 140,
-                width: 140,
-              }}
-            />
-          </TouchableOpacity>
+      <View style={styles.productItemContainer}>
+        <TouchableOpacity key={item.objectId} onPress={() => navigateToProductDetails(item)}>
+          <Image source={{ uri: item.Image }} style={styles.productImage} />
+        </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => navigateToProductDetails(item)}>
-            <Text
-              style={{
-                fontSize: 14,
-                color: COLORS.black,
-                fontWeight: "bold",
-              }}
-            >
-              {item.TenSanPham}
-            </Text>
-          </TouchableOpacity>
-          <Text
-            style={{
-              fontSize: 10,
-              color: COLORS.black,
-            }}
-          >
-            Clothing
-          </Text>
+        <TouchableOpacity onPress={() => navigateToProductDetails(item)}>
+          <Text style={styles.productName}>{item.TenSanPham}</Text>
+        </TouchableOpacity>
 
-          <View
-            style={{
-              flexDirection: "row",
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 12,
-                marginVertical: 4,
-              }}
-            >
-              ${item.GiaTien}
-            </Text>
-          </View>
+        <Text style={styles.productCategory}>Clothing</Text>
+
+        <View style={{ flexDirection: "row" }}>
+          <Text style={styles.productPrice}>${item.GiaTien}</Text>
         </View>
-      </>
+      </View>
     );
   };
+
   return (
-    // <SafeAreaView
-    //   style={{
-    //     flex: 1,
-    //     backgroundColor: COLORS.white,
-    //   }}
-    // >
-    <View
-      style={{
-        marginHorizontal: 22,
-        marginTop: 12,
-      }}
-    >
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Image
-          source={images.logo}
-          resizeMode="contain"
-          style={{
-            width: 58,
-            height: 22,
-          }}
-        />
+    <View style={styles.container}>
+      <View style={styles.logoContainer}>
+        <Image source={images.logo} resizeMode="contain" style={styles.logo} />
       </View>
 
       <ScrollView>
-        <View
-          style={{
-            backgroundColor: COLORS.gray,
-            borderRadius: 20,
-            marginTop: SIZES.padding,
-            width: SIZES.width - 44,
-            height: SIZES.height - 200,
-          }}
-        >
+        <View style={styles.sectionContainer}>
           <FlatList
-            horizontal={true}
+            horizontal
             data={shoesList1}
             keyExtractor={(item) => item.id}
             renderItem={({ item, index }) => (
@@ -172,93 +162,50 @@ const Home = ({ navigation }) => {
             )}
           />
 
-          <View
-            style={{
-              marginHorizontal: 12,
-              marginVertical: SIZES.padding,
-            }}
-          >
-            <Text style={{ ...FONTS.h3 }}>Made for Miles</Text>
-            <Text style={{ ...FONTS.body4, marginVertical: 10 }}>
-              The perfect place to find your new favourite running shoes
+          <View style={styles.sectionTextContainer}>
+            <Text style={styles.sectionTitle}>Made for Miles</Text>
+            <Text style={styles.sectionDescription}>
+              The perfect place to find your new favorite running shoes
             </Text>
           </View>
         </View>
 
-        <View
-          style={{
-            marginBottom: 50,
-          }}
-        >
-          <Text
-            style={{
-              ...FONTS.h3,
-              marginVertical: SIZES.padding * 2,
-            }}
-          >
-            Our Product
-          </Text>
+        <View style={styles.productListContainer}>
+          <Text style={styles.productListTitle}>Our Product</Text>
           <TouchableOpacity onPress={navigateToProductPage}>
             <Text>View All</Text>
           </TouchableOpacity>
           <FlatList
-            horizontal={true}
+            horizontal
             data={data.slice(0, 5)}
             renderItem={renderProductItem}
             keyExtractor={(item) => item.objectId}
           />
         </View>
 
-        <View
-          style={{
-            marginBottom: 50,
-          }}
-        >
-          <Text
-            style={{
-              ...FONTS.h3,
-              marginVertical: SIZES.padding * 2,
-            }}
-          >
-            For Men
-          </Text>
-
+        <View style={styles.productListContainer}>
+          <Text style={styles.productListTitle}>For Men</Text>
           <FlatList
-            horizontal={true}
+            horizontal
             data={men}
             renderItem={renderProductItem}
             keyExtractor={(item) => item.objectId}
           />
         </View>
-        <View
-          style={{
-            marginBottom: 50,
-          }}
-        >
-          <Text
-            style={{
-              ...FONTS.h3,
-              marginVertical: SIZES.padding * 2,
-            }}
-          >
-            For Women
-          </Text>
 
+        <View style={styles.productListContainer}>
+          <Text style={styles.productListTitle}>For Women</Text>
           <FlatList
-            horizontal={true}
+            horizontal
             data={women}
             renderItem={renderProductItem}
             keyExtractor={(item) => item.objectId}
           />
         </View>
-        <View
-          style={{
-            marginBottom: 50,
-          }}
-        ></View>
       </ScrollView>
+
+      <BottomTab />
     </View>
-    // </SafeAreaView>
   );
 };
 

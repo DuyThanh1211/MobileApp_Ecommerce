@@ -1,8 +1,7 @@
 import {
-  ScrollView,
-  Alert,
   StyleSheet,
   Text,
+  Alert,
   View,
   Dimensions,
   TouchableOpacity,
@@ -11,31 +10,59 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { AntDesign, Entypo } from "@expo/vector-icons";
-import { apiApp, apiKey } from "../features/ApiKey";
-
+import { apiApp, apiKey } from "../../features/ApiKey";
 import { useNavigation } from "@react-navigation/core";
+
 const { width, height } = Dimensions.get("screen");
-const Login = () => {
+const Register = () => {
+  const [fullname, setFullname] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setconfirmPassword] = useState("");
   const [getpassword, setpasswordvi] = useState(false);
+  const [getconfirmpassword, setconfirmpasswordvi] = useState(false);
 
   const navigate = useNavigation();
-  const navigateToRegister = () => {
-    navigate.navigate("Register");
+  const navigateToLogin = () => {
+    navigate.navigate("Login");
   };
-  const handleLogin = () => {
-    if (!username || !password) {
-      Alert.alert("Lỗi", "Bạn hãy điền đầy đủ thông tin!");
+
+  function validateEmail(email) {
+    const emailRegex = /^[a-zA-Z]+[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    return emailRegex.test(email);
+  }
+
+  const handleRegister = () => {
+    if (!fullname || !username || !password || !confirmPassword) {
+      Alert.alert("Lỗi", "Vui lòng không để trống thông tin.");
       return;
-    } else if (!username.endsWith("@gmail.com")) {
+    } else if (fullname.length < 10 || fullname.length > 50) {
+      Alert.alert("Lỗi", "Tên của bạn phải có từ 10 đến 50 ký tự.");
+      return;
+    } else if (fullname.trim().length === 0) {
+      Alert.alert("Lỗi", "Vui lòng nhập tên đầy đủ");
+      return;
+    } else if (!/^[a-zA-Z0-9\s]+$/.test(fullname)) {
+      Alert.alert("Lỗi", "Tên của bạn không được chứa ký tự đặc biệt.");
+      return;
+    } else if (!validateEmail(username)) {
       Alert.alert(
         "Lỗi",
-        "Bạn hãy điền email hợp lệ(phải bao gồm: @gmail.com)!"
+        "Vui lòng điền email hợp lệ (phải bao gồm chữ cái và kết thúc bằng: @gmail.com)."
       );
       return;
-    } else if (username.trim() || !password.trim()) {
-      Alert.alert("Lỗi", "Bạn hãy điền đầy đủ thông tin!");
+    } else if (password.length < 6 || password.length > 20) {
+      Alert.alert("Lỗi", "Mật khẩu của bạn phải có từ 6 đến 20 ký tự.");
+      return;
+    } else if (password != confirmPassword) {
+      Alert.alert("Lỗi", "Vui lòng điền mật khẩu trùng khớp.");
+      return;
+    } else if (
+      username.includes(" ") ||
+      password.includes(" ") ||
+      confirmPassword.includes(" ")
+    ) {
+      Alert.alert("Lỗi", "Vui lòng không nhập space");
       return;
     }
 
@@ -51,79 +78,85 @@ const Login = () => {
     )
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         if (data.length > 0) {
-          fetch(`https://api.backendless.com/${apiApp}/${apiKey}/users/login`, {
-            method: "POST",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              login: username,
-              password: password,
-            }),
-          })
+          console.log("Tài Khoảng đã Tồn Tại");
+          Alert.alert("Lỗi", "Email đã tồn tại");
+        } else {
+          fetch(
+            `https://api.backendless.com/${apiApp}/${apiKey}/users/register`,
+            {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                gmail: username,
+                password: password,
+                confirmPassword: confirmPassword,
+                name: fullname,
+              }),
+            }
+          )
             .then((response) => response.json())
             .then((data) => {
+              console.log(data);
               if (data.objectId) {
                 console.log("objectId:", data.objectId);
+
+                // Alert.alert("Thông báo:", "Đăng Ký Thành Công");
+                navigate.navigate("Login");
               } else {
-                console.log("Sai Mật Khẩu");
-                Alert.alert("Lỗi", "Sai Mật Khẩu");
+                Alert.alert("Lỗi", "Đăng Ký Không Thành Công.");
               }
             })
             .catch((error) => {
               console.error("Error:", error);
             });
-        } else {
-          console.log("Tài Khoảng Không Tồn Tại");
-          Alert.alert(
-            "Lỗi",
-            "Tài khoảng không tồn tại. Bạn hãy tạo tài khoảng để đặt hàng "
-          );
         }
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   };
-
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={navigate.goBack}>
-          <View style={styles.IconLeft}>
-            <AntDesign name="left" size={25} color="black" />
-          </View>
-        </TouchableOpacity>
-      </View>
+      <View style={styles.header}></View>
 
       <View style={styles.headerTitle}>
-        <Text style={styles.headerText}>
-          Welcome back! Glad to see you, Again!
-        </Text>
+        <Text style={styles.headerText}>Hello! Register to get started</Text>
       </View>
 
       <View style={styles.body}>
         <View style={styles.bodyUser}>
           <TextInput
             style={styles.textinput}
-            placeholder=" Enter your email"
+            placeholder=" Full Name"
+            value={fullname}
+            onChangeText={(text) => setFullname(text)}
+          />
+        </View>
+        <View style={styles.bodyUser}>
+          <TextInput
+            style={styles.textinput}
+            placeholder="Email"
             value={username}
             onChangeText={(text) => setUsername(text)}
           />
         </View>
-        <View style={styles.bodyPassword}>
+        <View style={styles.bodyUser}>
           <TextInput
             style={styles.textinput}
-            placeholder=" Enter your password"
+            placeholder=" Password"
             autoCapitalize="none"
             secureTextEntry={getpassword ? false : true}
             value={password}
             onChangeText={(text) => setPassword(text)}
           />
+
           <TouchableOpacity
-            style={{ left: -5, top: 30 }}
+            style={{ position: "absolute", left: 300, top: 18 }}
             onPress={() => {
               setpasswordvi(!getpassword);
             }}
@@ -145,14 +178,41 @@ const Login = () => {
             )}
           </TouchableOpacity>
         </View>
-        <View style={styles.bodyForgot}>
-          <TouchableOpacity>
-            <Text style={styles.bodyTextFor}> Forgot Password?</Text>
+        <View style={styles.bodyPassword}>
+          <TextInput
+            style={styles.textinput}
+            placeholder=" Confirm password"
+            autoCapitalize="none"
+            secureTextEntry={getconfirmpassword ? false : true}
+            value={confirmPassword}
+            onChangeText={(text) => setconfirmPassword(text)}
+          />
+          <TouchableOpacity
+            style={{ position: "absolute", left: 300, top: 18 }}
+            onPress={() => {
+              setconfirmpasswordvi(!getconfirmpassword);
+            }}
+          >
+            {getconfirmpassword ? (
+              <Entypo
+                name="eye-with-line"
+                size={26}
+                color="black"
+                style={styles.noiconeye}
+              />
+            ) : (
+              <Entypo
+                name="eye"
+                size={26}
+                color="black"
+                style={styles.iconeye}
+              />
+            )}
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={handleLogin}>
+        <TouchableOpacity onPress={handleRegister}>
           <View style={styles.bodyButton}>
-            <Text style={styles.bodyLogin}> Login</Text>
+            <Text style={styles.bodyLogin}> Signin</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -160,7 +220,7 @@ const Login = () => {
       <View style={styles.footer}>
         <View style={styles.footerText}>
           <View style={styles.footerLine}></View>
-          <Text style={styles.footerOr}>Or Login with</Text>
+          <Text style={styles.footerOr}>Or Registers with</Text>
           <View style={styles.footerLine}></View>
         </View>
         <View style={styles.footerImage}>
@@ -168,31 +228,31 @@ const Login = () => {
             <TouchableOpacity>
               <View style={styles.borderimg}>
                 <View style={styles.footerAnh1}>
-                  <Image source={require("../../assets/fb.png")} />
+                  <Image source={require("../../../assets/fb.png")} />
                 </View>
               </View>
             </TouchableOpacity>
             <TouchableOpacity>
               <View style={styles.borderimg}>
                 <View style={styles.footerAnh1}>
-                  <Image source={require("../../assets/google_ic.png")} />
+                  <Image source={require("../../../assets/google_ic.png")} />
                 </View>
               </View>
             </TouchableOpacity>
             <TouchableOpacity>
               <View style={styles.borderimg}>
                 <View style={styles.footerAnh1}>
-                  <Image source={require("../../assets/Ios.png")} />
+                  <Image source={require("../../../assets/Ios.png")} />
                 </View>
               </View>
             </TouchableOpacity>
           </View>
           <View style={styles.footerTextBot}>
             <Text style={styles.Textbot}> Dont't have an account?</Text>
-            <TouchableOpacity onPress={navigateToRegister}>
+            <TouchableOpacity onPress={navigateToLogin}>
               <Text style={[styles.Textbot, { color: "#35C2C1" }]}>
                 {" "}
-                Register Now
+                Login Now
               </Text>
             </TouchableOpacity>
           </View>
@@ -202,7 +262,7 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
 
 const styles = StyleSheet.create({
   container: {
@@ -210,10 +270,11 @@ const styles = StyleSheet.create({
   },
   header: {
     width: width,
-    height: (height * 15) / 100,
+    height: (height * 10) / 100,
     justifyContent: "center",
   },
   IconLeft: {
+    marginTop: 30,
     marginLeft: 20,
     borderWidth: 1,
     borderRadius: 15,
@@ -227,6 +288,7 @@ const styles = StyleSheet.create({
     width: 300,
     height: (height * 10) / 100,
     marginLeft: 20,
+    marginTop: 15,
     marginRight: 10,
   },
   headerText: {
@@ -237,7 +299,7 @@ const styles = StyleSheet.create({
   body: {
     width: width,
     height: (height * 30) / 100,
-    marginTop: 30,
+    marginTop: 20,
     alignItems: "center",
   },
   bodyUser: {
@@ -253,19 +315,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#F7F8F9",
     borderColor: "#E8ECF4",
   },
-  bodyForgot: {
-    width: (width * 90) / 100,
-    height: (height * 5) / 100,
-    alignItems: "flex-end",
-  },
-  bodyTextFor: {
-    marginTop: 5,
-    fontSize: 15,
-    fontWeight: "400",
-    color: "#6A707C",
-  },
   bodyButton: {
-    marginTop: 15,
+    marginTop: 25,
     backgroundColor: "black",
     width: (width * 90) / 100,
     height: (height * 7) / 100,
@@ -281,7 +332,7 @@ const styles = StyleSheet.create({
   },
 
   footer: {
-    marginTop: 50,
+    marginTop: 160,
     height: (height * 40) / 100,
   },
   footerText: {
@@ -311,24 +362,16 @@ const styles = StyleSheet.create({
   },
   borderimg: {
     borderWidth: 1,
-    borderColor: "#E8ECF4",
+    borderColor: "#5F9EA0",
     borderRadius: 10,
   },
   footerTextBot: {
-    marginTop: 100,
+    marginTop: 40,
     flexDirection: "row",
     alignSelf: "center",
   },
   Textbot: {
     fontSize: 17,
     fontWeight: "500",
-  },
-  iconeye: {
-    left: 300,
-    top: -73,
-  },
-  noiconeye: {
-    left: 300,
-    top: -73,
   },
 });

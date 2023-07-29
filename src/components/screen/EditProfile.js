@@ -9,15 +9,17 @@ import {
   TextInput,
 } from "react-native";
 import { AntDesign} from "@expo/vector-icons";
-
+import { useNavigation } from "@react-navigation/native";
 const { width, height } = Dimensions.get("screen");
 
 const EditProfile = () => {
+
+  const navigate = useNavigation();
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerTitle}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={navigate.goBack}>
             <AntDesign
               name="left"
               size={24}
