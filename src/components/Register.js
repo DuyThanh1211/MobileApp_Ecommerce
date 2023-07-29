@@ -11,6 +11,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import { apiApp, apiKey } from "../features/ApiKey";
+import { useNavigation } from "@react-navigation/core";
 
 const { width, height } = Dimensions.get("screen");
 const Register = () => {
@@ -20,6 +21,11 @@ const Register = () => {
   const [confirmPassword, setconfirmPassword] = useState("");
   const [getpassword, setpasswordvi] = useState(false);
   const [getconfirmpassword, setconfirmpasswordvi] = useState(false);
+
+  const navigate = useNavigation();
+  const navigateToLogin = () => {
+    navigate.navigate("Login");
+  };
 
   function validateEmail(email) {
     const emailRegex = /^[a-zA-Z]+[a-zA-Z0-9._%+-]+@gmail\.com$/;
@@ -48,8 +54,7 @@ const Register = () => {
     } else if (password.length < 8 || password.length > 20) {
       Alert.alert("Lỗi", "Mật khẩu của bạn phải có từ 10 đến 20 ký tự.");
       return;
-    } 
-    else if (password != confirmPassword) {
+    } else if (password != confirmPassword) {
       Alert.alert("Lỗi", "Vui lòng điền mật khẩu trùng khớp.");
       return;
     } else if (
@@ -99,8 +104,9 @@ const Register = () => {
               console.log(data);
               if (data.objectId) {
                 console.log("objectId:", data.objectId);
-                // navigation.navigate("Login");
-                Alert.alert("Thông báo:", "Đăng Ký Thành Công");
+
+                // Alert.alert("Thông báo:", "Đăng Ký Thành Công");
+                navigate.navigate("Login");
               } else {
                 Alert.alert("Lỗi", "Đăng Ký Không Thành Công.");
               }
@@ -116,13 +122,7 @@ const Register = () => {
   };
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity>
-          <View style={styles.IconLeft}>
-            <AntDesign name="left" size={25} color="black" />
-          </View>
-        </TouchableOpacity>
-      </View>
+      <View style={styles.header}></View>
 
       <View style={styles.headerTitle}>
         <Text style={styles.headerText}>Hello! Register to get started</Text>
@@ -249,7 +249,7 @@ const Register = () => {
           </View>
           <View style={styles.footerTextBot}>
             <Text style={styles.Textbot}> Dont't have an account?</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={navigateToLogin}>
               <Text style={[styles.Textbot, { color: "#35C2C1" }]}>
                 {" "}
                 Login Now

@@ -16,14 +16,6 @@ const Profile = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerTitle}>
-          <TouchableOpacity>
-            <AntDesign
-              name="left"
-              size={24}
-              color="black"
-              style={styles.backHeader}
-            />
-          </TouchableOpacity>
           <Text style={styles.textHeader}> Profile</Text>
         </View>
         <Image
@@ -124,9 +116,8 @@ const styles = StyleSheet.create({
     height: (height * 40) / 100,
   },
   headerTitle: {
-    flexDirection: "row",
     marginVertical: 35,
-    alignItems: 'center'
+    alignSelf: "center",
   },
   Text: {
     justifyContent: "center",
@@ -146,7 +137,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 9,
   },
   textHeader: {
-    marginLeft: "30%",
     fontSize: 20,
     fontWeight: "bold",
   },
