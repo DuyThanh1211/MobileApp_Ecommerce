@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants";
-import { Favourite, Home, Profile, Profilelogout } from "../navigations";
+import { Cart, Home, Profile } from "../navigations";
 
 const Tab = createBottomTabNavigator();
 
@@ -28,27 +28,19 @@ const BottomTabNavigation = () => {
         options={{
           tabBarIcon: ({ focused }) => {
             return (
-              <MaterialCommunityIcons
-                name={focused ? "home" : "home-outline"}
-                size={24}
-                color={COLORS.black}
-              />
+              <Ionicons name={focused ? "home" : "home-outline"} size={24} />
             );
           },
         }}
       />
 
       <Tab.Screen
-        name="Favourite"
-        component={Favourite}
+        name="Cart"
+        component={Cart}
         options={{
           tabBarIcon: ({ focused }) => {
             return (
-              <Ionicons
-                name={focused ? "book" : "book-outline"}
-                size={24}
-                color={COLORS.black}
-              />
+              <Ionicons name={focused ? "cart" : "cart-outline"} size={24} />
             );
           },
         }}
@@ -63,7 +55,6 @@ const BottomTabNavigation = () => {
               <Ionicons
                 name={focused ? "person" : "person-outline"}
                 size={24}
-                color={COLORS.black}
               />
             );
           },
