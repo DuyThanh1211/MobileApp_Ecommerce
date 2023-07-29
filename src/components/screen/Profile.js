@@ -8,10 +8,13 @@ import {
   Dimensions,
 } from "react-native";
 import { AntDesign, FontAwesome, Feather } from "@expo/vector-icons";
+import BottomTab from "../navigations/BottomTab";
+import { useNavigation } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("screen");
 
 const Profile = () => {
+  const navigate = useNavigation();
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -28,7 +31,7 @@ const Profile = () => {
         </View>
       </View>
       <View style={styles.body}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() =>navigate.navigate("EditProfile")}>
           <View style={styles.bodyItem}>
             <AntDesign
               name="adduser"
@@ -100,6 +103,7 @@ const Profile = () => {
           </View>
         </TouchableOpacity>
       </View>
+      <BottomTab/>
     </View>
   );
 };

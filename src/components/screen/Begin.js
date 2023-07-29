@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 
-const ProfileLogout = () => {
+const Begin = () => {
   const navigate = useNavigation();
 
   const navigateToLogin = () => {
@@ -39,7 +39,7 @@ const ProfileLogout = () => {
   );
 };
 
-export default ProfileLogout;
+export default Begin;
 
 const styles = StyleSheet.create({
   container: {

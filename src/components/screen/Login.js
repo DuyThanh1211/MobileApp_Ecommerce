@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { AntDesign, Entypo } from "@expo/vector-icons";
-import { apiApp, apiKey } from "../../features/ApiKey";
+import { apiKey, apiApp } from "../../features/ApiKey";
 
 import { useNavigation } from "@react-navigation/core";
 const { width, height } = Dimensions.get("screen");
@@ -25,7 +25,7 @@ const Login = () => {
     navigate.navigate("Register");
   };
   const handleLogin = () => {
-    if (!username || !password) {
+    if (!username.trim() || !password.trim()) {
       Alert.alert("Lỗi", "Bạn hãy điền đầy đủ thông tin!");
       return;
     } else if (!username.endsWith("@gmail.com")) {
@@ -33,9 +33,6 @@ const Login = () => {
         "Lỗi",
         "Bạn hãy điền email hợp lệ(phải bao gồm: @gmail.com)!"
       );
-      return;
-    } else if (username.trim() || !password.trim()) {
-      Alert.alert("Lỗi", "Bạn hãy điền đầy đủ thông tin!");
       return;
     }
 
@@ -67,6 +64,7 @@ const Login = () => {
             .then((data) => {
               if (data.objectId) {
                 console.log("objectId:", data.objectId);
+                navigate.navigate("Home");
               } else {
                 console.log("Sai Mật Khẩu");
                 Alert.alert("Lỗi", "Sai Mật Khẩu");
@@ -168,21 +166,21 @@ const Login = () => {
             <TouchableOpacity>
               <View style={styles.borderimg}>
                 <View style={styles.footerAnh1}>
-                  <Image source={require("../../assets/fb.png")} />
+                  <Image source={require("../../../assets/fb.png")} />
                 </View>
               </View>
             </TouchableOpacity>
             <TouchableOpacity>
               <View style={styles.borderimg}>
                 <View style={styles.footerAnh1}>
-                  <Image source={require("../../assets/google_ic.png")} />
+                  <Image source={require("../../../assets/google_ic.png")} />
                 </View>
               </View>
             </TouchableOpacity>
             <TouchableOpacity>
               <View style={styles.borderimg}>
                 <View style={styles.footerAnh1}>
-                  <Image source={require("../../assets/Ios.png")} />
+                  <Image source={require("../../../assets/Ios.png")} />
                 </View>
               </View>
             </TouchableOpacity>

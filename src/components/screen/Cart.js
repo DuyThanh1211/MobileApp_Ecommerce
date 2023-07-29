@@ -2,6 +2,7 @@ import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { FlatList } from "react-native-gesture-handler";
+import BottomTab from "../navigations/BottomTab";
 
 const Cart = ({ route }) => {
   const { cartItems } = route.params ?? {};
@@ -139,6 +140,7 @@ const Cart = ({ route }) => {
             <Text style={styles.buttonText}>Checkout</Text>
           </TouchableOpacity>
         </View>
+        <BottomTab/>
       </View>
     </>
   );

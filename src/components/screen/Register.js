@@ -51,8 +51,8 @@ const Register = () => {
         "Vui lòng điền email hợp lệ (phải bao gồm chữ cái và kết thúc bằng: @gmail.com)."
       );
       return;
-    } else if (password.length < 8 || password.length > 20) {
-      Alert.alert("Lỗi", "Mật khẩu của bạn phải có từ 10 đến 20 ký tự.");
+    } else if (password.length < 6 || password.length > 20) {
+      Alert.alert("Lỗi", "Mật khẩu của bạn phải có từ 6 đến 20 ký tự.");
       return;
     } else if (password != confirmPassword) {
       Alert.alert("Lỗi", "Vui lòng điền mật khẩu trùng khớp.");
@@ -228,21 +228,21 @@ const Register = () => {
             <TouchableOpacity>
               <View style={styles.borderimg}>
                 <View style={styles.footerAnh1}>
-                  <Image source={require("../../assets/fb.png")} />
+                  <Image source={require("../../../assets/fb.png")} />
                 </View>
               </View>
             </TouchableOpacity>
             <TouchableOpacity>
               <View style={styles.borderimg}>
                 <View style={styles.footerAnh1}>
-                  <Image source={require("../../assets/google_ic.png")} />
+                  <Image source={require("../../../assets/google_ic.png")} />
                 </View>
               </View>
             </TouchableOpacity>
             <TouchableOpacity>
               <View style={styles.borderimg}>
                 <View style={styles.footerAnh1}>
-                  <Image source={require("../../assets/Ios.png")} />
+                  <Image source={require("../../../assets/Ios.png")} />
                 </View>
               </View>
             </TouchableOpacity>
