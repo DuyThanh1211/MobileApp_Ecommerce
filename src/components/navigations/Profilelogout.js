@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View, ImageBackground, TouchableOpacity } from "react-native";
 
-const Profile = () => {
+const Profilelogout = () => {
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -23,7 +23,7 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default Profilelogout;
 
 const styles = StyleSheet.create({
   container: {
