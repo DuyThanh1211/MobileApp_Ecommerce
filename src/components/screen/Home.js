@@ -222,7 +222,9 @@ const Home = ({ navigation }) => {
           >
             For Men
           </Text>
-
+          <TouchableOpacity onPress={navigateToProductPage}>
+            <Text>View All</Text>
+          </TouchableOpacity>
           <FlatList
             horizontal={true}
             data={men}
@@ -243,7 +245,9 @@ const Home = ({ navigation }) => {
           >
             For Women
           </Text>
-
+          <TouchableOpacity onPress={navigateToProductPage}>
+            <Text>View All</Text>
+          </TouchableOpacity>
           <FlatList
             horizontal={true}
             data={women}

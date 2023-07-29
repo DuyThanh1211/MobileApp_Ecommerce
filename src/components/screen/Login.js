@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { AntDesign, Entypo } from "@expo/vector-icons";
-import { apiApp, apiKey } from "../features/ApiKey";
+import { apiApp, apiKey } from "../../features/ApiKey";
 
 import { useNavigation } from "@react-navigation/core";
 const { width, height } = Dimensions.get("screen");

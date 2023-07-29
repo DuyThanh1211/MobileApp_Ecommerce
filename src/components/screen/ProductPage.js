@@ -21,6 +21,7 @@ const ProductPage = ({ route }) => {
   const navigateToProductDetails = (item) => {
     navigations.navigate("Details", { item: item });
   };
+
   useEffect(() => {
     const filterData = () => {
       const keyword = searchKeyword.toLowerCase().trim();
