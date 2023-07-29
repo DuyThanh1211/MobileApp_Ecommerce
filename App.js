@@ -8,7 +8,7 @@
 // import { NavigationContainer } from "@react-navigation/native";
 // import Profile from "./src/components/navigations/Profile";
 // import Profilelogout from "./src/components/navigations/Profilelogout";
-// import Home from "./src/components/navigations/Home";
+
 // import EditProfile from "./src/components/navigations/EditProfile";
 // import { Profiler } from "react/cjs/react.production.min";
 // export default function App() {
@@ -29,34 +29,52 @@
 //   );
 // }
 
+// import { NavigationContainer } from "@react-navigation/native";
+// import { createNativeStackNavigator } from "@react-navigation/native-stack";
+// import * as SplashScreen from "expo-splash-screen";
+// import { useFonts } from "expo-font";
+// import { Details, Profile } from "./src/components/navigations";
+// import { useCallback } from "react";
+// import ProductPage from "./src/components/screen/ProductPage";
+// import { Favourite, Home, Profilelogout, Cart } from "../navigations";
+// const Stack = createNativeStackNavigator();
+// export default function App() {
+//   return (
+//     // <Profile />
+
+//     <NavigationContainer>
+//       <Stack.Navigator>
+//         <Stack.Screen name="Home" component={Home} />
+//         <Stack.Screen name="Product Details" component={ProductDetails} />
+//         <Stack.Screen name="List Product" component={ProductPage} />
+//       </Stack.Navigator>
+//     </NavigationContainer>
+//     // <NavigationContainer>
+//     //   <Stack.Navigator>
+//     //     <Stack.Screen name="List Product" component={ProductPage} />
+//     //     <Stack.Screen name="Details" component={ProductDetails} />
+//     //   </Stack.Navigator>
+//     // </NavigationContainer>
+
+//     // <ProductPage />
+//   );
+// }
+// // const styles = StyleSheet.create({});
+
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
-import { Details } from "./src/components/navigations";
+import { Details, Home } from "./src/components/navigations";
 import { useCallback } from "react";
 import BottomTabNavigation from "./src/components/navigations/BottomTabNavigation";
 import ProductPage from "./src/components/screen/ProductPage";
+import Login from "./src/components/Login";
+import Register from "./src/components/Register";
 const Stack = createNativeStackNavigator();
 export default function App() {
-  const [fontsLoaded] = useFonts({
-    black: require("./assets/fonts/Inter-Black.ttf"),
-    bold: require("./assets/fonts/Inter-Bold.ttf"),
-    regular: require("./assets/fonts/Inter-Regular.ttf"),
-    medium: require("./assets/fonts/Inter-Medium.ttf"),
-  });
-
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
-
-  if (!fontsLoaded) {
-    return null;
-  }
   return (
-    <NavigationContainer onReady={onLayoutRootView}>
+    <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
           name="BottomTabNavigation"
@@ -72,10 +90,24 @@ export default function App() {
             headerShown: false,
           }}
         />
+
         <Stack.Screen name="List Product" component={ProductPage} />
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Register"
+          component={Register}
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
-    // <ProductPage />
+    // <Home />
   );
 }
-const styles = StyleSheet.create({});

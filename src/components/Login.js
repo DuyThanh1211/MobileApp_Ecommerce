@@ -13,20 +13,28 @@ import React, { useEffect, useState } from "react";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import { apiApp, apiKey } from "../features/ApiKey";
 
+import { useNavigation } from "@react-navigation/core";
 const { width, height } = Dimensions.get("screen");
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [getpassword, setpasswordvi] = useState(false);
 
+  const navigate = useNavigation();
+  const navigateToRegister = () => {
+    navigate.navigate("Register");
+  };
   const handleLogin = () => {
     if (!username || !password) {
       Alert.alert("Lỗi", "Bạn hãy điền đầy đủ thông tin!");
       return;
     } else if (!username.endsWith("@gmail.com")) {
-      Alert.alert("Lỗi", "Bạn hãy điền email hợp lệ(phải bao gồm: @gmail.com)!");
+      Alert.alert(
+        "Lỗi",
+        "Bạn hãy điền email hợp lệ(phải bao gồm: @gmail.com)!"
+      );
       return;
-    }else if (username.trim() || !password.trim()) {
+    } else if (username.trim() || !password.trim()) {
       Alert.alert("Lỗi", "Bạn hãy điền đầy đủ thông tin!");
       return;
     }
@@ -83,7 +91,7 @@ const Login = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={navigate.goBack}>
           <View style={styles.IconLeft}>
             <AntDesign name="left" size={25} color="black" />
           </View>
@@ -181,7 +189,7 @@ const Login = () => {
           </View>
           <View style={styles.footerTextBot}>
             <Text style={styles.Textbot}> Dont't have an account?</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={navigateToRegister}>
               <Text style={[styles.Textbot, { color: "#35C2C1" }]}>
                 {" "}
                 Register Now
