@@ -27,17 +27,20 @@ const Register = () => {
     navigate.navigate("Login");
   };
 
-  function validateEmail(email) {
-    const emailRegex = /^[a-zA-Z]+[a-zA-Z0-9._%+-]+@gmail\.com$/;
-    return emailRegex.test(email);
-  }
-
   const handleRegister = () => {
     if (!fullname || !username || !password || !confirmPassword) {
       Alert.alert("Lỗi", "Vui lòng không để trống thông tin.");
       return;
+    }
+    else if (
+      username.includes(" ") ||
+      password.includes(" ") ||
+      confirmPassword.includes(" ")
+    ) {
+      Alert.alert("Lỗi", "Vui lòng không nhập space");
+      return;
     } else if (fullname.length < 10 || fullname.length > 50) {
-      Alert.alert("Lỗi", "Tên của bạn phải có từ 10 đến 50 ký tự.");
+      Alert.alert("Lỗi", "Tên của bạn phải có ít nhất từ 10 đến 50 ký tự.");
       return;
     } else if (fullname.trim().length === 0) {
       Alert.alert("Lỗi", "Vui lòng nhập tên đầy đủ");
@@ -45,29 +48,34 @@ const Register = () => {
     } else if (!/^[a-zA-Z0-9\s]+$/.test(fullname)) {
       Alert.alert("Lỗi", "Tên của bạn không được chứa ký tự đặc biệt.");
       return;
-    } else if (!validateEmail(username)) {
+    }  else if (/\d/.test(fullname)) {
+      Alert.alert("Lỗi", "Bạn hãy nhập tên hợp lệ( Không được có số và ký tự đặc biệt).");
+      return;
+    }else if (!username > 10) {
       Alert.alert(
         "Lỗi",
-        "Vui lòng điền email hợp lệ (phải bao gồm chữ cái và kết thúc bằng: @gmail.com)."
+        "Vui lòng nhập số điện thoại hợp lệ (gồm 10: chữ số)."
       );
       return;
-    } else if (password.length < 6 || password.length > 20) {
-      Alert.alert("Lỗi", "Mật khẩu của bạn phải có từ 6 đến 20 ký tự.");
+    }else if (username.toString()[0] !== '0') {
+      Alert.alert(
+        "Lỗi",
+        "Vui lòng nhập số điện thoại hợp lệ ."
+      );
+      return;
+    }else if (!/^[0-9\s]+$/.test(username)) {
+      Alert.alert("Lỗi", "Số điện thoại của bạn không hợp lệ(Không được chứa ký tự đặc biệt và chữ cái ).");
+      return;
+    } else if (password.length < 6 || password.length > 16) {
+      Alert.alert("Lỗi", "Mật khẩu của bạn phải có ít nhất từ 6 đến 16 ký tự.");
       return;
     } else if (password != confirmPassword) {
       Alert.alert("Lỗi", "Vui lòng điền mật khẩu trùng khớp.");
       return;
-    } else if (
-      username.includes(" ") ||
-      password.includes(" ") ||
-      confirmPassword.includes(" ")
-    ) {
-      Alert.alert("Lỗi", "Vui lòng không nhập space");
-      return;
     }
 
     fetch(
-      `https://api.backendless.com/${apiApp}/${apiKey}/data/Users?where=gmail%3D'${username}'`,
+      `https://api.backendless.com/${apiApp}/${apiKey}/data/Users?where=phonenumber%3D'${username}'`,
       {
         method: "GET",
         headers: {
@@ -81,7 +89,7 @@ const Register = () => {
         console.log(data);
         if (data.length > 0) {
           console.log("Tài Khoảng đã Tồn Tại");
-          Alert.alert("Lỗi", "Email đã tồn tại");
+          Alert.alert("Lỗi", "Tài khoảng đã tồn tại");
         } else {
           fetch(
             `https://api.backendless.com/${apiApp}/${apiKey}/users/register`,
@@ -92,7 +100,7 @@ const Register = () => {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                gmail: username,
+                phonenumber: username,
                 password: password,
                 confirmPassword: confirmPassword,
                 name: fullname,
@@ -140,7 +148,8 @@ const Register = () => {
         <View style={styles.bodyUser}>
           <TextInput
             style={styles.textinput}
-            placeholder="Email"
+            placeholder="Phone Number"
+            keyboardType="phone-pad"
             value={username}
             onChangeText={(text) => setUsername(text)}
           />

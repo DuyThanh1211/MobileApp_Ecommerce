@@ -33,10 +33,6 @@ const BottomTab = () => {
   );
 };
 
-const BottomTabItem = () => {
-  return <View></View>;
-};
-
 export default BottomTab;
 
 const styles = StyleSheet.create({

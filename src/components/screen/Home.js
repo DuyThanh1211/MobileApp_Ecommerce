@@ -4,12 +4,10 @@ import { COLORS, images, SIZES, FONTS } from "../constants";
 import { Feather } from "@expo/vector-icons";
 import { latestList, shoesList1, shoesList2 } from "../constants/data";
 import { apiKey, apiApp } from "../../features/ApiKey";
-import { useNavigation } from "@react-navigation/native";
 import BottomTab from "../navigations/BottomTab";
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'red'
   },
   logoContainer: {
     flexDirection: "row",
