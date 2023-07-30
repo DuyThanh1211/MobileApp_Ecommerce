@@ -45,6 +45,10 @@ const Cart = ({ route }) => {
     setItems(updatedItems);
   };
 
+  const removeAllItems = () => {
+    setItems([]);
+  };
+
   useEffect(() => {
     if (cartItems && cartItems.length > 0) {
       const updatedItems = [...items];
@@ -75,6 +79,11 @@ const Cart = ({ route }) => {
         <View style={styles.title}>
           <Text style={styles.titleText}>My Cart</Text>
         </View>
+        <TouchableOpacity style={styles.removeButton}>
+          <Text style={{ color: "white" }} onPress={removeAllItems}>
+            Remove All
+          </Text>
+        </TouchableOpacity>
         <View style={styles.productView}>
           <FlatList
             data={items}
@@ -140,7 +149,7 @@ const Cart = ({ route }) => {
             <Text style={styles.buttonText}>Checkout</Text>
           </TouchableOpacity>
         </View>
-        <BottomTab/>
+        <BottomTab />
       </View>
     </>
   );
@@ -151,19 +160,19 @@ export default Cart;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#efeff5",
+    backgroundColor: "black",
   },
   title: {
     paddingTop: 50,
     padding: 20,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "white",
-    borderBottomWidth: 2,
+    backgroundColor: "black",
   },
   titleText: {
     fontSize: 20,
     fontWeight: "700",
+    color: "white",
   },
   product: {
     alignSelf: "center",
@@ -181,9 +190,8 @@ const styles = StyleSheet.create({
     // backgroundColor: "yellow",
     width: "100%",
     height: 210,
-    borderTopWidth: 1,
     paddingTop: 10,
-    backgroundColor: "white",
+    backgroundColor: "black",
   },
   quantity: {
     flexDirection: "row",
@@ -198,18 +206,19 @@ const styles = StyleSheet.create({
     width: 330,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "black",
+    backgroundColor: "white",
     marginTop: 10,
     borderRadius: 5,
   },
   totalText: {
     fontWeight: "700",
     fontSize: 20,
+    color: "white",
   },
   buttonText: {
     fontSize: 20,
     fontWeight: "400",
-    color: "white",
+    color: "black",
   },
   totalNum: {
     fontWeight: "700",
@@ -225,7 +234,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   productView: {
-    marginBottom: 315,
+    marginBottom: 320,
   },
   detailProduct: {
     flex: 1,
@@ -257,5 +266,11 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     justifyContent: "space-between",
     flexDirection: "row",
+  },
+  removeButton: {
+    alignItems: "center",
+    width: 100,
+    paddingTop: 5,
+    marginLeft: 10,
   },
 });

@@ -31,7 +31,7 @@ const Profile = () => {
         </View>
       </View>
       <View style={styles.body}>
-        <TouchableOpacity onPress={() =>navigate.navigate("EditProfile")}>
+        <TouchableOpacity onPress={() => navigate.navigate("EditProfile")}>
           <View style={styles.bodyItem}>
             <AntDesign
               name="adduser"
@@ -103,7 +103,7 @@ const Profile = () => {
           </View>
         </TouchableOpacity>
       </View>
-      <BottomTab/>
+      <BottomTab />
     </View>
   );
 };

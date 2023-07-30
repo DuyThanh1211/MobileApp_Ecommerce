@@ -8,12 +8,11 @@ import {
   Dimensions,
   TextInput,
 } from "react-native";
-import { AntDesign} from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 const { width, height } = Dimensions.get("screen");
 
 const EditProfile = () => {
-
   const navigate = useNavigation();
   return (
     <View style={styles.container}>
@@ -132,11 +131,11 @@ const styles = StyleSheet.create({
     height: (height * 10) / 100,
     marginLeft: 20,
     marginRight: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   headerText: {
     fontSize: 30,
-    fontWeight: '900'
+    fontWeight: "900",
   },
 
   body: {
