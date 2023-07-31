@@ -39,8 +39,8 @@ const Register = () => {
     ) {
       Alert.alert("Lỗi", "Vui lòng không nhập space");
       return;
-    } else if (fullname.length < 10 || fullname.length > 50) {
-      Alert.alert("Lỗi", "Tên của bạn phải có ít nhất từ 10 đến 50 ký tự.");
+    } else if (fullname.length < 10 || fullname.length > 30) {
+      Alert.alert("Lỗi", "Tên của bạn phải có ít nhất từ 10 ký tự và tối đa 30 ký tự.");
       return;
     } else if (fullname.trim().length === 0) {
       Alert.alert("Lỗi", "Vui lòng nhập tên đầy đủ");
@@ -66,8 +66,8 @@ const Register = () => {
     }else if (!/^[0-9\s]+$/.test(username)) {
       Alert.alert("Lỗi", "Số điện thoại của bạn không hợp lệ(Không được chứa ký tự đặc biệt và chữ cái ).");
       return;
-    } else if (password.length < 6 || password.length > 16) {
-      Alert.alert("Lỗi", "Mật khẩu của bạn phải có ít nhất từ 6 đến 16 ký tự.");
+    } else if (password?.length < 6 || password?.length > 16) {
+      Alert.alert("Lỗi", "Mật khẩu mới của bạn phải có ít nhất 6 ký tự và tối đa là 16 ký tự.");
       return;
     } else if (password != confirmPassword) {
       Alert.alert("Lỗi", "Vui lòng điền mật khẩu trùng khớp.");

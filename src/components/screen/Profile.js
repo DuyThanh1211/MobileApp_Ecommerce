@@ -108,7 +108,7 @@ const Profile = () => {
           </View>
         </TouchableOpacity>
         <View style={styles.bodyborder}></View>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigate.navigate("Setting")}>
           <View style={styles.bodyItem2}>
             <Feather
               name="settings"
