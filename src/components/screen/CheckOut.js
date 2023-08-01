@@ -8,6 +8,7 @@ import {
   Dimensions,
   TextInput,
   Alert,
+  ScrollView,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -17,28 +18,55 @@ import { apiApp, apiKey } from "../../features/ApiKey";
 const { width, height } = Dimensions.get("screen");
 
 const CheckOut = () => {
+  const [isTienMat, setIsTienMat] = useState(false);
+  const [isThe, setIsThe] = useState(false);
+
+  const toggleTienMat = () => {
+    setIsTienMat(true);
+    setIsThe(false);
+  };
+
+  const toggleThe = () => {
+    setIsThe(true);
+    setIsTienMat(false);
+  };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View style={styles.titleHeader}>
-          <View style={styles.iconContainer}>
-            <TouchableOpacity>
-              <AntDesign
-                name="left"
-                size={23}
-                color="black"
-                style={styles.backHeader}
-              />
-            </TouchableOpacity>
-          </View>
+        <View style={styles.headerTitle}>
+          <TouchableOpacity>
+            <AntDesign
+              name="left"
+              size={25}
+              color="black"
+              style={styles.backHeader}
+            />
+          </TouchableOpacity>
+          <Text style={styles.textp}> Payment Methods</Text>
+        </View>
 
-          <View style={styles.paymenHeader}>
-            <Text style={styles.textTitle}> Payment Methods</Text>
-          </View>
+        <View style={styles.headerItem}>
+          <TouchableOpacity onPress={toggleTienMat}>
+            {isTienMat ? (
+              <AntDesign name="checksquare" size={24} color="black" />
+            ) : (
+              <AntDesign name="checksquareo" size={24} color="black" />
+            )}
+          </TouchableOpacity>
+          <Text style={styles.TextTT}>Thanh Toán Tiền Mặt</Text>
+
+          <TouchableOpacity onPress={toggleThe}>
+            {isThe ? (
+              <AntDesign name="checksquare" size={24} color="black" />
+            ) : (
+              <AntDesign name="checksquareo" size={24} color="black" />
+            )}
+          </TouchableOpacity>
+          <Text style={styles.TextTT}> Thanh Toán Thẻ</Text>
         </View>
       </View>
 
-      <View style={styles.body}>
+      <ScrollView style={styles.body}>
         <View style={styles.bodyItem}>
           <View style={styles.bodyItems}>
             <Image
@@ -47,95 +75,260 @@ const CheckOut = () => {
               }}
               style={styles.img}
             />
-            <Text style={styles.textItem}> Dress In Red</Text>
-            <Text style={styles.textItem}> $100.000</Text>
+            <View style={styles.item}>
+              <View style={styles.details}>
+                <Text style={styles.textItem}> Dress In Red</Text>
+                <View style={styles.tien}>
+                  <Text style={styles.textItemgiatien}> $100.000</Text>
+                  <Text style={styles.textItemsize}> Size M</Text>
+                </View>
+              </View>
+              <View style={styles.items}>
+                <Text style={styles.textItems}> Số Lượng: 1</Text>
+              </View>
+            </View>
           </View>
-          <Text style={styles.textItems}> Size M Color: Red</Text>
         </View>
+
         <View style={styles.bodyItem}>
           <View style={styles.bodyItems}>
-            <Text style={styles.textItem}> Shoes</Text>
-            <Text style={styles.textItem}> $230.00</Text>
+            <Image
+              source={{
+                uri: "https://static.nike.com/a/images/f_auto/dpr_1.0,cs_srgb/h_540,c_limit/864c2d5e-6134-486a-b964-543056d58307/nike-just-do-it.png",
+              }}
+              style={styles.img}
+            />
+            <View style={styles.item}>
+              <View style={styles.details}>
+                <Text style={styles.textItem}> Dress In Red</Text>
+                <View style={styles.tien}>
+                  <Text style={styles.textItemgiatien}> $100.000</Text>
+                  <Text style={styles.textItemsize}> Size M</Text>
+                </View>
+              </View>
+              <View style={styles.items}>
+                <Text style={styles.textItems}> Số Lượng: 1</Text>
+              </View>
+            </View>
           </View>
-          <Text style={styles.textItems}> Size 10M Color: Red</Text>
         </View>
+
         <View style={styles.bodyItem}>
           <View style={styles.bodyItems}>
-            <Text style={styles.textItem}> Glass</Text>
-            <Text style={styles.textItem}> $230.00</Text>
+            <Image
+              source={{
+                uri: "https://static.nike.com/a/images/f_auto/dpr_1.0,cs_srgb/h_540,c_limit/864c2d5e-6134-486a-b964-543056d58307/nike-just-do-it.png",
+              }}
+              style={styles.img}
+            />
+            <View style={styles.item}>
+              <View style={styles.details}>
+                <Text style={styles.textItem}> Dress In Red</Text>
+                <View style={styles.tien}>
+                  <Text style={styles.textItemgiatien}> $100.000</Text>
+                  <Text style={styles.textItemsize}> Size M</Text>
+                </View>
+              </View>
+              <View style={styles.items}>
+                <Text style={styles.textItems}> Số Lượng: 1</Text>
+              </View>
+            </View>
           </View>
-          <Text style={styles.textItems}> Size 10M Color: Red</Text>
+        </View>
+
+        <View style={styles.bodyItem}>
+          <View style={styles.bodyItems}>
+            <Image
+              source={{
+                uri: "https://static.nike.com/a/images/f_auto/dpr_1.0,cs_srgb/h_540,c_limit/864c2d5e-6134-486a-b964-543056d58307/nike-just-do-it.png",
+              }}
+              style={styles.img}
+            />
+            <View style={styles.item}>
+              <View style={styles.details}>
+                <Text style={styles.textItem}> Dress In Red</Text>
+                <View style={styles.tien}>
+                  <Text style={styles.textItemgiatien}> $100.000</Text>
+                  <Text style={styles.textItemsize}> Size M</Text>
+                </View>
+              </View>
+              <View style={styles.items}>
+                <Text style={styles.textItems}> Số Lượng: 1</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.bodyItem}>
+          <View style={styles.bodyItems}>
+            <Image
+              source={{
+                uri: "https://static.nike.com/a/images/f_auto/dpr_1.0,cs_srgb/h_540,c_limit/864c2d5e-6134-486a-b964-543056d58307/nike-just-do-it.png",
+              }}
+              style={styles.img}
+            />
+            <View style={styles.item}>
+              <View style={styles.details}>
+                <Text style={styles.textItem}> Dress In Red</Text>
+                <View style={styles.tien}>
+                  <Text style={styles.textItemgiatien}> $100.000</Text>
+                  <Text style={styles.textItemsize}> Size M</Text>
+                </View>
+              </View>
+              <View style={styles.items}>
+                <Text style={styles.textItems}> Số Lượng: 1</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      </ScrollView>
+
+      <View style={styles.footer}>
+        <View style={styles.textto}>
+          <Text style={styles.TextTotal}> Total: $2000</Text>
+        </View>
+        <View style={styles.Buttons}>
+          <TouchableOpacity>
+            <View style={styles.footerButton}>
+              <Text style={styles.TextButton}> Check Out</Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
-      <View style={styles.footer}></View>
     </View>
   );
 };
 
 export default CheckOut;
 
-<<<<<<< HEAD
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
   },
-
   header: {
-    width: (width * 90) / 100,
+    width: (width * 95) / 100,
     height: (height * 25) / 100,
     alignItems: "center",
     borderBottomWidth: 1,
+    backgroundColor: "blue",
   },
-  titleHeader: {
-    width: (width * 90) / 100,
-    height: (height * 7) / 100,
-    marginTop: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  iconContainer: {
+  headerTitle: {
     justifyContent: "center",
-    width: 40,
+    marginTop: 20,
+    width: 350,
   },
-  paymenHeader: {
-    flex: 1,
-    marginLeft: -20,
+  iconheader: {
     alignItems: "center",
-    marginHorizontal: 20,
   },
-  textTitle: {
+  textp: {
+    marginHorizontal: 80,
     fontSize: 20,
     fontWeight: "bold",
+    marginTop: -25,
+  },
+  backHeader: {
+    marginHorizontal: 10,
+  },
+  headerItem: {
+    backgroundColor: "red",
+    flex: 1,
+    flexDirection: "row",
+  },
+  check: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  TextTT: {
+    fontSize: 15,
+    fontWeight: "500",
   },
 
   body: {
-    width: (width * 90) / 100,
-    height: (height * 55) / 100,
+    width: (width * 95) / 100,
+    height: height,
+    marginBottom: 60,
   },
   bodyItem: {
-    height: 80,
+    marginTop: 10,
+    borderWidth: 1,
+    borderRadius: 5,
   },
-  textItem: {
-    fontSize: 20,
-    fontWeight: "bold",
+  tien: {
+    marginTop: 5,
   },
-  textItems: {
-    fontSize: 13,
-    fontWeight: "200",
+  details: {
+    flex: 1,
   },
   bodyItems: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    padding: 5,
+  },
+  textItem: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  textItemgiatien: {
+    fontSize: 13,
+    fontWeight: "bold",
+  },
+  textItemsize: {
+    fontSize: 11,
+    fontWeight: "200",
+  },
+  textItems: {
+    fontSize: 15,
+    fontWeight: "bold",
+  },
+  items: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
+  },
+  item: {
+    flex: 1,
+    padding: 10,
+  },
+  img: {
+    width: 90,
+    height: 120,
   },
 
   footer: {
-    width: (width * 90) / 100,
-    height: (height * 20) / 100,
-    // backgroundColor: "pink",
+    position: "absolute",
+    width: width,
+    bottom: 0,
+    flexDirection: "row",
+  },
+  footerButton: {
+    width: 150,
+    height: 50,
+    backgroundColor: "black",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  TextButton: {
+    color: "white",
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  Buttons: {
+    flex: 1,
+    alignItems: "flex-end",
+  },
+  TextTotal: {
+    color: "black",
+    fontSize: 20,
+    fontWeight: "600",
+  },
+  textto: {
+    justifyContent: "center",
+    paddingLeft: 10,
+  },
+  containerHeader: {
+    backgroundColor: "red",
+    flex: 1,
+    flexDirection: "row",
   },
 });
-=======
-const styles = StyleSheet.create({});
->>>>>>> c0ba9a2f0e27a35a8935a47c616e5ae3601ff282

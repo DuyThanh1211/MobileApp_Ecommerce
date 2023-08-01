@@ -109,32 +109,14 @@ const Profile = () => {
             <AntDesign
               name="right"
               size={24}
-              color="black"
-              style={styles.backHeader}
-            />
-          </View>
-        </TouchableOpacity>
-        <View style={styles.bodyborder}></View>
-        <TouchableOpacity onPress={() => navigate.navigate("Setting")}>
-          <View style={styles.bodyItem2}>
-            <Feather
-              name="settings"
-              size={28}
-              color="black"
-              style={styles.bodyIcon}
-            />
-            <Text style={styles.textBodyItem3}> Setting</Text>
-            <AntDesign
-              name="right"
-              size={24}
-              color="black"
+              color="white"
               style={styles.backHeader}
             />
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button}>
-          <View style={styles.bodyItem}>
+        <TouchableOpacity style={styles.button} onPress={() => navigate.navigate("Setting")}>
+          <View style={styles.bodyItem} >
             <Feather
               name="settings"
               size={28}
