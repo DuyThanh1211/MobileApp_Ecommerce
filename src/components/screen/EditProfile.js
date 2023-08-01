@@ -11,13 +11,14 @@ import {
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { getData } from "../../features/MyA";
+import { getData, storeData } from "../../features/MyA";
 import { apiApp, apiKey } from "../../features/ApiKey";
 
 const { width, height } = Dimensions.get("screen");
 
 const EditProfile = () => {
-  const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
+  const [showPasswordConfirmation, setShowPasswordConfirmation] =
+    useState(false);
   const navigate = useNavigation();
   const [userProfile, setUserProfile] = useState(null);
   const [newfullname, setNewfullname] = useState("");
@@ -74,18 +75,20 @@ const EditProfile = () => {
     } else if (!newAddress) {
       Alert.alert("Lỗi", "Vui lòng không để trống địa chỉ ");
       return;
-    }
-    else if (!/^[a-zA-Z0-9\s]+$/.test(newAddress)) {
-      Alert.alert("Lỗi", "Địa chỉ của bạn không được chứa ký tự đặc biệt.");
+    } else if (newAddress.length < 8 || newAddress.length > 50) {
+      Alert.alert(
+        "Lỗi",
+        "Địa chỉ của bạn phải có ít nhất từ 8 ký tự và tối đa 50 ký tự."
+      );
       return;
-    }else if (newAddress.length < 8 || newAddress.length > 50) {
-      Alert.alert("Lỗi", "Địa chỉ của bạn phải có ít nhất từ 8 ký tự và tối đa 50 ký tự.");
-      return;
-    }  else if (newAddress.trim().length === 0) {
+    } else if (newAddress.trim().length === 0) {
       Alert.alert("Lỗi", "Vui lòng nhập địa chỉ đầy đủ");
       return;
     } else if (newfullname.length < 10 || newfullname.length > 30) {
-      Alert.alert("Lỗi", "Tên của bạn phải có ít nhất từ 10 ký tự và tối đa 30 ký tự.");
+      Alert.alert(
+        "Lỗi",
+        "Tên của bạn phải có ít nhất từ 10 ký tự và tối đa 30 ký tự."
+      );
       return;
     } else if (newfullname.trim().length === 0) {
       Alert.alert("Lỗi", "Vui lòng nhập tên đầy đủ");
@@ -99,30 +102,35 @@ const EditProfile = () => {
         "Bạn hãy nhập tên hợp lệ( Không được có số và ký tự đặc biệt)."
       );
       return;
-    } else if (/\d/.test(newAddress)) {
+    } else if (!/^[\w\s/]*$/.test(newAddress)) {
       Alert.alert(
         "Lỗi",
-        "Bạn hãy nhập địa chỉ hợp lệ( Không được có số và ký tự đặc biệt)."
+        "Địa chỉ của bạn không hợp lệ. Vui lòng chỉ nhập số, chữ cái hoặc dấu '/'"
       );
       return;
     }
 
-  const hasChangedInfo =
-    newfullname !== userProfile.name ||
-    newAddress !== userProfile.address;
+    const hasChangedInfo =
+      newfullname !== userProfile.name || newAddress !== userProfile.address;
 
-  if (hasChangedInfo) {
-    setShowPasswordConfirmation(true);
-  } else {
-    performUpdate();
-  }
-};
+    if (hasChangedInfo) {
+      setShowPasswordConfirmation(true);
+    } else {
+      performUpdate();
+    }
+  };
 
-  const performUpdate = () => {
+  const performUpdate = async () => {
     const updatedUserData = {
       name: newfullname,
       address: newAddress,
     };
+
+    try {
+      await storeData("address", newAddress);
+    } catch (error) {
+      console.error("Error saving address to AsyncStorage:", error);
+    }
 
     fetch(`https://api.backendless.com/${apiApp}/${apiKey}/data/Users/${id}`, {
       method: "PUT",
@@ -135,7 +143,8 @@ const EditProfile = () => {
       .then((response) => response.json())
       .then((data) => {
         Alert.alert("Cập nhật thông tin thành công!");
-        navigate.navigate("Profile" );
+
+        navigate.navigate("Profile");
       })
       .catch((error) => {
         console.error("Lỗi:", error);

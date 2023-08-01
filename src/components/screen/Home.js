@@ -7,6 +7,7 @@ import {
   FlatList,
   TouchableOpacity,
   StyleSheet,
+  StatusBar,
 } from "react-native";
 import { apiKey, apiApp } from "../../features/ApiKey";
 import BottomTab from "../navigations/BottomTab";
@@ -94,7 +95,7 @@ const Home = () => {
           <Image source={{ uri: item.Image }} style={styles.productImage} />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => navigateToProductDetails()}>
+        <TouchableOpacity onPress={() => navigateToProductDetails(item)}>
           <Text style={styles.productName}>{item.TenSanPham}</Text>
         </TouchableOpacity>
 
@@ -128,6 +129,7 @@ const Home = () => {
 
   return (
     <View style={styles.container}>
+      <StatusBar />
       <View style={styles.logoContainer}>
         <Text style={styles.logo}>Home</Text>
       </View>

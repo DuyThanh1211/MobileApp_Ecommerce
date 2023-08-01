@@ -222,39 +222,6 @@ const Details = () => {
   );
 };
 
-// const handleAddToBag = async () => {
-//   const newItem = {
-//     objectId: item.objectId,
-//     TenSanPham: item.TenSanPham || "",
-//     GiaTien: item.GiaTien || 0,
-//     Image: item.Image,
-//     selectedSize: selectedSize,
-//     quantity: quantity,
-//   };
-
-//   try {
-//     setCartItems([...cartItems, newItem]);
-
-//     await AsyncStorage.setItem(
-//       "cartItems",
-//       JSON.stringify([...cartItems, newItem])
-//     );
-//     console.log("New cart items:", [...cartItems, newItem]);
-//   } catch (error) {
-//     console.log("Error adding item to cart: ", error);
-//   }
-//   navigate.navigate("Cart");
-// };
-
-// useEffect(() => {
-//   if (cartItems.length > 0) {
-//     navigation.navigate("Cart", { cartItems: cartItems });
-//   }
-// }, [cartItems]);
-// useEffect(() => {
-//   console.log("Updated cart items:", cartItems);
-// }, [cartItems]);
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

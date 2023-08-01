@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
+  TextInput,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { getData } from "../../features/MyA";
@@ -13,13 +14,12 @@ import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { apiApp, apiKey } from "../../features/ApiKey";
 
-const { width, height } = Dimensions.get("screen");
-
 const CheckOut = () => {
-  const [isTienMat, setIsTienMat] = useState(false);
+  const [isTienMat, setIsTienMat] = useState(true);
   const [isThe, setIsThe] = useState(false);
   const [cartItems, setCartItems] = useState([]);
-
+  const [text, onChangeText] = React.useState("");
+  const [totalPrice, setTotalPrice] = useState(0);
   const navigation = useNavigation();
 
   const toggleTienMat = () => {
@@ -32,9 +32,21 @@ const CheckOut = () => {
     setIsTienMat(false);
   };
 
-  useEffect(() => {
-    retrieveCartItems();
-  }, []);
+  const retrieveAddress = async () => {
+    try {
+      const storedAddress = await getData("address");
+      onChangeText(storedAddress || "");
+    } catch (error) {
+      console.error("Error retrieving address from AsyncStorage:", error);
+    }
+  };
+
+  const calculateTotalPrice = () => {
+    const totalPrice = cartItems.reduce((total, item) => {
+      return total + item.item.GiaTien * item.quantity;
+    }, 0);
+    setTotalPrice(totalPrice);
+  };
 
   const retrieveCartItems = async () => {
     try {
@@ -63,7 +75,7 @@ const CheckOut = () => {
         };
 
         const response = await fetch(
-          "https://api.backendless.com/BF32422B-2D6B-81ED-FF35-CD7D59024B00/D0672C31-F3A5-4156-BFE7-6439A190F7BA/data/LichSuMuaHang",
+          `https://api.backendless.com/${apiApp}/${apiKey}/data/LichSuMuaHang`,
           {
             method: "POST",
             headers: {
@@ -94,71 +106,78 @@ const CheckOut = () => {
       <Image source={{ uri: item.item.Image }} style={styles.productImage} />
       <View style={styles.detailProduct}>
         <Text style={styles.nameProduct}>{item.item.TenSanPham}</Text>
-        <Text>${item.item.GiaTien}</Text>
-        <Text>Size: {item.size}</Text>
-        <Text>Quantity: {item.quantity}</Text>
+        <Text style={styles.priceProduct}>${item.item.GiaTien}</Text>
+        <Text style={styles.sizeProduct}>Size: {item.size}</Text>
+        <Text style={styles.quantityProduct}>Quantity: {item.quantity}</Text>
       </View>
     </View>
   );
 
+  useEffect(() => {
+    retrieveCartItems();
+  }, []);
+
+  useEffect(() => {
+    calculateTotalPrice();
+  }, [cartItems]);
+
+  useEffect(() => {
+    retrieveAddress();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View style={styles.headerTitle}>
-          <TouchableOpacity>
-            <AntDesign
-              name="left"
-              size={25}
-              color="black"
-              style={styles.backHeader}
-            />
-          </TouchableOpacity>
-          <Text style={styles.textp}> Payment Methods</Text>
-        </View>
+        <TouchableOpacity style={styles.backHeader} onPress={navigation.goBack}>
+          <AntDesign name="arrowleft" size={25} color="white" />
+        </TouchableOpacity>
+        <Text style={styles.textHeader}>Payment Methods</Text>
+      </View>
 
-        <View style={styles.headerItem}>
+      <View style={styles.payment}>
+        <View style={styles.paymentCheckBox}>
           <TouchableOpacity onPress={toggleTienMat}>
             {isTienMat ? (
-              <AntDesign name="checksquare" size={24} color="black" />
+              <AntDesign name="checksquare" size={24} color="white" />
             ) : (
-              <AntDesign name="checksquareo" size={24} color="black" />
+              <AntDesign name="checksquareo" size={24} color="white" />
             )}
           </TouchableOpacity>
-          <Text style={styles.TextTT}>Thanh Toán Tiền Mặt</Text>
+          <Text style={styles.textPay}>Thanh Toán Tiền Mặt</Text>
+        </View>
 
+        <View style={styles.paymentCheckBox}>
           <TouchableOpacity onPress={toggleThe}>
             {isThe ? (
-              <AntDesign name="checksquare" size={24} color="black" />
+              <AntDesign name="checksquare" size={24} color="white" />
             ) : (
-              <AntDesign name="checksquareo" size={24} color="black" />
+              <AntDesign name="checksquareo" size={24} color="white" />
             )}
           </TouchableOpacity>
-          <Text style={styles.TextTT}> Thanh Toán Thẻ</Text>
+          <Text style={styles.textPay}>Thanh Toán Thẻ</Text>
         </View>
       </View>
+      <TextInput
+        style={styles.input}
+        onChangeText={onChangeText}
+        value={text}
+        placeholder="Address..."
+        placeholderTextColor={"white"}
+      />
 
-      <View style={styles.body}>
-        <FlatList
-          data={cartItems}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => `${item.item.objectId}-${index}`}
-        />
-      </View>
+      <FlatList
+        data={cartItems}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => `${item.item.objectId}-${index}`}
+      />
 
       <View style={styles.footer}>
-        <View style={styles.textto}>
-          <Text style={styles.TextTotal}> Total: $2000</Text>
-        </View>
-        <View style={styles.Buttons}>
-          <TouchableOpacity>
-            <View style={styles.footerButton}>
-              <Text style={styles.TextButton} onPress={handleCheckOut}>
-                {" "}
-                Check Out
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </View>
+        <Text style={styles.textTotal}> Total: ${totalPrice.toFixed(2)}</Text>
+        <TouchableOpacity style={styles.footerButton}>
+          <Text style={styles.textButton} onPress={handleCheckOut}>
+            Pay now
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -167,132 +186,96 @@ const CheckOut = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
+    backgroundColor: "black",
   },
   header: {
-    width: (width * 95) / 100,
-    height: (height * 25) / 100,
-    alignItems: "center",
-    borderBottomWidth: 1,
-    backgroundColor: "blue",
-  },
-  headerTitle: {
+    flexDirection: "row",
+    alignItems: "flex-end",
     justifyContent: "center",
-    marginTop: 20,
-    width: 350,
-  },
-  iconheader: {
-    alignItems: "center",
-  },
-  textp: {
-    marginHorizontal: 80,
-    fontSize: 20,
-    fontWeight: "bold",
-    marginTop: -25,
+    paddingTop: 50,
+    paddingBottom: 10,
   },
   backHeader: {
-    marginHorizontal: 10,
-  },
-  headerItem: {
-    backgroundColor: "red",
-    flex: 1,
-    flexDirection: "row",
-  },
-  check: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  TextTT: {
-    fontSize: 15,
-    fontWeight: "500",
-  },
-
-  body: {
-    width: (width * 95) / 100,
-    height: height,
-    marginBottom: 60,
-  },
-  bodyItem: {
-    marginTop: 10,
-    borderWidth: 1,
-    borderRadius: 5,
-  },
-  tien: {
-    marginTop: 5,
-  },
-  details: {
-    flex: 1,
-  },
-  bodyItems: {
-    flexDirection: "row",
-    padding: 5,
-  },
-  textItem: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  textItemgiatien: {
-    fontSize: 13,
-    fontWeight: "bold",
-  },
-  textItemsize: {
-    fontSize: 11,
-    fontWeight: "200",
-  },
-  textItems: {
-    fontSize: 15,
-    fontWeight: "bold",
-  },
-  items: {
-    flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "flex-end",
-  },
-  item: {
-    flex: 1,
-    padding: 10,
-  },
-  img: {
-    width: 90,
-    height: 120,
-  },
-
-  footer: {
     position: "absolute",
-    width: width,
-    bottom: 0,
+    left: 10,
+    bottom: 8,
+  },
+  textHeader: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "white",
+  },
+  payment: {
     flexDirection: "row",
+    paddingVertical: 17,
+    paddingHorizontal: 20,
+    justifyContent: "space-between",
+  },
+  paymentCheckBox: {
+    flexDirection: "row",
+  },
+  textPay: {
+    color: "white",
+    marginLeft: 5,
+    alignSelf: "center",
+  },
+  input: {
+    padding: 10,
+    paddingLeft: 15,
+    borderWidth: 1,
+    borderColor: "white",
+    marginHorizontal: 20,
+    marginBottom: 10,
+    borderRadius: 20,
+    color: "white",
+  },
+
+  product: {
+    padding: 10,
+    flexDirection: "row",
+  },
+
+  productImage: {
+    width: 100,
+    height: 130,
+    borderRadius: 10,
+  },
+  detailProduct: {
+    padding: 20,
+  },
+  footer: {
+    backgroundColor: "white",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  nameProduct: {
+    color: "white",
+  },
+  priceProduct: {
+    color: "white",
+  },
+  sizeProduct: {
+    color: "white",
+  },
+  quantityProduct: {
+    color: "white",
+  },
+  textTotal: {
+    alignSelf: "center",
+    paddingLeft: 15,
+    fontSize: 18,
+    fontWeight: "700",
   },
   footerButton: {
-    width: 150,
-    height: 50,
-    backgroundColor: "black",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: "green",
+    padding: 20,
+    paddingLeft: 30,
+    paddingRight: 30,
   },
-  TextButton: {
-    color: "white",
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  Buttons: {
-    flex: 1,
-    alignItems: "flex-end",
-  },
-  TextTotal: {
-    color: "black",
-    fontSize: 20,
+  textButton: {
+    fontSize: 15,
     fontWeight: "600",
-  },
-  textto: {
-    justifyContent: "center",
-    paddingLeft: 10,
-  },
-  containerHeader: {
-    backgroundColor: "red",
-    flex: 1,
-    flexDirection: "row",
+    color: "white",
   },
 });
 
