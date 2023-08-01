@@ -13,6 +13,8 @@ import Profile from "../screen/Profile";
 import EditProfile from "../screen/EditProfile";
 import WomenProduct from "../screen/WomenProduct";
 import MenProduct from "../screen/MenProduct";
+import History from "../screen/History";
+import CheckOut from "../screen/CheckOut";
 
 const Stack = createNativeStackNavigator();
 function Navigation() {
@@ -30,6 +32,8 @@ function Navigation() {
         <Stack.Screen name="Details" component={Details} />
         <Stack.Screen name="Cart" component={Cart} />
         <Stack.Screen name="Profile" component={Profile} />
+        <Stack.Screen name="History" component={History} />
+        <Stack.Screen name="CheckOut" component={CheckOut} />
         <Stack.Screen name="EditProfile" component={EditProfile} />
       </Stack.Navigator>
     </NavigationContainer>
