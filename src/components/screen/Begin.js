@@ -12,7 +12,7 @@ const Begin = () => {
   const navigate = useNavigation();
 
   const navigateToLogin = () => {
-    navigate.navigate("Login");
+    navigate.navigate("CheckOut");
   };
   return (
     <View style={styles.container}>

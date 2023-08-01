@@ -12,6 +12,7 @@ import Cart from "../screen/Cart";
 import Profile from "../screen/Profile";
 import EditProfile from "../screen/EditProfile";
 import Setting from "../screen/Setting";
+import CheckOut from "../screen/CheckOut";
 import { useFonts } from "expo-font";
 import { useCallback } from "react";
 
@@ -47,6 +48,7 @@ function Navigation() {
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="EditProfile" component={EditProfile} />
         <Stack.Screen name="Setting" component={Setting} />
+        <Stack.Screen name="CheckOut" component={CheckOut} />
       </Stack.Navigator>
     </NavigationContainer>
   );

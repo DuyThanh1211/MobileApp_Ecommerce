@@ -65,7 +65,7 @@ const Login = () => {
             .then((data) => {
               if (data.objectId) {
                 console.log("objectId:", data.objectId);
-                storeData('idUser',data.objectId) 
+                storeData('idUser',data.objectId);
                 navigate.navigate("Home");
               } else {
                 console.log("Sai Mật Khẩu");

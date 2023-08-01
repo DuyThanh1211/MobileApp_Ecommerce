@@ -90,6 +90,7 @@ const Register = () => {
         if (data.length > 0) {
           console.log("Tài Khoảng đã Tồn Tại");
           Alert.alert("Lỗi", "Tài khoảng đã tồn tại");
+          return;
         } else {
           fetch(
             `https://api.backendless.com/${apiApp}/${apiKey}/users/register`,

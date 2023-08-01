@@ -78,8 +78,8 @@ const EditProfile = () => {
     else if (!/^[a-zA-Z0-9\s]+$/.test(newAddress)) {
       Alert.alert("Lỗi", "Địa chỉ của bạn không được chứa ký tự đặc biệt.");
       return;
-    }else if (newAddress.length < 10 || newAddress.length > 50) {
-      Alert.alert("Lỗi", "Địa chỉ của bạn phải có ít nhất từ 10 ký tự và tối đa 50 ký tự.");
+    }else if (newAddress.length < 8 || newAddress.length > 50) {
+      Alert.alert("Lỗi", "Địa chỉ của bạn phải có ít nhất từ 8 ký tự và tối đa 50 ký tự.");
       return;
     }  else if (newAddress.trim().length === 0) {
       Alert.alert("Lỗi", "Vui lòng nhập địa chỉ đầy đủ");
@@ -135,12 +135,7 @@ const EditProfile = () => {
       .then((response) => response.json())
       .then((data) => {
         Alert.alert("Cập nhật thông tin thành công!");
-        navigate.navigate("Profile", {
-          updatedData: {
-            name: newfullname,
-            address: newAddress,
-          },
-        });
+        navigate.navigate("Profile" );
       })
       .catch((error) => {
         console.error("Lỗi:", error);
