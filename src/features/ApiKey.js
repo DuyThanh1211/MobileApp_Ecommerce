@@ -4,4 +4,3 @@
 export const apiApp = "BF32422B-2D6B-81ED-FF35-CD7D59024B00";
 
 export const apiKey = "D0672C31-F3A5-4156-BFE7-6439A190F7BA";
-

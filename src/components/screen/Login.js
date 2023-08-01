@@ -29,10 +29,7 @@ const Login = () => {
     if (!username.trim() || !password.trim()) {
       Alert.alert("Lỗi", "Bạn hãy điền đầy đủ thông tin để có thể mua hàng!");
       return;
-    } else if (
-      username.includes(" ") ||
-      password.includes(" ") 
-    ) {
+    } else if (username.includes(" ") || password.includes(" ")) {
       Alert.alert("Lỗi", "Vui lòng không nhập space");
       return;
     }

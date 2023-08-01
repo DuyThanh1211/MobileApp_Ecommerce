@@ -1,17 +1,152 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { FlatList } from "react-native-gesture-handler";
 import BottomTab from "../navigations/BottomTab";
+import { getData, storeData } from "../../features/MyA";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 
-const Cart = ({ route }) => {
-  const { cartItems } = route.params ?? {};
+const Cart = () => {
+  const [cartItems, setCartItems] = useState([]);
+  const navigation = useNavigation();
+  const isFocused = useIsFocused();
 
-  const [items, setItems] = useState([]);
+  useEffect(() => {
+    getCartItems();
+  }, []);
+
+  useEffect(() => {
+    if (isFocused) {
+      refreshCartItems();
+    }
+  }, [isFocused]);
+
+  const refreshCartItems = async () => {
+    try {
+      const cartItemsJSON = await getData("shoppingBagItems");
+      if (cartItemsJSON) {
+        const cartItemsArray = JSON.parse(cartItemsJSON);
+        setCartItems(cartItemsArray);
+      }
+    } catch (error) {
+      console.error("Error retrieving cart items from AsyncStorage:", error);
+    }
+  };
+
+  const updateCartItemsInAsyncStorage = async (cartItems) => {
+    try {
+      const cartItemsJSON = JSON.stringify(cartItems);
+      await storeData("shoppingBagItems", cartItemsJSON);
+    } catch (error) {
+      console.error("Error updating cart items in AsyncStorage:", error);
+    }
+  };
+
+  const getCartItems = async () => {
+    try {
+      const cartItemsJSON = await getData("shoppingBagItems");
+      if (cartItemsJSON) {
+        const cartItemsArray = JSON.parse(cartItemsJSON);
+        setCartItems(cartItemsArray);
+      }
+    } catch (error) {
+      console.error("Error retrieving cart items from AsyncStorage:", error);
+    }
+  };
+
+  const renderCartItem = ({ item, index }) => {
+    const navigateToDetails = async () => {
+      try {
+        await storeData("selectedItem", JSON.stringify(item.item));
+        navigation.navigate("Details");
+      } catch (error) {
+        console.error("Error storing selected product:", error);
+      }
+    };
+    const increaseQuantity = () => {
+      const updatedCartItems = [...cartItems];
+      updatedCartItems[index].quantity += 1;
+      setCartItems(updatedCartItems);
+      updateCartItemsInAsyncStorage(updatedCartItems);
+    };
+
+    const decreaseQuantity = () => {
+      const updatedCartItems = [...cartItems];
+      if (updatedCartItems[index].quantity > 1) {
+        updatedCartItems[index].quantity -= 1;
+        setCartItems(updatedCartItems);
+        updateCartItemsInAsyncStorage(updatedCartItems);
+      }
+    };
+
+    const removeItem = () => {
+      const updatedCartItems = [...cartItems];
+      updatedCartItems.splice(index, 1);
+      setCartItems(updatedCartItems);
+      updateCartItemsInAsyncStorage(updatedCartItems);
+    };
+
+    return (
+      <View style={styles.product}>
+        <TouchableWithoutFeedback onPress={navigateToDetails}>
+          <Image
+            source={{ uri: item.item.Image }}
+            style={styles.productImage}
+          />
+        </TouchableWithoutFeedback>
+        <View style={styles.detailProduct}>
+          <TouchableOpacity onPress={navigateToDetails}>
+            <Text style={styles.nameProduct}>{item.item.TenSanPham}</Text>
+          </TouchableOpacity>
+          <View style={styles.priceSize}>
+            <Text style={{ fontWeight: "600", fontSize: 20 }}>
+              ${item.item.GiaTien}
+            </Text>
+            <Text>Size: {item.size}</Text>
+          </View>
+
+          <View style={styles.buttonQuantity}>
+            <TouchableOpacity onPress={() => decreaseQuantity()}>
+              <Ionicons name="remove" size={14} />
+            </TouchableOpacity>
+            <Text
+              style={{
+                fontSize: 13,
+                fontWeight: "600",
+                marginLeft: 10,
+                marginRight: 10,
+              }}
+            >
+              {item.quantity}
+            </Text>
+            <TouchableOpacity onPress={() => increaseQuantity()}>
+              <Ionicons name="add" size={14} />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View>
+          <TouchableOpacity
+            style={styles.remove}
+            onPress={() => removeItem(index)}
+          >
+            <Ionicons name="close" size={24} />
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
 
   const TotalQuantity = () => {
     let totalQuantity = 0;
-    items.forEach((item) => {
+    cartItems.forEach((item) => {
       totalQuantity += item.quantity;
     });
     return totalQuantity;
@@ -19,55 +154,32 @@ const Cart = ({ route }) => {
 
   const TotalPrice = () => {
     let totalPrice = 0;
-    items.forEach((item) => {
-      totalPrice += item.GiaTien * item.quantity;
+    cartItems.forEach((item) => {
+      totalPrice += item.item.GiaTien * item.quantity;
     });
     return totalPrice.toFixed(2);
   };
 
-  const increaseQuantity = (index) => {
-    const updatedItems = [...items];
-    updatedItems[index].quantity += 1;
-    setItems(updatedItems);
+  const removeAllItems = () => {
+    setCartItems([]);
+    updateCartItemsInAsyncStorage([]);
   };
 
-  const decreaseQuantity = (index) => {
-    const updatedItems = [...items];
-    if (updatedItems[index].quantity > 1) {
-      updatedItems[index].quantity -= 1;
-      setItems(updatedItems);
-    }
-  };
+  // useEffect(() => {
+  //   const fetchCartItems = async () => {
+  //     try {
+  //       const cartItemsString = await AsyncStorage.getItem("cartItems");
+  //       if (cartItemsString) {
+  //         const cartItems = JSON.parse(cartItemsString);
+  //         setItems(cartItems);
+  //       }
+  //     } catch (error) {
+  //       console.log("Error fetching cart items: ", error);
+  //     }
+  //   };
 
-  const removeItem = (index) => {
-    const updatedItems = [...items];
-    updatedItems.splice(index, 1);
-    setItems(updatedItems);
-  };
-
-  useEffect(() => {
-    if (cartItems && cartItems.length > 0) {
-      const updatedItems = [...items];
-
-      cartItems.forEach((item) => {
-        const existingItem = updatedItems.find(
-          (updatedItem) =>
-            updatedItem.objectId === item.objectId &&
-            updatedItem.selectedSize === item.selectedSize
-        );
-
-        if (existingItem) {
-          existingItem.quantity += item.quantity;
-        } else {
-          updatedItems.push({ ...item, quantity: item.quantity });
-        }
-      });
-
-      setItems(updatedItems);
-    }
-  }, [cartItems]);
-
-  console.log(items);
+  //   fetchCartItems();
+  // }, []);
 
   return (
     <>
@@ -75,56 +187,21 @@ const Cart = ({ route }) => {
         <View style={styles.title}>
           <Text style={styles.titleText}>My Cart</Text>
         </View>
+        <TouchableOpacity style={styles.removeButton}>
+          <Text style={{ color: "white" }} onPress={removeAllItems}>
+            Remove All
+          </Text>
+        </TouchableOpacity>
         <View style={styles.productView}>
-          <FlatList
-            data={items}
-            keyExtractor={(item, index) => index}
-            renderItem={({ item, index }) => (
-              <View key={index} style={styles.product}>
-                <Image
-                  source={{ uri: item.Image }}
-                  style={styles.productImage}
-                />
-                <View style={styles.detailProduct}>
-                  <Text style={styles.nameProduct}>{item.TenSanPham}</Text>
-                  <View style={styles.priceSize}>
-                    <Text style={{ fontWeight: "600", fontSize: 20 }}>
-                      ${item.GiaTien}
-                    </Text>
-                    <Text>Size: {item.selectedSize}</Text>
-                  </View>
-
-                  <View style={styles.buttonQuantity}>
-                    <TouchableOpacity onPress={() => decreaseQuantity(index)}>
-                      <Ionicons name="remove" size={14} />
-                    </TouchableOpacity>
-                    <Text
-                      style={{
-                        fontSize: 13,
-                        fontWeight: "600",
-                        marginLeft: 10,
-                        marginRight: 10,
-                      }}
-                    >
-                      {item.quantity}
-                    </Text>
-                    <TouchableOpacity onPress={() => increaseQuantity(index)}>
-                      <Ionicons name="add" size={14} />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-
-                <View>
-                  <TouchableOpacity
-                    style={styles.remove}
-                    onPress={() => removeItem(index)}
-                  >
-                    <Ionicons name="close" size={24} />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            )}
-          />
+          {cartItems.length === 0 ? (
+            <Text style={styles.emptyCartMessage}>Your cart is empty.</Text>
+          ) : (
+            <FlatList
+              data={cartItems}
+              renderItem={renderCartItem}
+              keyExtractor={(item, index) => `${item.item.objectId}-${index}`}
+            />
+          )}
         </View>
 
         <View style={styles.total}>
@@ -140,7 +217,7 @@ const Cart = ({ route }) => {
             <Text style={styles.buttonText}>Checkout</Text>
           </TouchableOpacity>
         </View>
-        <BottomTab/>
+        <BottomTab />
       </View>
     </>
   );
@@ -151,19 +228,19 @@ export default Cart;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#efeff5",
+    backgroundColor: "black",
   },
   title: {
     paddingTop: 50,
     padding: 20,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "white",
-    borderBottomWidth: 2,
+    backgroundColor: "black",
   },
   titleText: {
     fontSize: 20,
     fontWeight: "700",
+    color: "white",
   },
   product: {
     alignSelf: "center",
@@ -181,9 +258,8 @@ const styles = StyleSheet.create({
     // backgroundColor: "yellow",
     width: "100%",
     height: 210,
-    borderTopWidth: 1,
     paddingTop: 10,
-    backgroundColor: "white",
+    backgroundColor: "black",
   },
   quantity: {
     flexDirection: "row",
@@ -198,18 +274,19 @@ const styles = StyleSheet.create({
     width: 330,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "black",
+    backgroundColor: "white",
     marginTop: 10,
     borderRadius: 5,
   },
   totalText: {
     fontWeight: "700",
     fontSize: 20,
+    color: "white",
   },
   buttonText: {
     fontSize: 20,
     fontWeight: "400",
-    color: "white",
+    color: "black",
   },
   totalNum: {
     fontWeight: "700",
@@ -225,7 +302,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   productView: {
-    marginBottom: 315,
+    marginBottom: 320,
   },
   detailProduct: {
     flex: 1,
@@ -257,5 +334,11 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     justifyContent: "space-between",
     flexDirection: "row",
+  },
+  removeButton: {
+    alignItems: "center",
+    width: 100,
+    paddingTop: 5,
+    marginLeft: 10,
   },
 });

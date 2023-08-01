@@ -31,8 +31,7 @@ const Register = () => {
     if (!fullname || !username || !password || !confirmPassword) {
       Alert.alert("Lỗi", "Vui lòng không để trống thông tin.");
       return;
-    }
-    else if (
+    } else if (
       username.includes(" ") ||
       password.includes(" ") ||
       confirmPassword.includes(" ")
@@ -48,19 +47,25 @@ const Register = () => {
     } else if (!/^[a-zA-Z0-9\s]+$/.test(fullname)) {
       Alert.alert("Lỗi", "Tên của bạn không được chứa ký tự đặc biệt.");
       return;
-    }  else if (/\d/.test(fullname)) {
-      Alert.alert("Lỗi", "Bạn hãy nhập tên hợp lệ( Không được có số và ký tự đặc biệt).");
+    } else if (/\d/.test(fullname)) {
+      Alert.alert(
+        "Lỗi",
+        "Bạn hãy nhập tên hợp lệ( Không được có số và ký tự đặc biệt)."
+      );
       return;
-    }else if (!username > 10) {
+    } else if (!username > 10) {
       Alert.alert(
         "Lỗi",
         "Vui lòng nhập số điện thoại hợp lệ (gồm 10: chữ số)."
       );
       return;
-    }else if (username.toString()[0] !== '0') {
+    } else if (username.toString()[0] !== "0") {
+      Alert.alert("Lỗi", "Vui lòng nhập số điện thoại hợp lệ .");
+      return;
+    } else if (!/^[0-9\s]+$/.test(username)) {
       Alert.alert(
         "Lỗi",
-        "Vui lòng nhập số điện thoại hợp lệ ."
+        "Số điện thoại của bạn không hợp lệ(Không được chứa ký tự đặc biệt và chữ cái )."
       );
       return;
     }else if (!/^[0-9\s]+$/.test(username)) {

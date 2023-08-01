@@ -74,6 +74,7 @@ const CheckOut = () => {
 
 export default CheckOut;
 
+<<<<<<< HEAD
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -135,3 +136,6 @@ const styles = StyleSheet.create({
     // backgroundColor: "pink",
   },
 });
+=======
+const styles = StyleSheet.create({});
+>>>>>>> c0ba9a2f0e27a35a8935a47c616e5ae3601ff282
