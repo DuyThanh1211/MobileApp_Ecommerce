@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { apiKey, apiApp } from "../../features/ApiKey";
-import { useNavigation } from "@react-navigation/native";
 import BottomTab from "../navigations/BottomTab";
 import { useFonts } from "expo-font";
 

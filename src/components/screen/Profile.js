@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,11 +10,48 @@ import {
 import { AntDesign, FontAwesome, Feather } from "@expo/vector-icons";
 import BottomTab from "../navigations/BottomTab";
 import { useNavigation } from "@react-navigation/native";
+import { getData } from "../../features/MyA";
+import { apiApp, apiKey } from "../../features/ApiKey";
 
 const { width, height } = Dimensions.get("screen");
 
 const Profile = () => {
   const navigate = useNavigation();
+  const [userData, setUserData] = useState(null);
+
+  const inUserID = async () => {
+    try {
+      const idUser = await getData("idUser");
+      return idUser;
+    } catch (error) {
+      console.error("Error inUserID:", error);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    inUserID()
+      .then((id) => {
+        fetch(`https://api.backendless.com/${apiApp}/${apiKey}/data/Users/${id}`, {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            setUserData(data); 
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      })
+      .catch((error) => {
+      });
+  }, []);
+  
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -25,10 +62,14 @@ const Profile = () => {
           style={styles.avatar}
           source={{ uri: "https://bootdey.com/img/Content/avatar/avatar6.png" }}
         />
+        {userData ? (
         <View style={styles.Text}>
-          <Text style={styles.textname}> Phát Huỳnh</Text>
-          <Text style={styles.textmail}> phat@gmail.com</Text>
+          <Text style={styles.textname}> {userData.name}</Text>
+          <Text style={styles.textmail}> {userData.phonenumber}</Text>
         </View>
+      ) : (
+        <Text>Loading...</Text>
+      )}
       </View>
       <View style={styles.body}>
         <TouchableOpacity onPress={() => navigate.navigate("EditProfile")}>
@@ -85,7 +126,7 @@ const Profile = () => {
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigate.navigate("Begin")}>
           <View style={styles.bodyItem2}>
             <AntDesign
               name="logout"
@@ -131,11 +172,13 @@ const styles = StyleSheet.create({
   textname: {
     fontSize: 23,
     fontWeight: "600",
+    alignSelf: 'center'
   },
   textmail: {
     fontSize: 15,
     fontWeight: "200",
     marginLeft: 5,
+    alignSelf: 'center'
   },
   backHeader: {
     marginHorizontal: 9,

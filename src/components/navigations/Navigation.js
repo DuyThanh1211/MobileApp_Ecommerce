@@ -11,43 +11,18 @@ import Details from "../screen/Details";
 import Cart from "../screen/Cart";
 import Profile from "../screen/Profile";
 import EditProfile from "../screen/EditProfile";
-import BottomTab from "./BottomTab";
-import { useFonts } from "expo-font";
-import { useCallback } from "react";
-import * as SplashScreen from "expo-splash-screen";
-import WomenProduct from "../screen/WomenProduct";
-import MenProduct from "../screen/MenProduct";
 
 const Stack = createNativeStackNavigator();
 function Navigation() {
-  const [fontsLoaded] = useFonts({
-    black: require("../../../assets/fonts/Inter-Black.ttf"),
-    bold: require("../../../assets/fonts/Inter-Bold.ttf"),
-    regular: require("../../../assets/fonts/Inter-Regular.ttf"),
-    medium: require("../../../assets/fonts/Inter-Medium.ttf"),
-  });
-
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
-
-  if (!fontsLoaded) {
-    return null;
-  }
   return (
-    <NavigationContainer onReady={onLayoutRootView}>
+    <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {/* <Stack.Screen name="Begin" component={Begin} />
-          <Stack.Screen name="Login" component={Login} /> */}
-        {/* <Stack.Screen name="Register" component={Register} /> */}
-
+        <Stack.Screen name="Begin" component={Begin} />
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="BottomTab" component={Home} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="AllProduct" component={AllProduct} />
-        <Stack.Screen name="WomenProduct" component={WomenProduct} />
-        <Stack.Screen name="MenProduct" component={MenProduct} />
         <Stack.Screen name="Details" component={Details} />
         <Stack.Screen name="Cart" component={Cart} />
         <Stack.Screen name="Profile" component={Profile} />
