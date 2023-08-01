@@ -19,8 +19,9 @@ const Begin = () => {
       <ImageBackground
         style={styles.background}
         source={{
-          uri: "https://static.nike.com/a/images/f_auto/dpr_1.0,cs_srgb/h_540,c_limit/864c2d5e-6134-486a-b964-543056d58307/nike-just-do-it.png",
+          uri: "https://e0.pxfuel.com/wallpapers/378/705/desktop-wallpaper-liverpool-players-model-new-2021-22-nike-home-kit-liverpool-fc-liverpool-squad-2021-2022-thumbnail.jpg",
         }}
+        blurRadius={1.5}
       >
         <View style={styles.texthello}>
           <Text style={styles.Texts}>Hello!</Text>
@@ -47,21 +48,20 @@ const styles = StyleSheet.create({
   },
   background: {
     flex: 1,
-    resizeMode: "cover",
     justifyContent: "center",
   },
   buttonContainer: {
     borderRadius: 5,
-    width: 300,
     alignItems: "center",
     alignSelf: "center",
     backgroundColor: "black",
-    borderRadius: 25,
+    borderRadius: 15,
+    padding: 10,
+    paddingHorizontal: 100,
   },
   Text: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 10,
     color: "white",
     justifyContent: "center",
     alignItems: "center",

@@ -12,6 +12,7 @@ import BottomTab from "../navigations/BottomTab";
 import { useNavigation } from "@react-navigation/native";
 import { getData } from "../../features/MyA";
 import { apiApp, apiKey } from "../../features/ApiKey";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -27,6 +28,20 @@ const Profile = () => {
       console.error("Error inUserID:", error);
       throw error;
     }
+  };
+
+  const clearShoppingBagItems = async () => {
+    try {
+      await AsyncStorage.removeItem("shoppingBagItems");
+      console.log("Shopping bag items cleared!");
+    } catch (error) {
+      console.error("Error clearing shopping bag items:", error);
+    }
+  };
+
+  const handleSignOut = () => {
+    clearShoppingBagItems();
+    navigate.navigate("Begin");
   };
 
   useEffect(() => {
@@ -97,7 +112,10 @@ const Profile = () => {
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigate.navigate("History")}
+        >
           <View style={styles.bodyItem}>
             <FontAwesome
               name="history"
@@ -133,10 +151,7 @@ const Profile = () => {
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={() => navigate.navigate("Begin")}
-          style={styles.button}
-        >
+        <TouchableOpacity onPress={handleSignOut} style={styles.button}>
           <View style={styles.bodyItem}>
             <AntDesign
               name="logout"
@@ -169,7 +184,7 @@ const styles = StyleSheet.create({
   header: {
     width: width,
     height: (height * 40) / 100,
-    backgroundColor: "grey",
+    backgroundColor: "black",
     marginBottom: 50,
   },
   headerTitle: {

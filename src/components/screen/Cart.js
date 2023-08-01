@@ -165,21 +165,14 @@ const Cart = () => {
     updateCartItemsInAsyncStorage([]);
   };
 
-  // useEffect(() => {
-  //   const fetchCartItems = async () => {
-  //     try {
-  //       const cartItemsString = await AsyncStorage.getItem("cartItems");
-  //       if (cartItemsString) {
-  //         const cartItems = JSON.parse(cartItemsString);
-  //         setItems(cartItems);
-  //       }
-  //     } catch (error) {
-  //       console.log("Error fetching cart items: ", error);
-  //     }
-  //   };
-
-  //   fetchCartItems();
-  // }, []);
+  const handleCheckOut = async () => {
+    try {
+      await storeData("cartItems", JSON.stringify(cartItems));
+      navigation.navigate("CheckOut");
+    } catch (error) {
+      console.error("Error storing cart items in AsyncStorage:", error);
+    }
+  };
 
   return (
     <>
@@ -213,7 +206,7 @@ const Cart = () => {
             <Text style={styles.totalText}>Total</Text>
             <Text style={styles.totalNum}>${TotalPrice()}</Text>
           </View>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={handleCheckOut}>
             <Text style={styles.buttonText}>Checkout</Text>
           </TouchableOpacity>
         </View>
