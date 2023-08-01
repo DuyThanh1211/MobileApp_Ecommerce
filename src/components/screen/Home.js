@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
+  StatusBar,
 } from "react-native";
 import { apiKey, apiApp } from "../../features/ApiKey";
 import BottomTab from "../navigations/BottomTab";
@@ -148,6 +149,7 @@ const Home = () => {
   }
   return (
     <View style={styles.container}>
+      <StatusBar></StatusBar>
       <View style={styles.logoContainer}>
         <Text style={styles.logo}>Home</Text>
       </View>

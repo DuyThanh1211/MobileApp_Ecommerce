@@ -17,6 +17,7 @@ import MenProduct from "../screen/MenProduct";
 import History from "../screen/History";
 import CheckOut from "../screen/CheckOut";
 import Lockacc from "../screen/Lockacc";
+import Forgot from "../screen/Forgot";
 
 const Stack = createNativeStackNavigator();
 function Navigation() {
@@ -39,6 +40,7 @@ function Navigation() {
         <Stack.Screen name="Setting" component={Setting} />
         <Stack.Screen name="CheckOut" component={CheckOut} />
         <Stack.Screen name="Lockacc" component={Lockacc} />
+        <Stack.Screen name="Forgot" component={Forgot} />
       </Stack.Navigator>
     </NavigationContainer>
   );
