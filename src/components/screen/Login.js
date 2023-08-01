@@ -61,9 +61,16 @@ const Login = () => {
           })
             .then((response) => response.json())
             .then((data) => {
+              const user = data;
+              if (user.status && user.status === "xoa") {
+                console.log("Tài khoản đã bị xoá");
+                Alert.alert("Lỗi", "Tài khoản của bạn đang bị khoá tạm thời.");
+                navigate.navigate("Lockacc");
+                return;
+              }
               if (data.objectId) {
                 console.log("objectId:", data.objectId);
-                storeData('idUser',data.objectId);
+                storeData("idUser", data.objectId);
                 navigate.navigate("Home");
               } else {
                 console.log("Sai Mật Khẩu");

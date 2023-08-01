@@ -12,11 +12,11 @@ import Cart from "../screen/Cart";
 import Profile from "../screen/Profile";
 import EditProfile from "../screen/EditProfile";
 import Setting from "../screen/Setting";
-import CheckOut from "../screen/CheckOut";
 import WomenProduct from "../screen/WomenProduct";
 import MenProduct from "../screen/MenProduct";
 import History from "../screen/History";
 import CheckOut from "../screen/CheckOut";
+import Lockacc from "../screen/Lockacc";
 
 const Stack = createNativeStackNavigator();
 function Navigation() {
@@ -35,10 +35,10 @@ function Navigation() {
         <Stack.Screen name="Cart" component={Cart} />
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="History" component={History} />
-        <Stack.Screen name="CheckOut" component={CheckOut} />
         <Stack.Screen name="EditProfile" component={EditProfile} />
         <Stack.Screen name="Setting" component={Setting} />
         <Stack.Screen name="CheckOut" component={CheckOut} />
+        <Stack.Screen name="Lockacc" component={Lockacc} />
       </Stack.Navigator>
     </NavigationContainer>
   );

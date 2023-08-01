@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import { AntDesign, FontAwesome, Feather } from "@expo/vector-icons";
 import BottomTab from "../navigations/BottomTab";
@@ -19,6 +20,8 @@ const { width, height } = Dimensions.get("screen");
 const Profile = () => {
   const navigate = useNavigation();
   const [userData, setUserData] = useState(null);
+  const [Loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const inUserID = async () => {
     try {
@@ -45,6 +48,7 @@ const Profile = () => {
   };
 
   useEffect(() => {
+    setLoading(true);
     inUserID()
       .then((id) => {
         fetch(
@@ -61,6 +65,7 @@ const Profile = () => {
           .then((data) => {
             console.log(data);
             setUserData(data);
+            setLoading(false);
           })
           .catch((error) => {
             console.error("Error:", error);
@@ -68,6 +73,21 @@ const Profile = () => {
       })
       .catch((error) => {});
   }, []);
+
+  if (Loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size={"large"} color="black"></ActivityIndicator>
+      </View>
+    );
+  }
+  if (error) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text> Lỗi Tải Dữ Liệu, Hãy Kiểm Tra Lại Đuờng Truyền</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -133,8 +153,11 @@ const Profile = () => {
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={() => navigate.navigate("Setting")}>
-          <View style={styles.bodyItem} >
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigate.navigate("Setting")}
+        >
+          <View style={styles.bodyItem}>
             <Feather
               name="settings"
               size={28}

@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -19,10 +20,13 @@ const WomenProduct = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const navigation = useNavigation();
+  const [Loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const fetchWomenItems = async () => {
     const women = await getData("womenItems");
     const womenItems = JSON.parse(women);
+    setLoading(false);
     return womenItems;
   };
 
@@ -37,6 +41,7 @@ const WomenProduct = () => {
   };
 
   useEffect(() => {
+    setLoading(true);
     const filterData = async () => {
       const womenItems = await fetchWomenItems();
       const keyword = searchKeyword.toLowerCase().trim();
@@ -97,6 +102,22 @@ const WomenProduct = () => {
     }
     return null;
   };
+
+  if (Loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size={"large"} color="black"></ActivityIndicator>
+      </View>
+    );
+  }
+  if (error) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text> Lỗi Tải Dữ Liệu, Hãy Kiểm Tra Lại Đuờng Truyền</Text>
+      </View>
+    );
+  }
+
   return (
     <>
       <View style={ProductListCss.topNavigation}>

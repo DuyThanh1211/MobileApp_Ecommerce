@@ -6,6 +6,7 @@ import {
   TextInput,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -18,12 +19,15 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const AllProduct = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [filteredData, setFilteredData] = useState([]);
+  const [Loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const navigation = useNavigation();
 
   const fetchAllItems = async () => {
     const data = await getData("dataItems");
     const dataItems = JSON.parse(data);
+    setLoading(false);
     return dataItems;
   };
 
@@ -38,6 +42,7 @@ const AllProduct = () => {
   };
 
   useEffect(() => {
+    setLoading(true);
     const filterData = async () => {
       const data = await fetchAllItems();
       const keyword = searchKeyword.toLowerCase().trim();
@@ -98,6 +103,21 @@ const AllProduct = () => {
     }
     return null;
   };
+
+  if (Loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size={"large"} color="black"></ActivityIndicator>
+      </View>
+    );
+  }
+  if (error) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text> Lỗi Tải Dữ Liệu, Hãy Kiểm Tra Lại Đuờng Truyền</Text>
+      </View>
+    );
+  }
 
   return (
     <>

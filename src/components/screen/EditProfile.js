@@ -8,6 +8,7 @@ import {
   Dimensions,
   TextInput,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -17,13 +18,16 @@ import { apiApp, apiKey } from "../../features/ApiKey";
 const { width, height } = Dimensions.get("screen");
 
 const EditProfile = () => {
-  const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
+  const [showPasswordConfirmation, setShowPasswordConfirmation] =
+    useState(false);
   const navigate = useNavigation();
   const [userProfile, setUserProfile] = useState(null);
   const [newfullname, setNewfullname] = useState("");
   const [newAddress, setNewAddress] = useState("");
   const [id, setId] = useState("");
   const [confirmationPassword, setConfirmationPassword] = useState("");
+  const [Loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const inUserID = async () => {
     try {
@@ -36,6 +40,7 @@ const EditProfile = () => {
   };
 
   useEffect(() => {
+    setLoading(true);
     inUserID()
       .then((id) => {
         setId(id);
@@ -59,6 +64,7 @@ const EditProfile = () => {
             });
             setNewfullname(data.name);
             setNewAddress(data.address);
+            setLoading(false);
           })
           .catch((error) => {
             console.error("Error:", error);
@@ -74,18 +80,23 @@ const EditProfile = () => {
     } else if (!newAddress) {
       Alert.alert("Lỗi", "Vui lòng không để trống địa chỉ ");
       return;
-    }
-    else if (!/^[a-zA-Z0-9\s]+$/.test(newAddress)) {
+    } else if (!/^[a-zA-Z0-9\s]+$/.test(newAddress)) {
       Alert.alert("Lỗi", "Địa chỉ của bạn không được chứa ký tự đặc biệt.");
       return;
-    }else if (newAddress.length < 8 || newAddress.length > 50) {
-      Alert.alert("Lỗi", "Địa chỉ của bạn phải có ít nhất từ 8 ký tự và tối đa 50 ký tự.");
+    } else if (newAddress.length < 8 || newAddress.length > 50) {
+      Alert.alert(
+        "Lỗi",
+        "Địa chỉ của bạn phải có ít nhất từ 8 ký tự và tối đa 50 ký tự."
+      );
       return;
-    }  else if (newAddress.trim().length === 0) {
+    } else if (newAddress.trim().length === 0) {
       Alert.alert("Lỗi", "Vui lòng nhập địa chỉ đầy đủ");
       return;
     } else if (newfullname.length < 10 || newfullname.length > 30) {
-      Alert.alert("Lỗi", "Tên của bạn phải có ít nhất từ 10 ký tự và tối đa 30 ký tự.");
+      Alert.alert(
+        "Lỗi",
+        "Tên của bạn phải có ít nhất từ 10 ký tự và tối đa 30 ký tự."
+      );
       return;
     } else if (newfullname.trim().length === 0) {
       Alert.alert("Lỗi", "Vui lòng nhập tên đầy đủ");
@@ -107,16 +118,15 @@ const EditProfile = () => {
       return;
     }
 
-  const hasChangedInfo =
-    newfullname !== userProfile.name ||
-    newAddress !== userProfile.address;
+    const hasChangedInfo =
+      newfullname !== userProfile.name || newAddress !== userProfile.address;
 
-  if (hasChangedInfo) {
-    setShowPasswordConfirmation(true);
-  } else {
-    performUpdate();
-  }
-};
+    if (hasChangedInfo) {
+      setShowPasswordConfirmation(true);
+    } else {
+      performUpdate();
+    }
+  };
 
   const performUpdate = () => {
     const updatedUserData = {
@@ -135,7 +145,7 @@ const EditProfile = () => {
       .then((response) => response.json())
       .then((data) => {
         Alert.alert("Cập nhật thông tin thành công!");
-        navigate.navigate("Profile" );
+        navigate.navigate("Profile");
       })
       .catch((error) => {
         console.error("Lỗi:", error);
@@ -151,6 +161,21 @@ const EditProfile = () => {
       Alert.alert("Mật khẩu xác nhận không chính xác!");
     }
   };
+
+  if (Loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size={"large"} color="black"></ActivityIndicator>
+      </View>
+    );
+  }
+  if (error) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text> Lỗi Tải Dữ Liệu, Hãy Kiểm Tra Lại Đuờng Truyền</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>

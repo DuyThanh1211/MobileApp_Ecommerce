@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -19,10 +20,13 @@ const MenProduct = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const navigation = useNavigation();
+  const [Loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const fetchMenItems = async () => {
     const men = await getData("menItems");
     const menItems = JSON.parse(men);
+    setLoading(false);
     return menItems;
   };
   const navigateToProductDetails = async (item) => {
@@ -31,11 +35,11 @@ const MenProduct = () => {
     } catch (error) {
       console.error("Error saving item to AsyncStorage:", error);
     }
-
     navigation.navigate("Details");
   };
 
   useEffect(() => {
+    setLoading(true);
     const filterData = async () => {
       const men = await fetchMenItems();
       const keyword = searchKeyword.toLowerCase().trim();
@@ -55,6 +59,7 @@ const MenProduct = () => {
 
   useEffect(() => {
     fetchMenItems();
+    setLoading(true);
   }, []);
 
   const renderItem = ({ item }) => {
@@ -96,6 +101,21 @@ const MenProduct = () => {
     }
     return null;
   };
+
+  if (Loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size={"large"} color="black"></ActivityIndicator>
+      </View>
+    );
+  }
+  if (error) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text> Lỗi Tải Dữ Liệu, Hãy Kiểm Tra Lại Đuờng Truyền</Text>
+      </View>
+    );
+  }
 
   return (
     <>
