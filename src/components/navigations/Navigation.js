@@ -11,6 +11,8 @@ import Details from "../screen/Details";
 import Cart from "../screen/Cart";
 import Profile from "../screen/Profile";
 import EditProfile from "../screen/EditProfile";
+import WomenProduct from "../screen/WomenProduct";
+import MenProduct from "../screen/MenProduct";
 
 const Stack = createNativeStackNavigator();
 function Navigation() {
@@ -23,6 +25,8 @@ function Navigation() {
         <Stack.Screen name="BottomTab" component={Home} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="AllProduct" component={AllProduct} />
+        <Stack.Screen name="WomenProduct" component={WomenProduct} />
+        <Stack.Screen name="MenProduct" component={MenProduct} />
         <Stack.Screen name="Details" component={Details} />
         <Stack.Screen name="Cart" component={Cart} />
         <Stack.Screen name="Profile" component={Profile} />

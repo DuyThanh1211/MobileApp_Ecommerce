@@ -29,10 +29,7 @@ const Login = () => {
     if (!username.trim() || !password.trim()) {
       Alert.alert("Lỗi", "Bạn hãy điền đầy đủ thông tin!");
       return;
-    } else if (
-      username.includes(" ") ||
-      password.includes(" ") 
-    ) {
+    } else if (username.includes(" ") || password.includes(" ")) {
       Alert.alert("Lỗi", "Vui lòng không nhập space");
       return;
     }
@@ -65,7 +62,7 @@ const Login = () => {
             .then((data) => {
               if (data.objectId) {
                 console.log("objectId:", data.objectId);
-                storeData('idUser',data.objectId) 
+                storeData("idUser", data.objectId);
                 navigate.navigate("Home");
               } else {
                 console.log("Sai Mật Khẩu");

@@ -12,20 +12,34 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { ProductListCss } from "./ProductListCss";
+import { getData } from "../../features/MyA";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const AllProduct = ({ route }) => {
-  const { data } = route.params;
+const AllProduct = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [filteredData, setFilteredData] = useState(data);
+  const [filteredData, setFilteredData] = useState([]);
 
-  const navigations = useNavigation();
+  const navigation = useNavigation();
 
-  const navigateToProductDetails = (item) => {
-    navigations.navigate("Details", { item: item });
+  const fetchAllItems = async () => {
+    const data = await getData("dataItems");
+    const dataItems = JSON.parse(data);
+    return dataItems;
+  };
+
+  const navigateToProductDetails = async (item) => {
+    try {
+      await AsyncStorage.setItem("selectedItem", JSON.stringify(item));
+    } catch (error) {
+      console.error("Error saving item to AsyncStorage:", error);
+    }
+
+    navigation.navigate("Details");
   };
 
   useEffect(() => {
-    const filterData = () => {
+    const filterData = async () => {
+      const data = await fetchAllItems();
       const keyword = searchKeyword.toLowerCase().trim();
       if (keyword === "") {
         setFilteredData(data);
@@ -39,7 +53,11 @@ const AllProduct = ({ route }) => {
     };
 
     filterData();
-  }, [searchKeyword, data]);
+  }, [searchKeyword]);
+
+  useEffect(() => {
+    fetchAllItems();
+  });
 
   const renderItem = ({ item }) => {
     return (
@@ -86,7 +104,7 @@ const AllProduct = ({ route }) => {
       <View style={ProductListCss.topNavigation}>
         <TouchableOpacity
           style={ProductListCss.back}
-          onPress={navigations.goBack}
+          onPress={navigation.goBack}
         >
           <Ionicons name="arrow-back" size={26} color="white" />
         </TouchableOpacity>

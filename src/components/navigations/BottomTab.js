@@ -10,24 +10,25 @@ import {
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { NavigationContainer } from "@react-navigation/native";
-
 const { width, height } = Dimensions.get("screen");
 
 const BottomTab = () => {
-  const navigate = useNavigation();
+  const navigation = useNavigation();
+  const handleHomePress = () => {
+    navigation.navigate("Home");
+  };
 
   const handleCartPress = () => {
-    navigate.navigate("Cart");
+    navigation.navigate("Cart");
   };
 
   const handleProfilePress = () => {
-    navigate.navigate("Profile");
+    navigation.navigate("Profile");
   };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigate.navigate("Home")}>
+      <TouchableOpacity onPress={handleHomePress}>
         <AntDesign name="home" size={20} color="white" />
       </TouchableOpacity>
 

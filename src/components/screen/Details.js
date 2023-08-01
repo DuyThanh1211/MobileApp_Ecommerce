@@ -1,44 +1,94 @@
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import React, { useState, useEffect } from "react";
 import { MaterialIcons, Ionicons, Feather } from "@expo/vector-icons";
-import { apiApp, apiKey } from "../../features/ApiKey";
-import Cart from "./Cart";
-import { ScrollView } from "react-native-gesture-handler";
+import { useNavigation } from "@react-navigation/native";
+import { getData, storeData } from "../../features/MyA";
 
-const Details = ({ navigation, route }) => {
+const Details = () => {
   const [isFavourite, setIsFavourite] = useState(false);
   const [selectedSize, setSelectedSize] = useState("S");
   const [quantity, setQuantity] = useState(1);
-  const { item } = route.params;
-  const [cartItems, setCartItems] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const navigate = useNavigation();
 
-  const handleAddToBag = () => {
-    const newItem = {
-      objectId: item.objectId,
-      TenSanPham: item?.TenSanPham || "",
-      GiaTien: item?.GiaTien || 0,
-      Image: item?.Image,
-      selectedSize: selectedSize,
+  useEffect(() => {
+    getSelectedItem();
+  }, []);
+
+  const handleAddToBagCallback = () => {
+    navigate.navigate("Cart");
+  };
+
+  const getSelectedItem = async () => {
+    try {
+      const itemJSON = await getData("selectedItem");
+      if (itemJSON) {
+        const item = JSON.parse(itemJSON);
+        setSelectedItem(item);
+      }
+    } catch (error) {
+      console.error("Error retrieving item from AsyncStorage:", error);
+    }
+  };
+
+  if (!selectedItem) {
+    return <Text>Loading...</Text>;
+  }
+
+  const checkIfItemExists = (selectedItems, newItem) => {
+    for (let i = 0; i < selectedItems.length; i++) {
+      const selectedItem = selectedItems[i];
+      if (
+        selectedItem.item.objectId === newItem.item.objectId &&
+        selectedItem.size === newItem.size
+      ) {
+        return i;
+      }
+    }
+    return -1;
+  };
+
+  const handleAddToBag = async () => {
+    if (!selectedSize) {
+      console.log("Please select a size before adding to bag.");
+      return;
+    }
+
+    const shoppingBagItem = {
+      item: selectedItem,
+      size: selectedSize,
       quantity: quantity,
     };
 
-    setCartItems([...cartItems, newItem]);
+    try {
+      const bagItemsJSON = await getData("shoppingBagItems");
+      const bagItems = bagItemsJSON ? JSON.parse(bagItemsJSON) : [];
+
+      const existingIndex = checkIfItemExists(bagItems, shoppingBagItem);
+
+      if (existingIndex !== -1) {
+        bagItems[existingIndex].quantity += quantity;
+      } else {
+        bagItems.push(shoppingBagItem);
+      }
+
+      // Save updated cart items to AsyncStorage
+      await storeData("shoppingBagItems", JSON.stringify(bagItems));
+      console.log("Item added to shopping bag!");
+      handleAddToBagCallback();
+    } catch (error) {
+      console.error("Error adding item to shopping bag:", error);
+    }
   };
 
   const handleSizeSelection = (size) => {
     setSelectedSize(size);
   };
 
-  useEffect(() => {
-    if (cartItems.length > 0) {
-      navigation.navigate("Cart", { cartItems: cartItems });
-    }
-  }, [cartItems]);
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigate.goBack()}>
           <MaterialIcons name="keyboard-arrow-left" size={30} color="black" />
         </TouchableOpacity>
 
@@ -51,14 +101,14 @@ const Details = ({ navigation, route }) => {
         </TouchableOpacity>
       </View>
       <Image
-        source={{ uri: item.Image }}
+        source={{ uri: selectedItem.Image }}
         resizeMode="cover"
         style={styles.image}
       />
       <View style={styles.detailsContainer}>
-        <Text style={styles.productName}>{item.TenSanPham}</Text>
+        <Text style={styles.productName}>{selectedItem.TenSanPham}</Text>
 
-        <Text style={styles.productDescription}>{item.MoTa}</Text>
+        <Text style={styles.productDescription}>{selectedItem.MoTa}</Text>
 
         <View style={styles.sizeContainer}>
           <Text style={styles.sizeTitle}>Select Size</Text>
@@ -160,7 +210,7 @@ const Details = ({ navigation, route }) => {
         </View>
         <View style={styles.totalPriceContainer}>
           <Text style={styles.totalPriceLabel}>Price</Text>
-          <Text style={styles.totalPrice}>${item.GiaTien}</Text>
+          <Text style={styles.totalPrice}>${selectedItem.GiaTien}</Text>
         </View>
 
         <TouchableOpacity style={styles.button} onPress={handleAddToBag}>
@@ -171,6 +221,39 @@ const Details = ({ navigation, route }) => {
     </View>
   );
 };
+
+// const handleAddToBag = async () => {
+//   const newItem = {
+//     objectId: item.objectId,
+//     TenSanPham: item.TenSanPham || "",
+//     GiaTien: item.GiaTien || 0,
+//     Image: item.Image,
+//     selectedSize: selectedSize,
+//     quantity: quantity,
+//   };
+
+//   try {
+//     setCartItems([...cartItems, newItem]);
+
+//     await AsyncStorage.setItem(
+//       "cartItems",
+//       JSON.stringify([...cartItems, newItem])
+//     );
+//     console.log("New cart items:", [...cartItems, newItem]);
+//   } catch (error) {
+//     console.log("Error adding item to cart: ", error);
+//   }
+//   navigate.navigate("Cart");
+// };
+
+// useEffect(() => {
+//   if (cartItems.length > 0) {
+//     navigation.navigate("Cart", { cartItems: cartItems });
+//   }
+// }, [cartItems]);
+// useEffect(() => {
+//   console.log("Updated cart items:", cartItems);
+// }, [cartItems]);
 
 const styles = StyleSheet.create({
   container: {

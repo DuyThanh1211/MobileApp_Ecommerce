@@ -8,19 +8,18 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import { Feather } from "@expo/vector-icons";
 import { apiKey, apiApp } from "../../features/ApiKey";
 import BottomTab from "../navigations/BottomTab";
 import { useFonts } from "expo-font";
-
+import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Dimensions } from "react-native";
-// const windowWidth = Dimensions.get("window").width;
-// const windowHeight = Dimensions.get("window").height;
-
-const { width } = Dimensions.get("window");
 import { apiUrl } from "../../features/apiURL";
+import { storeData } from "../../features/MyA";
 
-const Home = ({ navigation }) => {
+const Home = () => {
+  const { width } = Dimensions.get("window");
+  const navigation = useNavigation();
   const [data, setData] = useState([]);
   const [women, setWomen] = useState([]);
   const [men, setMen] = useState([]);
@@ -41,31 +40,48 @@ const Home = ({ navigation }) => {
       const response = await fetch(apiUrl);
       const json = await response.json();
       setData(json);
+      const dataItemsJSON = JSON.stringify(json);
+      storeData("dataItems", dataItemsJSON);
 
       const womenItems = json.filter((item) => item.GioiTinh === "Women");
       setWomen(womenItems);
+      const womenItemsJSON = JSON.stringify(womenItems);
+      storeData("womenItems", womenItemsJSON);
 
       const menItems = json.filter((item) => item.GioiTinh === "Men");
       setMen(menItems);
+      const menItemsJSON = JSON.stringify(menItems);
+      storeData("menItems", menItemsJSON);
     } catch (error) {
       setError(error);
       console.log(setError);
     }
   };
 
-  const navigateToProductDetails = (item) => {
-    navigation.navigate("Details", { item: item });
+  useEffect(() => {
+    getDataAPI();
+    fetchData();
+  }, []);
+
+  const navigateToProductDetails = async (item) => {
+    try {
+      await AsyncStorage.setItem("selectedItem", JSON.stringify(item));
+    } catch (error) {
+      console.error("Error saving item to AsyncStorage:", error);
+    }
+
+    navigation.navigate("Details");
   };
 
   const navigateToAllProduct = () => {
-    navigation.navigate("AllProduct", { data: data });
+    navigation.navigate("AllProduct");
   };
 
   const navigateToMenProduct = () => {
-    navigation.navigate("MenProduct", { men: men });
+    navigation.navigate("MenProduct");
   };
   const navigateToWomenProduct = () => {
-    navigation.navigate("WomenProduct", { women: women });
+    navigation.navigate("WomenProduct");
   };
 
   const renderProductItem = ({ item }) => {
@@ -78,7 +94,7 @@ const Home = ({ navigation }) => {
           <Image source={{ uri: item.Image }} style={styles.productImage} />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => navigateToProductDetails(item)}>
+        <TouchableOpacity onPress={() => navigateToProductDetails()}>
           <Text style={styles.productName}>{item.TenSanPham}</Text>
         </TouchableOpacity>
 
@@ -109,11 +125,6 @@ const Home = ({ navigation }) => {
       sale: "https://pbs.twimg.com/media/EFZ1looXsAAFzHZ.jpg",
     },
   ];
-
-  useEffect(() => {
-    getDataAPI();
-    fetchData();
-  }, []);
 
   return (
     <View style={styles.container}>

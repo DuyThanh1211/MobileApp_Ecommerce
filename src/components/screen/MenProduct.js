@@ -12,20 +12,32 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { ProductListCss } from "./ProductListCss";
+import { getData } from "../../features/MyA";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const MenProduct = ({ route }) => {
-  const { men } = route.params;
+const MenProduct = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [filteredData, setFilteredData] = useState(men);
+  const [filteredData, setFilteredData] = useState([]);
+  const navigation = useNavigation();
 
-  const navigations = useNavigation();
+  const fetchMenItems = async () => {
+    const men = await getData("menItems");
+    const menItems = JSON.parse(men);
+    return menItems;
+  };
+  const navigateToProductDetails = async (item) => {
+    try {
+      await AsyncStorage.setItem("selectedItem", JSON.stringify(item));
+    } catch (error) {
+      console.error("Error saving item to AsyncStorage:", error);
+    }
 
-  const navigateToProductDetails = (item) => {
-    navigations.navigate("Details", { item: item });
+    navigation.navigate("Details");
   };
 
   useEffect(() => {
-    const filterData = () => {
+    const filterData = async () => {
+      const men = await fetchMenItems();
       const keyword = searchKeyword.toLowerCase().trim();
       if (keyword === "") {
         setFilteredData(men);
@@ -39,7 +51,11 @@ const MenProduct = ({ route }) => {
     };
 
     filterData();
-  }, [searchKeyword, men]);
+  }, [searchKeyword]);
+
+  useEffect(() => {
+    fetchMenItems();
+  }, []);
 
   const renderItem = ({ item }) => {
     return (
@@ -86,7 +102,7 @@ const MenProduct = ({ route }) => {
       <View style={ProductListCss.topNavigation}>
         <TouchableOpacity
           style={ProductListCss.back}
-          onPress={navigations.goBack}
+          onPress={navigation.goBack}
         >
           <Ionicons name="arrow-back" size={26} color="white" />
         </TouchableOpacity>
