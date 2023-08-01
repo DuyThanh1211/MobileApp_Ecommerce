@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   StatusBar,
+  ActivityIndicator,
 } from "react-native";
 import { apiKey, apiApp } from "../../features/ApiKey";
 import BottomTab from "../navigations/BottomTab";
@@ -24,6 +25,8 @@ const Home = () => {
   const [data, setData] = useState([]);
   const [women, setWomen] = useState([]);
   const [men, setMen] = useState([]);
+  const [Loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const getDataAPI = () => {
     fetch(apiUrl)
@@ -53,6 +56,8 @@ const Home = () => {
       setMen(menItems);
       const menItemsJSON = JSON.stringify(menItems);
       storeData("menItems", menItemsJSON);
+
+      setLoading(false);
     } catch (error) {
       setError(error);
       console.log(setError);
@@ -62,6 +67,7 @@ const Home = () => {
   useEffect(() => {
     getDataAPI();
     fetchData();
+    setLoading(true);
   }, []);
 
   const navigateToProductDetails = async (item) => {
@@ -127,6 +133,20 @@ const Home = () => {
     },
   ];
 
+  if (Loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size={"large"} color="black"></ActivityIndicator>
+      </View>
+    );
+  }
+  if (error) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text> Lỗi Tải Dữ Liệu, Hãy Kiểm Tra Lại Đuờng Truyền</Text>
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       <StatusBar />

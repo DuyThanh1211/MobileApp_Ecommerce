@@ -8,6 +8,7 @@ import {
   Dimensions,
   TextInput,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -25,6 +26,8 @@ const EditProfile = () => {
   const [newAddress, setNewAddress] = useState("");
   const [id, setId] = useState("");
   const [confirmationPassword, setConfirmationPassword] = useState("");
+  const [Loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const inUserID = async () => {
     try {
@@ -37,6 +40,7 @@ const EditProfile = () => {
   };
 
   useEffect(() => {
+    setLoading(true);
     inUserID()
       .then((id) => {
         setId(id);
@@ -60,6 +64,7 @@ const EditProfile = () => {
             });
             setNewfullname(data.name);
             setNewAddress(data.address);
+            setLoading(false);
           })
           .catch((error) => {
             console.error("Error:", error);
@@ -160,6 +165,21 @@ const EditProfile = () => {
       Alert.alert("Mật khẩu xác nhận không chính xác!");
     }
   };
+
+  if (Loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size={"large"} color="black"></ActivityIndicator>
+      </View>
+    );
+  }
+  if (error) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text> Lỗi Tải Dữ Liệu, Hãy Kiểm Tra Lại Đuờng Truyền</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>

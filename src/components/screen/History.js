@@ -5,6 +5,7 @@ import {
   View,
   Image,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -15,10 +16,13 @@ const History = () => {
   const navigation = useNavigation();
   const [purchaseHistory, setPurchaseHistory] = useState([]);
   const [loggedInUser, setLoggedInUser] = useState(null);
+  const [Loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     fetchPurchaseHistory();
     inUserID();
+    setLoading(true);
   }, []);
 
   const inUserID = async () => {
@@ -39,6 +43,7 @@ const History = () => {
       if (response.ok) {
         const data = await response.json();
         setPurchaseHistory(data);
+        setLoading(false);
       } else {
         console.error(
           "Failed to fetch purchase history:",
@@ -85,6 +90,21 @@ const History = () => {
       return null;
     }
   };
+
+  if (Loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size={"large"} color="black"></ActivityIndicator>
+      </View>
+    );
+  }
+  if (error) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text> Lỗi Tải Dữ Liệu, Hãy Kiểm Tra Lại Đuờng Truyền</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>

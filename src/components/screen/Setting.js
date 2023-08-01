@@ -20,6 +20,8 @@ const Setting = () => {
   const [showpassword, setshowpassword] = useState(false);
   const [showPasswordConfirmation, setShowPasswordConfirmation] =
     useState(false);
+  const [showLockConfirmation, setShowLockConfirmation] = useState(false);
+  const [lockConfirmationPassword, setLockConfirmationPassword] = useState("");
   const navigate = useNavigation();
   const [userProfile, setUserProfile] = useState(null);
   const [newPassword, setNewPassword] = useState("");
@@ -98,6 +100,38 @@ const Setting = () => {
       performUpdate();
     }
   };
+  const LockAcc = () => {
+    const updatedUserData = {
+      status: "xoa",
+    };
+
+    fetch(`https://api.backendless.com/${apiApp}/${apiKey}/data/Users/${id}`, {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedUserData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        Alert.alert("Thông Báo", "Tài khoảng của bạn sẽ bị khoá sau 10 ngày");
+        navigate.navigate("Lockacc");
+      })
+      .catch((error) => {
+        console.error("Lỗi:", error);
+        Alert.alert("Đã xảy ra lỗi khi xoá tài khoản");
+      });
+  };
+
+  const handleLockAccount = () => {
+    if (lockConfirmationPassword === userProfile.confirmpassword) {
+      LockAcc();
+      setShowLockConfirmation(false);
+    } else {
+      Alert.alert("Mật khẩu xác nhận không chính xác!");
+    }
+  };
 
   const performUpdate = () => {
     const updatedUserData = {
@@ -152,9 +186,6 @@ const Setting = () => {
           </TouchableOpacity>
           <Text style={styles.textHeader}> Setting</Text>
         </View>
-        <View style={styles.headerTitles}>
-          <Text style={styles.headerText}> ✌️ Hello Setting </Text>
-        </View>
       </View>
       <View style={styles.body}>
         <View style={styles.bodyItems}>
@@ -195,7 +226,7 @@ const Setting = () => {
           </View>
         )}
         <View style={styles.bodyItems}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => setShowLockConfirmation(true)}>
             <View style={styles.borderText}>
               <Text style={styles.bodyTextDelete}> Delete Accout</Text>
 
@@ -233,6 +264,36 @@ const Setting = () => {
           </View>
         )}
       </View>
+      {showLockConfirmation && (
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>
+              Bạn có chắc muốn xoá tài khoảng này?
+            </Text>
+            <TextInput
+              secureTextEntry
+              style={styles.modalInput}
+              onChangeText={setLockConfirmationPassword}
+              value={lockConfirmationPassword}
+              placeholder="Mật Khẩu"
+            />
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={styles.modalButton}
+                onPress={() => setShowLockConfirmation(false)}
+              >
+                <Text style={styles.modalButtonText}>Huỷ</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.modalButton}
+                onPress={handleLockAccount}
+              >
+                <Text style={styles.modalButtonText}>Xoá</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      )}
     </View>
   );
 };

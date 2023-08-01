@@ -5,6 +5,8 @@ import {
   View,
   Image,
   TouchableOpacity,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -17,15 +19,19 @@ const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const navigation = useNavigation();
   const isFocused = useIsFocused();
+  const [Loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     getCartItems();
+    setLoading(true);
   }, []);
 
   useEffect(() => {
     if (isFocused) {
       refreshCartItems();
     }
+    setLoading(true);
   }, [isFocused]);
 
   const refreshCartItems = async () => {
@@ -35,6 +41,7 @@ const Cart = () => {
         const cartItemsArray = JSON.parse(cartItemsJSON);
         setCartItems(cartItemsArray);
       }
+      setLoading(false);
     } catch (error) {
       console.error("Error retrieving cart items from AsyncStorage:", error);
     }
@@ -44,6 +51,7 @@ const Cart = () => {
     try {
       const cartItemsJSON = JSON.stringify(cartItems);
       await storeData("shoppingBagItems", cartItemsJSON);
+      setLoading(false);
     } catch (error) {
       console.error("Error updating cart items in AsyncStorage:", error);
     }
@@ -55,6 +63,7 @@ const Cart = () => {
       if (cartItemsJSON) {
         const cartItemsArray = JSON.parse(cartItemsJSON);
         setCartItems(cartItemsArray);
+        setLoading(false);
       }
     } catch (error) {
       console.error("Error retrieving cart items from AsyncStorage:", error);
@@ -87,10 +96,21 @@ const Cart = () => {
     };
 
     const removeItem = () => {
-      const updatedCartItems = [...cartItems];
-      updatedCartItems.splice(index, 1);
-      setCartItems(updatedCartItems);
-      updateCartItemsInAsyncStorage(updatedCartItems);
+      Alert.alert("Xác nhận xoá", "Bạn có chắc chắn muốn xoá sản phẩm này?", [
+        {
+          text: "Hủy",
+          style: "cancel",
+        },
+        {
+          text: "Xoá",
+          onPress: () => {
+            const updatedCartItems = [...cartItems];
+            updatedCartItems.splice(index, 1);
+            setCartItems(updatedCartItems);
+            updateCartItemsInAsyncStorage(updatedCartItems);
+          },
+        },
+      ]);
     };
 
     return (
@@ -161,8 +181,27 @@ const Cart = () => {
   };
 
   const removeAllItems = () => {
-    setCartItems([]);
-    updateCartItemsInAsyncStorage([]);
+    if (cartItems.length === 0) {
+      Alert.alert("Thông báo", "Chưa có sản phẩm trong giỏ hàng.");
+    } else {
+      Alert.alert(
+        "Xác nhận xoá",
+        "Bạn có chắc chắn muốn xoá tất cả sản phẩm trong giỏ hàng?",
+        [
+          {
+            text: "Hủy",
+            style: "cancel",
+          },
+          {
+            text: "Xoá",
+            onPress: () => {
+              setCartItems([]);
+              updateCartItemsInAsyncStorage([]);
+            },
+          },
+        ]
+      );
+    }
   };
 
   const handleCheckOut = async () => {
@@ -173,6 +212,21 @@ const Cart = () => {
       console.error("Error storing cart items in AsyncStorage:", error);
     }
   };
+
+  if (Loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size={"large"} color="black"></ActivityIndicator>
+      </View>
+    );
+  }
+  if (error) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text> Lỗi Tải Dữ Liệu, Hãy Kiểm Tra Lại Đuờng Truyền</Text>
+      </View>
+    );
+  }
 
   return (
     <>
