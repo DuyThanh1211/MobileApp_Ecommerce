@@ -16,12 +16,14 @@ import { apiApp, apiKey } from "../../features/ApiKey";
 
 const { width, height } = Dimensions.get("screen");
 
-const EditProfile = () => {
-  const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
+const Setting = () => {
+  const [showpassword, setshowpassword] = useState(false);
+  const [showPasswordConfirmation, setShowPasswordConfirmation] =
+    useState(false);
   const navigate = useNavigation();
   const [userProfile, setUserProfile] = useState(null);
-  const [newfullname, setNewfullname] = useState("");
-  const [newAddress, setNewAddress] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [newConfirmPassword, setConfrimPassWord] = useState("");
   const [id, setId] = useState("");
   const [confirmationPassword, setConfirmationPassword] = useState("");
 
@@ -52,13 +54,11 @@ const EditProfile = () => {
           .then((response) => response.json())
           .then((data) => {
             setUserProfile({
-              name: data.name,
-              address: data.address,
               password: data.password,
               confirmpassword: data.confirmpassword,
             });
-            setNewfullname(data.name);
-            setNewAddress(data.address);
+            setNewPassword(data.password);
+            setConfrimPassWord(data.confirmpassword);
           })
           .catch((error) => {
             console.error("Error:", error);
@@ -68,60 +68,41 @@ const EditProfile = () => {
   }, []);
 
   const handleUpdate = () => {
-    if (!newfullname) {
-      Alert.alert("Lỗi", "Vui lòng không để trống tên của bạn");
-      return;
-    } else if (!newAddress) {
-      Alert.alert("Lỗi", "Vui lòng không để trống địa chỉ ");
-      return;
-    }
-    else if (!/^[a-zA-Z0-9\s]+$/.test(newAddress)) {
-      Alert.alert("Lỗi", "Địa chỉ của bạn không được chứa ký tự đặc biệt.");
-      return;
-    }else if (newAddress.length < 8 || newAddress.length > 50) {
-      Alert.alert("Lỗi", "Địa chỉ của bạn phải có ít nhất từ 8 ký tự và tối đa 50 ký tự.");
-      return;
-    }  else if (newAddress.trim().length === 0) {
-      Alert.alert("Lỗi", "Vui lòng nhập địa chỉ đầy đủ");
-      return;
-    } else if (newfullname.length < 10 || newfullname.length > 30) {
-      Alert.alert("Lỗi", "Tên của bạn phải có ít nhất từ 10 ký tự và tối đa 30 ký tự.");
-      return;
-    } else if (newfullname.trim().length === 0) {
-      Alert.alert("Lỗi", "Vui lòng nhập tên đầy đủ");
-      return;
-    } else if (!/^[a-zA-Z0-9\s]+$/.test(newfullname)) {
-      Alert.alert("Lỗi", "Tên của bạn không được chứa ký tự đặc biệt.");
-      return;
-    } else if (/\d/.test(newfullname)) {
+    if (newPassword?.length < 6 || newPassword?.length > 16) {
       Alert.alert(
         "Lỗi",
-        "Bạn hãy nhập tên hợp lệ( Không được có số và ký tự đặc biệt)."
+        "Mật khẩu mới của bạn phải có ít nhất 6 ký tự và tối đa là 16 ký tự."
       );
       return;
-    } else if (/\d/.test(newAddress)) {
-      Alert.alert(
-        "Lỗi",
-        "Bạn hãy nhập địa chỉ hợp lệ( Không được có số và ký tự đặc biệt)."
-      );
+    } else if (
+      newPassword?.includes(" ") ||
+      newConfirmPassword?.includes(" ")
+    ) {
+      Alert.alert("Lỗi", "Vui lòng không nhập space");
+      return;
+    } else if (!newPassword || !newConfirmPassword) {
+      Alert.alert("Lỗi", "Vui lòng điền đầy đủ để cập nhật mật khẩu.");
+      return;
+    } else if (newPassword != newConfirmPassword) {
+      Alert.alert("Lỗi", "Vui lòng điền mật khẩu trùng khớp.");
       return;
     }
 
-  const hasChangedInfo =
-    newfullname !== userProfile.name ||
-    newAddress !== userProfile.address;
+    const hasChangedInfo =
+      newPassword !== userProfile.password ||
+      newConfirmPassword !== userProfile.confirmpassword;
 
-  if (hasChangedInfo) {
-    setShowPasswordConfirmation(true);
-  } else {
-    performUpdate();
-  }
-};
+    if (hasChangedInfo) {
+      setShowPasswordConfirmation(true);
+    } else {
+      performUpdate();
+    }
+  };
 
   const performUpdate = () => {
     const updatedUserData = {
-      name: newfullname,
-      address: newAddress,
+      password: newPassword,
+      confirmpassword: newConfirmPassword,
     };
 
     fetch(`https://api.backendless.com/${apiApp}/${apiKey}/data/Users/${id}`, {
@@ -134,12 +115,17 @@ const EditProfile = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        Alert.alert("Cập nhật thông tin thành công!");
-        navigate.navigate("Profile" );
+        // Alert.alert("Đổi mật khẩu thành công!");
+        navigate.navigate("Profile", {
+          updatedData: {
+            password: newPassword,
+            confirmpassword: newConfirmPassword,
+          },
+        });
       })
       .catch((error) => {
         console.error("Lỗi:", error);
-        Alert.alert("Đã xảy ra lỗi khi cập nhật thông tin");
+        Alert.alert("Đã xảy ra lỗi khi cập nhật mật khẩu");
       });
   };
 
@@ -164,45 +150,59 @@ const EditProfile = () => {
               style={styles.backHeader}
             />
           </TouchableOpacity>
-          <Text style={styles.textHeader}> Edit Profile</Text>
+          <Text style={styles.textHeader}> Setting</Text>
         </View>
-        {userProfile ? (
-          <View style={styles.headerTitles}>
-            <Text style={styles.headerText}> ✌️ Hello {userProfile.name} </Text>
-          </View>
-        ) : (
-          <Text>Loading...</Text>
-        )}
+        <View style={styles.headerTitles}>
+          <Text style={styles.headerText}> ✌️ Hello Setting </Text>
+        </View>
       </View>
       <View style={styles.body}>
-        <View style={styles.bodyItem}>
-          <View style={styles.bodyText}>
-            <Text style={styles.bodyTextTitle}> Full Name</Text>
-            <TextInput
-              placeholder="Full Name"
-              style={styles.bodyTextInput}
-              value={newfullname}
-              onChangeText={setNewfullname}
-            />
+        <View style={styles.bodyItems}>
+          <View style={styles.borderText}>
+            <Text style={styles.bodyTextTitlephone}> Change Password</Text>
+            <TouchableOpacity onPress={() => setshowpassword(!showpassword)}>
+              <AntDesign
+                name={showpassword ? "up" : "down"}
+                size={24}
+                color="black"
+              />
+            </TouchableOpacity>
           </View>
         </View>
-        <View style={styles.bodyItem}>
-          <View style={styles.bodyText}>
-            <Text style={styles.bodyTextTitle}> Address</Text>
-            <TextInput
-              placeholder="Address"
-              style={styles.bodyTextInput}
-              value={newAddress}
-              onChangeText={setNewAddress}
-            />
+        {showpassword && (
+          <View style={styles.changePasss}>
+            <View style={styles.bodyText}>
+              <Text style={styles.bodyTextTitle}> Password New</Text>
+              <TextInput
+                placeholder="Password New"
+                onChangeText={setNewPassword}
+                style={styles.bodyTextInput}
+              />
+            </View>
+            <View style={styles.bodyText}>
+              <Text style={styles.bodyTextTitle}> Confrim New Password</Text>
+              <TextInput
+                placeholder=" Confirm New Password"
+                onChangeText={setConfrimPassWord}
+                style={styles.bodyTextInput}
+              />
+            </View>
+            <TouchableOpacity onPress={handleUpdate}>
+              <View style={styles.bodyButton}>
+                <Text style={styles.bodyTextButton}> Update</Text>
+              </View>
+            </TouchableOpacity>
           </View>
-        </View>
-        <TouchableOpacity onPress={handleUpdate}>
-          <View style={styles.bodyButton}>
-            <Text style={styles.bodyTextButton}> Update</Text>
-          </View>
-        </TouchableOpacity>
+        )}
+        <View style={styles.bodyItems}>
+          <TouchableOpacity>
+            <View style={styles.borderText}>
+              <Text style={styles.bodyTextDelete}> Delete Accout</Text>
 
+              <AntDesign name="right" size={24} color="red" />
+            </View>
+          </TouchableOpacity>
+        </View>
         {showPasswordConfirmation && (
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
@@ -237,7 +237,7 @@ const EditProfile = () => {
   );
 };
 
-export default EditProfile;
+export default Setting;
 
 const styles = StyleSheet.create({
   container: {
@@ -270,13 +270,20 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
+  changePasss: {
+    borderWidth: 1,
+    backgroundColor: "white",
+    margin: 20,
+    height: 250,
+    borderRadius: 5,
+  },
   borderText: {
     height: 40,
     marginLeft: 15,
     marginRight: 15,
     backgroundColor: "white",
     justifyContent: "center",
-    borderRadius: 20,
+    borderRadius: 3,
     borderWidth: 2,
     borderColor: "gray",
     marginTop: 10,
@@ -289,6 +296,12 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "600",
     marginLeft: 5,
+  },
+  bodyTextDelete: {
+    fontSize: 15,
+    fontWeight: "600",
+    marginLeft: 5,
+    color: "red",
   },
   headerTitles: {
     height: (height * 10) / 100,
@@ -305,14 +318,9 @@ const styles = StyleSheet.create({
     width: width,
     height: (height * 60) / 100,
   },
-  bodyItem: {
+  bodyText: {
     width: width,
     height: (height * 9) / 100,
-    marginTop: 10,
-  },
-  bodyItems: {
-    width: width,
-    height: (height * 7) / 100,
     marginTop: 10,
   },
   bodyTextTitle: {
@@ -324,11 +332,12 @@ const styles = StyleSheet.create({
   },
   bodyTextInput: {
     height: 40,
+    width: 320,
     marginLeft: 15,
     marginRight: 15,
     backgroundColor: "white",
     padding: 10,
-    borderRadius: 20,
+    borderRadius: 5,
     borderColor: "black",
     borderWidth: 1,
   },
@@ -341,7 +350,7 @@ const styles = StyleSheet.create({
     borderColor: "#CCD2E8",
     width: 170,
     height: 35,
-    borderRadius: 20,
+    borderRadius: 10,
     backgroundColor: "black",
   },
   bodyTextButton: {
@@ -349,6 +358,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
   },
+
   modalContainer: {
     width: (width * 90) / 100,
     height: (height * 30) / 100,

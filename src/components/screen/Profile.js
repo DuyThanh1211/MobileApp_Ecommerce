@@ -133,8 +133,8 @@ const Profile = () => {
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button}>
-          <View style={styles.bodyItem}>
+        <TouchableOpacity style={styles.button} onPress={() => navigate.navigate("Setting")}>
+          <View style={styles.bodyItem} >
             <Feather
               name="settings"
               size={28}

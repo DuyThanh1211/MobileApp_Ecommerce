@@ -5,14 +5,33 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { getData } from "../../features/MyA";
+import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { apiApp, apiKey } from "../../features/ApiKey";
+
+const { width, height } = Dimensions.get("screen");
+
 const CheckOut = () => {
+  const [isTienMat, setIsTienMat] = useState(false);
+  const [isThe, setIsThe] = useState(false);
   const [cartItems, setCartItems] = useState([]);
 
   const navigation = useNavigation();
+
+  const toggleTienMat = () => {
+    setIsTienMat(true);
+    setIsThe(false);
+  };
+
+  const toggleThe = () => {
+    setIsThe(true);
+    setIsTienMat(false);
+  };
+
   useEffect(() => {
     retrieveCartItems();
   }, []);
@@ -84,48 +103,197 @@ const CheckOut = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.titleText}>Checkout</Text>
-      <FlatList
-        data={cartItems}
-        renderItem={renderItem}
-        keyExtractor={(item, index) => `${item.item.objectId}-${index}`}
-      />
-      <TouchableOpacity onPress={handleCheckOut}>
-        <Text>Check Out</Text>
-      </TouchableOpacity>
+      <View style={styles.header}>
+        <View style={styles.headerTitle}>
+          <TouchableOpacity>
+            <AntDesign
+              name="left"
+              size={25}
+              color="black"
+              style={styles.backHeader}
+            />
+          </TouchableOpacity>
+          <Text style={styles.textp}> Payment Methods</Text>
+        </View>
+
+        <View style={styles.headerItem}>
+          <TouchableOpacity onPress={toggleTienMat}>
+            {isTienMat ? (
+              <AntDesign name="checksquare" size={24} color="black" />
+            ) : (
+              <AntDesign name="checksquareo" size={24} color="black" />
+            )}
+          </TouchableOpacity>
+          <Text style={styles.TextTT}>Thanh Toán Tiền Mặt</Text>
+
+          <TouchableOpacity onPress={toggleThe}>
+            {isThe ? (
+              <AntDesign name="checksquare" size={24} color="black" />
+            ) : (
+              <AntDesign name="checksquareo" size={24} color="black" />
+            )}
+          </TouchableOpacity>
+          <Text style={styles.TextTT}> Thanh Toán Thẻ</Text>
+        </View>
+      </View>
+
+      <View style={styles.body}>
+        <FlatList
+          data={cartItems}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => `${item.item.objectId}-${index}`}
+        />
+      </View>
+
+      <View style={styles.footer}>
+        <View style={styles.textto}>
+          <Text style={styles.TextTotal}> Total: $2000</Text>
+        </View>
+        <View style={styles.Buttons}>
+          <TouchableOpacity>
+            <View style={styles.footerButton}>
+              <Text style={styles.TextButton} onPress={handleCheckOut}>
+                {" "}
+                Check Out
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 };
 
-export default CheckOut;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: "white",
+    alignItems: "center",
   },
-  titleText: {
+  header: {
+    width: (width * 95) / 100,
+    height: (height * 25) / 100,
+    alignItems: "center",
+    borderBottomWidth: 1,
+    backgroundColor: "blue",
+  },
+  headerTitle: {
+    justifyContent: "center",
+    marginTop: 20,
+    width: 350,
+  },
+  iconheader: {
+    alignItems: "center",
+  },
+  textp: {
+    marginHorizontal: 80,
     fontSize: 20,
-    fontWeight: "700",
-    marginBottom: 20,
+    fontWeight: "bold",
+    marginTop: -25,
   },
-  product: {
+  backHeader: {
+    marginHorizontal: 10,
+  },
+  headerItem: {
+    backgroundColor: "red",
+    flex: 1,
     flexDirection: "row",
+  },
+  check: {
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 10,
   },
-  productImage: {
-    width: 90,
-    height: 90,
-    borderRadius: 8,
+  TextTT: {
+    fontSize: 15,
+    fontWeight: "500",
   },
-  detailProduct: {
+
+  body: {
+    width: (width * 95) / 100,
+    height: height,
+    marginBottom: 60,
+  },
+  bodyItem: {
+    marginTop: 10,
+    borderWidth: 1,
+    borderRadius: 5,
+  },
+  tien: {
+    marginTop: 5,
+  },
+  details: {
+    flex: 1,
+  },
+  bodyItems: {
+    flexDirection: "row",
+    padding: 5,
+  },
+  textItem: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  textItemgiatien: {
+    fontSize: 13,
+    fontWeight: "bold",
+  },
+  textItemsize: {
+    fontSize: 11,
+    fontWeight: "200",
+  },
+  textItems: {
+    fontSize: 15,
+    fontWeight: "bold",
+  },
+  items: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
+  },
+  item: {
     flex: 1,
     padding: 10,
-    justifyContent: "space-between",
   },
-  nameProduct: {
-    fontWeight: "400",
-    fontSize: 15,
+  img: {
+    width: 90,
+    height: 120,
+  },
+
+  footer: {
+    position: "absolute",
+    width: width,
+    bottom: 0,
+    flexDirection: "row",
+  },
+  footerButton: {
+    width: 150,
+    height: 50,
+    backgroundColor: "black",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  TextButton: {
+    color: "white",
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  Buttons: {
+    flex: 1,
+    alignItems: "flex-end",
+  },
+  TextTotal: {
+    color: "black",
+    fontSize: 20,
+    fontWeight: "600",
+  },
+  textto: {
+    justifyContent: "center",
+    paddingLeft: 10,
+  },
+  containerHeader: {
+    backgroundColor: "red",
+    flex: 1,
+    flexDirection: "row",
   },
 });
+
+export default CheckOut;
