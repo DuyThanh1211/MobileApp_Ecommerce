@@ -63,6 +63,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
     color: "white",
+    justifyContent: "center",
+    alignItems: "center",
   },
   Texts: {
     fontSize: 50,
@@ -81,7 +83,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   texthello: {
-    marginVertical: 10, // Khoảng cách từ texthello tới các thành phần khác
-    alignItems: "center", // Căn giữa theo chiều ngang
+    marginVertical: 10,
+    alignItems: "center",
   },
 });

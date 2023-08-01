@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,14 +7,152 @@ import {
   TouchableOpacity,
   Dimensions,
   TextInput,
+  Alert,
 } from "react-native";
-import { AntDesign} from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { getData } from "../../features/MyA";
+import { apiApp, apiKey } from "../../features/ApiKey";
+
 const { width, height } = Dimensions.get("screen");
 
 const EditProfile = () => {
-
+  const [showpassword, setshowpassword] = useState(false);
+  const [showPasswordConfirmation, setShowPasswordConfirmation] =
+    useState(false);
   const navigate = useNavigation();
+  const [userProfile, setUserProfile] = useState(null);
+  const [newfullname, setNewfullname] = useState("");
+  const [newAddress, setNewAddress] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [newConfirmPassword, setConfrimPassWord] = useState("");
+  const [id, setId] = useState("");
+  const [confirmationPassword, setConfirmationPassword] = useState("");
+
+  const inUserID = async () => {
+    try {
+      const idUser = await getData("idUser");
+      return idUser;
+    } catch (error) {
+      console.error("Error inUserID:", error);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    inUserID()
+      .then((id) => {
+        setId(id);
+        fetch(
+          `https://api.backendless.com/${apiApp}/${apiKey}/data/Users/${id}`,
+          {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          }
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            setUserProfile({
+              name: data.name,
+              address: data.address,
+              password: data.password,
+              confirmpassword: data.confirmpassword,
+            });
+            setNewfullname(data.name);
+            setNewAddress(data.address);
+            setNewPassword(data.password);
+            setConfrimPassWord(data.confirmpassword);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      })
+      .catch((error) => {});
+  }, []);
+
+  const handleUpdate = () => {
+    if (!newfullname) {
+      Alert.alert("Lỗi", "Vui lòng không để trống tên của bạn");
+      return;
+    } else if (!newAddress) {
+      Alert.alert("Lỗi", "Vui lòng không để trống địa chỉ ");
+      return;
+    } else if (newfullname.length < 10 || newfullname.length > 50) {
+      Alert.alert("Lỗi", "Tên của bạn phải có ít nhất từ 10 đến 50 ký tự.");
+      return;
+    } else if (newfullname.trim().length === 0) {
+      Alert.alert("Lỗi", "Vui lòng nhập tên đầy đủ");
+      return;
+    } else if (!/^[a-zA-Z0-9\s]+$/.test(newfullname)) {
+      Alert.alert("Lỗi", "Tên của bạn không được chứa ký tự đặc biệt.");
+      return;
+    } else if (/\d/.test(newfullname)) {
+      Alert.alert(
+        "Lỗi",
+        "Bạn hãy nhập tên hợp lệ( Không được có số và ký tự đặc biệt)."
+      );
+      return;
+    }
+    const hasChangedInfo =
+      newfullname !== userProfile.name || newAddress !== userProfile.address;
+
+    if (hasChangedInfo) {
+      setShowPasswordConfirmation(true);
+    } else {
+      performUpdate();
+    }
+  };
+
+  const performUpdate = () => {
+    const updatedUserData = {
+      name: newfullname,
+      password: newPassword,
+      address: newAddress,
+      confirmpassword: newConfirmPassword,
+    };
+
+    if (newPassword !== "") {
+      updatedUserData.password = newPassword;
+    }
+
+    fetch(`https://api.backendless.com/${apiApp}/${apiKey}/data/Users/${id}`, {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedUserData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        Alert.alert("Cập nhật thông tin thành công!");
+        navigate.navigate("Profile", {
+          updatedData: {
+            name: newfullname,
+            address: newAddress,
+            password: newPassword,
+            confirmpassword: newConfirmPassword,
+          },
+        });
+      })
+      .catch((error) => {
+        console.error("Lỗi:", error);
+        Alert.alert("Đã xảy ra lỗi khi cập nhật mật khẩu");
+      });
+  };
+
+  const handlePasswordConfirmation = () => {
+    if (confirmationPassword === userProfile.confirmpassword) {
+      performUpdate();
+      setShowPasswordConfirmation(false);
+    } else {
+      Alert.alert("Mật khẩu xác nhận không chính xác!");
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -29,62 +167,108 @@ const EditProfile = () => {
           </TouchableOpacity>
           <Text style={styles.textHeader}> Edit Profile</Text>
         </View>
-        <View style={styles.headerTitles}>
-          <Text style={styles.headerText}> ✌️ Hello Thang </Text>
-        </View>
+        {userProfile ? (
+          <View style={styles.headerTitles}>
+            <Text style={styles.headerText}> ✌️ Hello {userProfile.name} </Text>
+          </View>
+        ) : (
+          <Text>Loading...</Text>
+        )}
       </View>
-
       <View style={styles.body}>
         <View style={styles.bodyItem}>
           <View style={styles.bodyText}>
             <Text style={styles.bodyTextTitle}> Full Name</Text>
-            <TextInput placeholder="Full Name" style={styles.bodyTextInput} />
+            <TextInput
+              placeholder="Full Name"
+              style={styles.bodyTextInput}
+              value={newfullname}
+              onChangeText={setNewfullname}
+            />
           </View>
         </View>
         <View style={styles.bodyItem}>
           <View style={styles.bodyText}>
             <Text style={styles.bodyTextTitle}> Address</Text>
-            <TextInput placeholder="Address" style={styles.bodyTextInput} />
-          </View>
-        </View>
-        <View style={styles.bodyItem}>
-          <View style={styles.bodyText}>
-            <Text style={styles.bodyTextTitle}> Phone Number</Text>
             <TextInput
-              placeholder="Phone Number"
+              placeholder="Address"
               style={styles.bodyTextInput}
+              value={newAddress}
+              onChangeText={setNewAddress}
             />
           </View>
         </View>
-        <View style={styles.bodyItem}>
-          <View style={styles.bodyText}>
-            <Text style={styles.bodyTextTitle}> Password New</Text>
-            <TextInput
-              placeholder="Password New"
-              style={styles.bodyTextInput}
-            />
+        <View style={styles.bodyItems}>
+          <View style={styles.borderText}>
+            <Text style={styles.bodyTextTitlephone}> Change Password</Text>
+            <TouchableOpacity onPress={() => setshowpassword(!showpassword)}>
+              <AntDesign
+                name={showpassword ? "up" : "down"}
+                size={24}
+                color="black"
+              />
+            </TouchableOpacity>
           </View>
         </View>
-        <View style={styles.bodyItem}>
-          <View style={styles.bodyText}>
-            <Text style={styles.bodyTextTitle}> Confrim Password</Text>
-            <TextInput
-              placeholder=" Confirm Password"
-              style={styles.bodyTextInput}
-            />
+        {showpassword && (
+          <View style={styles.changePasss}>
+            <View style={styles.bodyItem}>
+              <View style={styles.bodyText}>
+                <Text style={styles.bodyTextTitle}> Password New</Text>
+                <TextInput
+                  placeholder="Password New"
+                  onChangeText={setNewPassword}
+                  style={styles.bodyTextInput}
+                />
+              </View>
+            </View>
+            <View style={styles.bodyItem}>
+              <View style={styles.bodyText}>
+                <Text style={styles.bodyTextTitle}> Confrim Password</Text>
+                <TextInput
+                  placeholder=" Confirm Password"
+                  onChangeText={setConfrimPassWord}
+                  style={styles.bodyTextInput}
+                />
+              </View>
+            </View>
           </View>
-        </View>
-        <View style={styles.bodyItem}>
-          <View style={styles.bodyText}>
-            <Text style={styles.bodyTextTitle}> Password</Text>
-            <TextInput placeholder=" Password" style={styles.bodyTextInput} />
-          </View>
-        </View>
-        <TouchableOpacity>
+        )}
+        <TouchableOpacity onPress={handleUpdate}>
           <View style={styles.bodyButton}>
             <Text style={styles.bodyTextButton}> Update</Text>
           </View>
         </TouchableOpacity>
+
+        {showPasswordConfirmation && (
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalText}>
+                Vui lòng nhập mật khẩu của bạn để cập nhật thông tin
+              </Text>
+              <TextInput
+                secureTextEntry
+                style={styles.modalInput}
+                onChangeText={setConfirmationPassword}
+                placeholder="Mật khẩu"
+              />
+              <View style={styles.modalButtons}>
+                <TouchableOpacity
+                  style={styles.modalButton}
+                  onPress={() => setShowPasswordConfirmation(false)}
+                >
+                  <Text style={styles.modalButtonText}>Hủy</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.modalButton}
+                  onPress={handlePasswordConfirmation}
+                >
+                  <Text style={styles.modalButtonText}>Xác nhận</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -115,11 +299,6 @@ const styles = StyleSheet.create({
     fontSize: 23,
     fontWeight: "600",
   },
-  textmail: {
-    fontSize: 15,
-    fontWeight: "200",
-    marginLeft: 5,
-  },
   backHeader: {
     marginHorizontal: 9,
   },
@@ -128,15 +307,35 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
+  borderText: {
+    height: 40,
+    marginLeft: 15,
+    marginRight: 15,
+    backgroundColor: "white",
+    justifyContent: "center",
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: "gray",
+    marginTop: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 15,
+  },
+  bodyTextTitlephone: {
+    fontSize: 15,
+    fontWeight: "600",
+    marginLeft: 5,
+  },
   headerTitles: {
     height: (height * 10) / 100,
     marginLeft: 20,
     marginRight: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   headerText: {
     fontSize: 30,
-    fontWeight: '900'
+    fontWeight: "900",
   },
 
   body: {
@@ -148,6 +347,11 @@ const styles = StyleSheet.create({
     height: (height * 9) / 100,
     marginTop: 10,
   },
+  bodyItems: {
+    width: width,
+    height: (height * 7) / 100,
+    marginTop: 10,
+  },
   bodyTextTitle: {
     fontSize: 17,
     fontWeight: "600",
@@ -155,6 +359,7 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginRight: 15,
   },
+  changePasss: {},
   bodyTextInput: {
     height: 40,
     marginLeft: 15,
@@ -181,5 +386,46 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     color: "white",
+  },
+  modalContainer: {
+    width: (width * 90) / 100,
+    height: (height * 30) / 100,
+    position: "absolute",
+    top: "40%",
+    alignSelf: "center",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#DCDCDC",
+    marginTop: -((height * 30) / 100) / 2,
+  },
+  modalContent: {
+    width: (width * 80) / 100,
+    height: (height * 20) / 100,
+  },
+  modalText: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  modalInput: {
+    marginTop: 15,
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 10,
+  },
+  modalButtons: {
+    marginTop: 15,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginLeft: 5,
+    marginRight: 5,
+  },
+  modalButton: {
+    borderRadius: 10,
+    borderWidth: 1,
+    height: 30,
+    width: 90,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

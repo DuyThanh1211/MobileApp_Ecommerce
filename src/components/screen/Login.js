@@ -14,6 +14,7 @@ import { AntDesign, Entypo } from "@expo/vector-icons";
 import { apiKey, apiApp } from "../../features/ApiKey";
 
 import { useNavigation } from "@react-navigation/core";
+import { storeData } from "../../features/MyA";
 const { width, height } = Dimensions.get("screen");
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -28,16 +29,13 @@ const Login = () => {
     if (!username.trim() || !password.trim()) {
       Alert.alert("Lỗi", "Bạn hãy điền đầy đủ thông tin!");
       return;
-    } else if (!username.endsWith("@gmail.com")) {
-      Alert.alert(
-        "Lỗi",
-        "Bạn hãy điền email hợp lệ(phải bao gồm: @gmail.com)!"
-      );
+    } else if (username.includes(" ") || password.includes(" ")) {
+      Alert.alert("Lỗi", "Vui lòng không nhập space");
       return;
     }
 
     fetch(
-      `https://api.backendless.com/${apiApp}/${apiKey}/data/Users?where=gmail%3D'${username}'`,
+      `https://api.backendless.com/${apiApp}/${apiKey}/data/Users?where=phonenumber%3D'${username}'`,
       {
         method: "GET",
         headers: {
@@ -64,6 +62,7 @@ const Login = () => {
             .then((data) => {
               if (data.objectId) {
                 console.log("objectId:", data.objectId);
+                storeData("idUser", data.objectId);
                 navigate.navigate("Home");
               } else {
                 console.log("Sai Mật Khẩu");
@@ -106,7 +105,7 @@ const Login = () => {
         <View style={styles.bodyUser}>
           <TextInput
             style={styles.textinput}
-            placeholder=" Enter your email"
+            placeholder=" Enter your phone number"
             value={username}
             onChangeText={(text) => setUsername(text)}
           />
