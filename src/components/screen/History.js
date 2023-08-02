@@ -60,6 +60,9 @@ const History = () => {
   const renderItem = ({ item }) => {
     const isSameUser = loggedInUser && item.idUser === loggedInUser;
 
+    const formatTotal = item.GiaTien * item.SoLuong;
+    const formatedTotal = formatTotal.toFixed(2);
+
     const createdDate = new Date(item.created);
     const formattedDate = `${createdDate.toLocaleDateString()} ${createdDate.toLocaleTimeString()}`;
     console.log(item.created);
@@ -82,9 +85,7 @@ const History = () => {
               <Text>{item.NgayMua}</Text>
             </View>
             <View style={styles.priceQuantity}>
-              <Text style={styles.total}>
-                Total: ${item.GiaTien * item.SoLuong}
-              </Text>
+              <Text style={styles.total}>Total: ${formatedTotal}</Text>
               <Text>x{item.SoLuong}</Text>
             </View>
           </View>
