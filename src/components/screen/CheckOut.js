@@ -87,7 +87,7 @@ const CheckOut = () => {
         Alert.alert("Lỗi", "Vui lòng nhập địa chỉ đầy đủ");
         return;
       } else if (!address) {
-        Alert.alert("Lỗi", "Vui lòng không để trống địa chí");
+        Alert.alert("Lỗi", "Vui lòng không để trống địa chỉ");
         return;
       } else if (!/^[\w\s/]*$/.test(address)) {
         Alert.alert(
