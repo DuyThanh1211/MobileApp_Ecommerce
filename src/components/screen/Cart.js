@@ -12,7 +12,7 @@ import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { FlatList } from "react-native-gesture-handler";
 import BottomTab from "../navigations/BottomTab";
-import { getData, storeData } from "../../features/MyA";
+import { getData, storeData, removeData } from "../../features/MyA";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 
 const Cart = () => {
@@ -22,10 +22,10 @@ const Cart = () => {
   const [Loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    getCartItems();
-    setLoading(true);
-  }, []);
+  // useEffect(() => {
+  //   getCartItems();
+  //   setLoading(true);
+  // }, []);
 
   useEffect(() => {
     if (isFocused) {
@@ -57,18 +57,18 @@ const Cart = () => {
     }
   };
 
-  const getCartItems = async () => {
-    try {
-      const cartItemsJSON = await getData("shoppingBagItems");
-      if (cartItemsJSON) {
-        const cartItemsArray = JSON.parse(cartItemsJSON);
-        setCartItems(cartItemsArray);
-        setLoading(false);
-      }
-    } catch (error) {
-      console.error("Error retrieving cart items from AsyncStorage:", error);
-    }
-  };
+  // const getCartItems = async () => {
+  //   try {
+  //     const cartItemsJSON = await getData("shoppingBagItems");
+  //     if (cartItemsJSON) {
+  //       const cartItemsArray = JSON.parse(cartItemsJSON);
+  //       setCartItems(cartItemsArray);
+  //       setLoading(false);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error retrieving cart items from AsyncStorage:", error);
+  //   }
+  // };
 
   const renderCartItem = ({ item, index }) => {
     const navigateToDetails = async () => {
@@ -205,8 +205,14 @@ const Cart = () => {
   };
 
   const handleCheckOut = async () => {
+    if (cartItems.length === 0) {
+      Alert.alert("Thông báo", "Chưa có sản phẩm trong giỏ hàng.");
+      return;
+    }
+
     try {
-      await storeData("cartItems", JSON.stringify(cartItems));
+      await storeData("checkoutItems", JSON.stringify(cartItems));
+
       navigation.navigate("CheckOut");
     } catch (error) {
       console.error("Error storing cart items in AsyncStorage:", error);
@@ -260,7 +266,14 @@ const Cart = () => {
             <Text style={styles.totalText}>Total</Text>
             <Text style={styles.totalNum}>${TotalPrice()}</Text>
           </View>
-          <TouchableOpacity style={styles.button} onPress={handleCheckOut}>
+
+          <TouchableOpacity
+            style={[
+              styles.button,
+              cartItems.length === 0 && styles.disabledButton,
+            ]}
+            onPress={handleCheckOut}
+          >
             <Text style={styles.buttonText}>Checkout</Text>
           </TouchableOpacity>
         </View>
@@ -273,12 +286,15 @@ const Cart = () => {
 export default Cart;
 
 const styles = StyleSheet.create({
+  disabledButton: {
+    backgroundColor: "gray",
+  },
   container: {
     flex: 1,
     backgroundColor: "black",
   },
   title: {
-    paddingTop: 50,
+    paddingTop: 20,
     padding: 20,
     justifyContent: "center",
     alignItems: "center",

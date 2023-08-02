@@ -5,7 +5,6 @@ export const ProductListCss = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     height: 90,
-    paddingTop: 35,
     backgroundColor: "black",
   },
   back: {
@@ -56,6 +55,7 @@ export const ProductListCss = StyleSheet.create({
   },
   search: {
     padding: 10,
+    marginTop: 0,
     margin: 10,
     borderWidth: 1,
     borderRadius: 10,

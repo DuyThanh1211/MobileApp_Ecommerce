@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,9 +11,9 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 const { width, height } = Dimensions.get("screen");
-
 const BottomTab = () => {
   const navigation = useNavigation();
+
   const handleHomePress = () => {
     navigation.navigate("Home");
   };

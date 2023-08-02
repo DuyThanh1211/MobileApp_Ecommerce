@@ -7,29 +7,35 @@ import {
   TouchableOpacity,
   Dimensions,
   TextInput,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { getData } from "../../features/MyA";
+import { getData, removeData, storeData } from "../../features/MyA";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { apiApp, apiKey } from "../../features/ApiKey";
 
+import { useIsFocused } from "@react-navigation/native";
+
 const CheckOut = () => {
-  const [isTienMat, setIsTienMat] = useState(true);
-  const [isThe, setIsThe] = useState(false);
+  const [isCast, setIsCast] = useState(true);
+  const [isCard, setIsCard] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [text, onChangeText] = React.useState("");
   const [totalPrice, setTotalPrice] = useState(0);
   const navigation = useNavigation();
+  const [Loading, setLoading] = useState(false);
 
-  const toggleTienMat = () => {
-    setIsTienMat(true);
-    setIsThe(false);
+  const isFocused = useIsFocused();
+
+  const toggleCast = () => {
+    setIsCast(true);
+    setIsCard(false);
   };
 
-  const toggleThe = () => {
-    setIsThe(true);
-    setIsTienMat(false);
+  const toggleCard = () => {
+    setIsCard(true);
+    setIsCast(false);
   };
 
   const retrieveAddress = async () => {
@@ -48,9 +54,16 @@ const CheckOut = () => {
     setTotalPrice(totalPrice);
   };
 
+  useEffect(() => {
+    if (isFocused) {
+      retrieveCartItems();
+    }
+  }, [isFocused]);
+
   const retrieveCartItems = async () => {
     try {
-      const cartItemsJSON = await getData("cartItems");
+      console.log("Retrieving cart items from AsyncStorage...");
+      const cartItemsJSON = await getData("checkoutItems");
       if (cartItemsJSON) {
         const cartItemsArray = JSON.parse(cartItemsJSON);
         setCartItems(cartItemsArray);
@@ -63,6 +76,8 @@ const CheckOut = () => {
   const handleCheckOut = async () => {
     try {
       const userObjectID = await getData("idUser");
+      const paymentMethod = isCast ? "cash" : "card";
+      const address = text;
 
       for (const item of cartItems) {
         const checkoutData = {
@@ -72,10 +87,12 @@ const CheckOut = () => {
           Size: item.size,
           SoLuong: item.quantity,
           Hinh: item.item.Image,
+          PhuongThucThanhToan: paymentMethod,
+          DiaChi: address,
         };
 
         const response = await fetch(
-          `https://api.backendless.com/${apiApp}/${apiKey}/data/LichSuMuaHang`,
+          `https://api.backendless.com/${apiApp}/${apiKey}/data/LichSuMuaHang?pageSize=40`,
           {
             method: "POST",
             headers: {
@@ -85,17 +102,27 @@ const CheckOut = () => {
           }
         );
 
-        if (response.ok) {
-          console.log(`Checkout successful!`);
-          navigation.navigate("Home");
-        } else {
+        if (!response.ok) {
           console.error(
             `Error during checkout for ${item.item.TenSanPham}:`,
             response.status,
             response.statusText
           );
+          return;
         }
       }
+
+      console.log("Checkout successful!");
+      await removeData("shoppingBagItems");
+      Alert.alert("Thanh toán thành công", "Bạn đã thanh toán thành công", [
+        {
+          text: "Đồng ý",
+          onPress: () => {
+            setCartItems([]);
+            navigation.navigate("Home");
+          },
+        },
+      ]);
     } catch (error) {
       console.error("Error during checkout:", error);
     }
@@ -136,8 +163,8 @@ const CheckOut = () => {
 
       <View style={styles.payment}>
         <View style={styles.paymentCheckBox}>
-          <TouchableOpacity onPress={toggleTienMat}>
-            {isTienMat ? (
+          <TouchableOpacity onPress={toggleCast}>
+            {isCast ? (
               <AntDesign name="checksquare" size={24} color="white" />
             ) : (
               <AntDesign name="checksquareo" size={24} color="white" />
@@ -147,8 +174,8 @@ const CheckOut = () => {
         </View>
 
         <View style={styles.paymentCheckBox}>
-          <TouchableOpacity onPress={toggleThe}>
-            {isThe ? (
+          <TouchableOpacity onPress={toggleCard}>
+            {isCard ? (
               <AntDesign name="checksquare" size={24} color="white" />
             ) : (
               <AntDesign name="checksquareo" size={24} color="white" />
@@ -192,7 +219,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-end",
     justifyContent: "center",
-    paddingTop: 50,
+    paddingTop: 20,
     paddingBottom: 10,
   },
   backHeader: {

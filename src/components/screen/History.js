@@ -59,6 +59,9 @@ const History = () => {
   const renderItem = ({ item }) => {
     const isSameUser = loggedInUser && item.idUser === loggedInUser;
 
+    const createdDate = new Date(item.created);
+    const formattedDate = `${createdDate.toLocaleDateString()} ${createdDate.toLocaleTimeString()}`;
+    console.log(item.created);
     if (isSameUser) {
       return (
         <View style={styles.product}>
@@ -73,6 +76,7 @@ const History = () => {
               <View>
                 <Text style={styles.price}>${item.GiaTien}</Text>
                 <Text>Size: {item.Size}</Text>
+                <Text>Ngày đặt: {formattedDate}</Text>
               </View>
               <Text>{item.NgayMua}</Text>
             </View>
@@ -153,7 +157,7 @@ const styles = StyleSheet.create({
   },
   topTitle: {
     flexDirection: "row",
-    height: 90,
+    height: 70,
     backgroundColor: "black",
     alignItems: "flex-end",
     justifyContent: "center",

@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     padding: 5,
     alignItems: "center",
-    height: 80,
+    height: 60,
     backgroundColor: "black",
   },
   logo: {
