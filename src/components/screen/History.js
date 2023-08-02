@@ -38,7 +38,7 @@ const History = () => {
   const fetchPurchaseHistory = async () => {
     try {
       const response = await fetch(
-        "https://api.backendless.com/BF32422B-2D6B-81ED-FF35-CD7D59024B00/D0672C31-F3A5-4156-BFE7-6439A190F7BA/data/LichSuMuaHang?offset=0"
+        "https://api.backendless.com/AB89E3DF-3D05-C109-FFB9-BE1C04C5A900/07A6E400-E19B-4D34-ACE6-422033446351/data/LichSuMuaHang?pageSize=40"
       );
       if (response.ok) {
         const data = await response.json();
