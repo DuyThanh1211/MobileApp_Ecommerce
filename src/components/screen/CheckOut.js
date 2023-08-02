@@ -80,6 +80,22 @@ const CheckOut = () => {
       const userObjectID = await getData("idUser");
       const paymentMethod = isCast ? "cash" : "card";
       const address = text;
+      if (!address.length > 50) {
+        Alert.alert("Lỗi", "Địa chỉ của bạn chỉ được tối đa 50 ký tự.");
+        return;
+      } else if (!address.trim().length === 0) {
+        Alert.alert("Lỗi", "Vui lòng nhập địa chỉ đầy đủ");
+        return;
+      } else if (!address) {
+        Alert.alert("Lỗi", "Vui lòng không để trống địa chỉ");
+        return;
+      } else if (!/^[\w\s/]*$/.test(address)) {
+        Alert.alert(
+          "Lỗi",
+          "Địa chỉ của bạn không hợp lệ. Vui lòng chỉ nhập số, chữ cái hoặc dấu '/'"
+        );
+        return;
+      }
       setLoading(true);
       for (const item of cartItems) {
         const checkoutData = {
