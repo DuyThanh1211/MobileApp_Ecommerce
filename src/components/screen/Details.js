@@ -72,9 +72,8 @@ const Details = () => {
         bagItems.push(shoppingBagItem);
       }
 
-      // Save updated cart items to AsyncStorage
       await storeData("shoppingBagItems", JSON.stringify(bagItems));
-      console.log("Item added to shopping bag!");
+      // console.log("Item added to shopping bag!");
       handleAddToBagCallback();
     } catch (error) {
       console.error("Error adding item to shopping bag:", error);

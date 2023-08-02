@@ -36,7 +36,6 @@ const Profile = () => {
   const clearShoppingBagItems = async () => {
     try {
       await AsyncStorage.removeItem("shoppingBagItems");
-      console.log("Shopping bag items cleared!");
     } catch (error) {
       console.error("Error clearing shopping bag items:", error);
     }
