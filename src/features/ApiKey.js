@@ -1,6 +1,6 @@
-// export const apiApp = "AB89E3DF-3D05-C109-FFB9-BE1C04C5A900";
+export const apiApp = "AB89E3DF-3D05-C109-FFB9-BE1C04C5A900";
 
-// export const apiKey = "07A6E400-E19B-4D34-ACE6-422033446351";
-export const apiApp = "BF32422B-2D6B-81ED-FF35-CD7D59024B00";
+export const apiKey = "07A6E400-E19B-4D34-ACE6-422033446351";
+// export const apiApp = "BF32422B-2D6B-81ED-FF35-CD7D59024B00";
 
-export const apiKey = "D0672C31-F3A5-4156-BFE7-6439A190F7BA";
+// export const apiKey = "D0672C31-F3A5-4156-BFE7-6439A190F7BA";

@@ -9,6 +9,7 @@ import {
   TextInput,
   Alert,
   ActivityIndicator,
+  Modal,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -18,8 +19,6 @@ import { apiApp, apiKey } from "../../features/ApiKey";
 const { width, height } = Dimensions.get("screen");
 
 const EditProfile = () => {
-  const [showPasswordConfirmation, setShowPasswordConfirmation] =
-    useState(false);
   const navigate = useNavigation();
   const [userProfile, setUserProfile] = useState(null);
   const [newfullname, setNewfullname] = useState("");
@@ -28,6 +27,7 @@ const EditProfile = () => {
   const [confirmationPassword, setConfirmationPassword] = useState("");
   const [Loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const inUserID = async () => {
     try {
@@ -80,20 +80,14 @@ const EditProfile = () => {
     } else if (!newAddress) {
       Alert.alert("Lỗi", "Vui lòng không để trống địa chỉ ");
       return;
-    } else if (newAddress.length < 8 || newAddress.length > 50) {
-      Alert.alert(
-        "Lỗi",
-        "Địa chỉ của bạn phải có ít nhất từ 8 ký tự và tối đa 50 ký tự."
-      );
+    } else if (newAddress.length > 50) {
+      Alert.alert("Lỗi", "Địa chỉ của bạn chỉ được tối đa 50 ký tự.");
       return;
     } else if (newAddress.trim().length === 0) {
       Alert.alert("Lỗi", "Vui lòng nhập địa chỉ đầy đủ");
       return;
-    } else if (newfullname.length < 10 || newfullname.length > 30) {
-      Alert.alert(
-        "Lỗi",
-        "Tên của bạn phải có ít nhất từ 10 ký tự và tối đa 30 ký tự."
-      );
+    } else if (newfullname.length > 30) {
+      Alert.alert("Lỗi", "Tên của bạn chỉ được tối đa 30 ký tự.");
       return;
     } else if (newfullname.trim().length === 0) {
       Alert.alert("Lỗi", "Vui lòng nhập tên đầy đủ");
@@ -119,7 +113,7 @@ const EditProfile = () => {
       newfullname !== userProfile.name || newAddress !== userProfile.address;
 
     if (hasChangedInfo) {
-      setShowPasswordConfirmation(true);
+      setIsModalVisible(true);
     } else {
       performUpdate();
     }
@@ -160,7 +154,7 @@ const EditProfile = () => {
   const handlePasswordConfirmation = () => {
     if (confirmationPassword === userProfile.confirmpassword) {
       performUpdate();
-      setShowPasswordConfirmation(false);
+      setIsModalVisible(false);
     } else {
       Alert.alert("Mật khẩu xác nhận không chính xác!");
     }
@@ -168,8 +162,15 @@ const EditProfile = () => {
 
   if (Loading) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size={"large"} color="black"></ActivityIndicator>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "black",
+        }}
+      >
+        <ActivityIndicator size={"large"} color="white"></ActivityIndicator>
       </View>
     );
   }
@@ -232,7 +233,12 @@ const EditProfile = () => {
           </View>
         </TouchableOpacity>
 
-        {showPasswordConfirmation && (
+        <Modal
+          visible={isModalVisible}
+          transparent={true}
+          animationType="fade"
+          onRequestClose={() => setIsModalVisible(false)}
+        >
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
               <Text style={styles.modalText}>
@@ -247,7 +253,7 @@ const EditProfile = () => {
               <View style={styles.modalButtons}>
                 <TouchableOpacity
                   style={styles.modalButton}
-                  onPress={() => setShowPasswordConfirmation(false)}
+                  onPress={() => setIsModalVisible(false)}
                 >
                   <Text style={styles.modalButtonText}>Hủy</Text>
                 </TouchableOpacity>
@@ -260,7 +266,7 @@ const EditProfile = () => {
               </View>
             </View>
           </View>
-        )}
+        </Modal>
       </View>
     </View>
   );

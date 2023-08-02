@@ -8,6 +8,7 @@ import {
   Dimensions,
   TextInput,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { getData, removeData, storeData } from "../../features/MyA";
@@ -25,6 +26,7 @@ const CheckOut = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const navigation = useNavigation();
   const [Loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const isFocused = useIsFocused();
 
@@ -78,7 +80,7 @@ const CheckOut = () => {
       const userObjectID = await getData("idUser");
       const paymentMethod = isCast ? "cash" : "card";
       const address = text;
-
+      setLoading(true);
       for (const item of cartItems) {
         const checkoutData = {
           idUser: userObjectID,
@@ -108,6 +110,7 @@ const CheckOut = () => {
             response.status,
             response.statusText
           );
+          setLoading(false);
           return;
         }
       }
@@ -151,6 +154,28 @@ const CheckOut = () => {
   useEffect(() => {
     retrieveAddress();
   }, []);
+
+  if (Loading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "black",
+        }}
+      >
+        <ActivityIndicator size={"large"} color="white"></ActivityIndicator>
+      </View>
+    );
+  }
+  if (error) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text> Lỗi Tải Dữ Liệu, Hãy Kiểm Tra Lại Đuờng Truyền</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
