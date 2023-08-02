@@ -9,6 +9,7 @@ import {
   StyleSheet,
   StatusBar,
   ActivityIndicator,
+  BackHandler,
 } from "react-native";
 import { apiKey, apiApp } from "../../features/ApiKey";
 import BottomTab from "../navigations/BottomTab";
@@ -18,6 +19,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Dimensions } from "react-native";
 import { apiUrl } from "../../features/apiURL";
 import { storeData } from "../../features/MyA";
+import { BackAndroid } from "react-native";
 
 const Home = () => {
   const { width } = Dimensions.get("window");
@@ -27,6 +29,14 @@ const Home = () => {
   const [men, setMen] = useState([]);
   const [Loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => true
+    );
+    return () => backHandler.remove();
+  }, []);
 
   const getDataAPI = () => {
     fetch(apiUrl)
