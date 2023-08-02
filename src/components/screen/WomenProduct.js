@@ -103,21 +103,6 @@ const WomenProduct = () => {
     return null;
   };
 
-  if (Loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size={"large"} color="black"></ActivityIndicator>
-      </View>
-    );
-  }
-  if (error) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text> Lỗi Tải Dữ Liệu, Hãy Kiểm Tra Lại Đuờng Truyền</Text>
-      </View>
-    );
-  }
-
   return (
     <>
       <View style={ProductListCss.topNavigation}>

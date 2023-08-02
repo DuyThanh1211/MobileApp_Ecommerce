@@ -11,6 +11,7 @@ import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { getData } from "../../features/MyA";
+import { apiApp, apiKey } from "../../features/ApiKey";
 
 const History = () => {
   const navigation = useNavigation();
@@ -38,7 +39,7 @@ const History = () => {
   const fetchPurchaseHistory = async () => {
     try {
       const response = await fetch(
-        "https://api.backendless.com/AB89E3DF-3D05-C109-FFB9-BE1C04C5A900/07A6E400-E19B-4D34-ACE6-422033446351/data/LichSuMuaHang?pageSize=40"
+        `https://api.backendless.com/${apiApp}/${apiKey}/data/LichSuMuaHang?pageSize=40`
       );
       if (response.ok) {
         const data = await response.json();
@@ -96,8 +97,15 @@ const History = () => {
 
   if (Loading) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size={"large"} color="black"></ActivityIndicator>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "black",
+        }}
+      >
+        <ActivityIndicator size={"large"} color="white"></ActivityIndicator>
       </View>
     );
   }
