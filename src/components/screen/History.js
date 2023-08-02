@@ -70,7 +70,7 @@ const History = () => {
             <Image source={{ uri: item.Hinh }} style={styles.image} />
           </View>
           <View style={styles.detailsContainer}>
-            <Text style={styles.nameProduct} numberOfLines={2}>
+            <Text style={styles.nameProduct} numberOfLines={1}>
               {item.TenSanPham}
             </Text>
             <View style={styles.infoContainer}>

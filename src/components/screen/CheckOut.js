@@ -135,7 +135,9 @@ const CheckOut = () => {
     <View style={styles.product}>
       <Image source={{ uri: item.item.Image }} style={styles.productImage} />
       <View style={styles.detailProduct}>
-        <Text style={styles.nameProduct}>{item.item.TenSanPham}</Text>
+        <Text style={styles.nameProduct} numberOfLines={1}>
+          {item.item.TenSanPham}
+        </Text>
         <Text style={styles.priceProduct}>${item.item.GiaTien}</Text>
         <Text style={styles.sizeProduct}>Size: {item.size}</Text>
         <Text style={styles.quantityProduct}>Quantity: {item.quantity}</Text>
@@ -301,6 +303,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   nameProduct: {
+    width: 200,
     color: "white",
   },
   priceProduct: {

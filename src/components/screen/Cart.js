@@ -123,7 +123,9 @@ const Cart = () => {
         </TouchableWithoutFeedback>
         <View style={styles.detailProduct}>
           <TouchableOpacity onPress={navigateToDetails}>
-            <Text style={styles.nameProduct}>{item.item.TenSanPham}</Text>
+            <Text style={styles.nameProduct} numberOfLines={1}>
+              {item.item.TenSanPham}
+            </Text>
           </TouchableOpacity>
           <View style={styles.priceSize}>
             <Text style={{ fontWeight: "600", fontSize: 20 }}>
@@ -382,7 +384,6 @@ const styles = StyleSheet.create({
   remove: {},
   productImage: {
     width: 90,
-
     borderRadius: 8,
   },
   buttonQuantity: {
