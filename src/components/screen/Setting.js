@@ -8,6 +8,7 @@ import {
   Dimensions,
   TextInput,
   Alert,
+  Modal,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -28,6 +29,7 @@ const Setting = () => {
   const [newConfirmPassword, setConfrimPassWord] = useState("");
   const [id, setId] = useState("");
   const [confirmationPassword, setConfirmationPassword] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   const inUserID = async () => {
     try {
@@ -85,7 +87,7 @@ const Setting = () => {
     } else if (!newPassword || !newConfirmPassword) {
       Alert.alert("Lỗi", "Vui lòng điền đầy đủ để cập nhật mật khẩu.");
       return;
-    } else if (newPassword != newConfirmPassword) {
+    } else if (newPassword !== newConfirmPassword) {
       Alert.alert("Lỗi", "Vui lòng điền mật khẩu trùng khớp.");
       return;
     }
@@ -100,6 +102,7 @@ const Setting = () => {
       performUpdate();
     }
   };
+
   const LockAcc = () => {
     const updatedUserData = {
       status: "xoa",
@@ -115,7 +118,7 @@ const Setting = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        Alert.alert("Thông Báo", "Tài khoảng của bạn sẽ bị khoá sau 10 ngày");
+        Alert.alert("Thông Báo", "Tài khoản của bạn sẽ bị khoá sau 10 ngày");
         navigate.navigate("Lockacc");
       })
       .catch((error) => {
@@ -207,20 +210,22 @@ const Setting = () => {
               <TextInput
                 placeholder="Password New"
                 onChangeText={setNewPassword}
+                secureTextEntry
                 style={styles.bodyTextInput}
               />
             </View>
             <View style={styles.bodyText}>
-              <Text style={styles.bodyTextTitle}> Confrim New Password</Text>
+              <Text style={styles.bodyTextTitle}> Confirm New Password</Text>
               <TextInput
-                placeholder=" Confirm New Password"
+                placeholder="Confirm New Password"
                 onChangeText={setConfrimPassWord}
+                secureTextEntry
                 style={styles.bodyTextInput}
               />
             </View>
             <TouchableOpacity onPress={handleUpdate}>
               <View style={styles.bodyButton}>
-                <Text style={styles.bodyTextButton}> Update</Text>
+                <Text style={styles.bodyTextButton}> Change</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -228,71 +233,74 @@ const Setting = () => {
         <View style={styles.bodyItems}>
           <TouchableOpacity onPress={() => setShowLockConfirmation(true)}>
             <View style={styles.borderText}>
-              <Text style={styles.bodyTextDelete}> Delete Accout</Text>
-
+              <Text style={styles.bodyTextDelete}> Delete Account</Text>
               <AntDesign name="right" size={24} color="red" />
             </View>
           </TouchableOpacity>
         </View>
         {showPasswordConfirmation && (
+          <Modal transparent visible={showPasswordConfirmation}>
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <Text style={styles.modalText}>
+                  Vui lòng nhập mật khẩu của bạn để cập nhật thông tin
+                </Text>
+                <TextInput
+                  secureTextEntry
+                  style={styles.modalInput}
+                  onChangeText={setConfirmationPassword}
+                  placeholder="Mật khẩu"
+                />
+                <View style={styles.modalButtons}>
+                  <TouchableOpacity
+                    style={styles.modalButton}
+                    onPress={() => setShowPasswordConfirmation(false)}
+                  >
+                    <Text style={styles.modalButtonText}>Hủy</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.modalButton}
+                    onPress={handlePasswordConfirmation}
+                  >
+                    <Text style={styles.modalButtonText}>Xác nhận</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Modal>
+        )}
+      </View>
+      {showLockConfirmation && (
+        <Modal transparent visible={showLockConfirmation}>
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
               <Text style={styles.modalText}>
-                Vui lòng nhập mật khẩu của bạn để cập nhật thông tin
+                Bạn có chắc muốn xoá tài khoản này?
               </Text>
               <TextInput
                 secureTextEntry
                 style={styles.modalInput}
-                onChangeText={setConfirmationPassword}
-                placeholder="Mật khẩu"
+                onChangeText={setLockConfirmationPassword}
+                value={lockConfirmationPassword}
+                placeholder="Mật Khẩu"
               />
               <View style={styles.modalButtons}>
                 <TouchableOpacity
                   style={styles.modalButton}
-                  onPress={() => setShowPasswordConfirmation(false)}
+                  onPress={() => setShowLockConfirmation(false)}
                 >
-                  <Text style={styles.modalButtonText}>Hủy</Text>
+                  <Text style={styles.modalButtonText}>Huỷ</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.modalButton}
-                  onPress={handlePasswordConfirmation}
+                  onPress={handleLockAccount}
                 >
-                  <Text style={styles.modalButtonText}>Xác nhận</Text>
+                  <Text style={styles.modalButtonText}>Xác Nhận</Text>
                 </TouchableOpacity>
               </View>
             </View>
           </View>
-        )}
-      </View>
-      {showLockConfirmation && (
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalText}>
-              Bạn có chắc muốn xoá tài khoảng này?
-            </Text>
-            <TextInput
-              secureTextEntry
-              style={styles.modalInput}
-              onChangeText={setLockConfirmationPassword}
-              value={lockConfirmationPassword}
-              placeholder="Mật Khẩu"
-            />
-            <View style={styles.modalButtons}>
-              <TouchableOpacity
-                style={styles.modalButton}
-                onPress={() => setShowLockConfirmation(false)}
-              >
-                <Text style={styles.modalButtonText}>Huỷ</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.modalButton}
-                onPress={handleLockAccount}
-              >
-                <Text style={styles.modalButtonText}>Xoá</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
+        </Modal>
       )}
     </View>
   );
@@ -313,15 +321,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginVertical: 35,
     alignItems: "center",
-  },
-  Text: {
-    justifyContent: "center",
-    alignSelf: "center",
-    marginVertical: 110,
-  },
-  textname: {
-    fontSize: 23,
-    fontWeight: "600",
   },
   backHeader: {
     marginHorizontal: 9,
@@ -430,7 +429,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#DCDCDC",
-    marginTop: -((height * 30) / 100) / 2,
+    marginTop: -((height * 20) / 100) / 2,
   },
   modalContent: {
     width: (width * 80) / 100,
@@ -460,5 +459,9 @@ const styles = StyleSheet.create({
     width: 90,
     alignItems: "center",
     justifyContent: "center",
+  },
+  modalButtonText: {
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });

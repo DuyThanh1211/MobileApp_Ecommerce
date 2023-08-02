@@ -5,6 +5,7 @@ import {
   View,
   ImageBackground,
   TouchableOpacity,
+  StatusBar,
 } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 
@@ -16,6 +17,7 @@ const Begin = () => {
   };
   return (
     <View style={styles.container}>
+      <StatusBar />
       <ImageBackground
         style={styles.background}
         source={{
