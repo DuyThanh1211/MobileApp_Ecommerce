@@ -90,7 +90,6 @@ const History = () => {
         </View>
       );
     } else {
-      // Return null if the user doesn't match, so the item won't be rendered
       return null;
     }
   };
