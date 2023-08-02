@@ -152,9 +152,9 @@ const Login = () => {
         </View>
         <View style={styles.bodyForgot}>
           <TouchableOpacity
-            onPress={() => {
-              navigate.navigate("Forgot");
-            }}
+          // onPress={() => {
+          //   navigate.navigate("Forgot");
+          // }}
           >
             <Text style={styles.bodyTextFor}> Forgot Password?</Text>
           </TouchableOpacity>
