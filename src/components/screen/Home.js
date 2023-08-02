@@ -117,7 +117,7 @@ const Home = () => {
   const saleList = [
     {
       id: "1",
-      sale: "https://images.squarespace-cdn.com/content/v1/55e467b1e4b0a2a709a23aa9/e9274d45-d26c-4d87-b75b-6f15d5654a4d/NikeUltimateSale",
+      sale: "https://static.nike.com/a/images/f_auto/dpr_1.1,cs_srgb/h_816,c_limit/d876c9dc-49ec-4a81-a0e9-27b396093584/image.png",
     },
     {
       id: "2",

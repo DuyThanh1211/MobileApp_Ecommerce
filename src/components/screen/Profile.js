@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { AntDesign, FontAwesome, Feather } from "@expo/vector-icons";
 import BottomTab from "../navigations/BottomTab";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { getData } from "../../features/MyA";
 import { apiApp, apiKey } from "../../features/ApiKey";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -22,6 +22,8 @@ const Profile = () => {
   const [userData, setUserData] = useState(null);
   const [Loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const isFocused = useIsFocused();
 
   const inUserID = async () => {
     try {
@@ -48,7 +50,7 @@ const Profile = () => {
 
   useEffect(() => {
     setLoading(true);
-    inUserID()
+    inUserID(isFocused)
       .then((id) => {
         fetch(
           `https://api.backendless.com/${apiApp}/${apiKey}/data/Users/${id}`,
@@ -71,7 +73,7 @@ const Profile = () => {
           });
       })
       .catch((error) => {});
-  }, []);
+  }, [isFocused]);
 
   if (Loading) {
     return (
