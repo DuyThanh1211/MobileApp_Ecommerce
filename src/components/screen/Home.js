@@ -9,6 +9,7 @@ import {
   StyleSheet,
   StatusBar,
   ActivityIndicator,
+  StatusBar,
 } from "react-native";
 import { apiKey, apiApp } from "../../features/ApiKey";
 import BottomTab from "../navigations/BottomTab";
