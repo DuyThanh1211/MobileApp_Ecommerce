@@ -15,10 +15,6 @@ const Details = () => {
     getSelectedItem();
   }, []);
 
-  const handleAddToBagCallback = () => {
-    navigate.navigate("Cart");
-  };
-
   const getSelectedItem = async () => {
     try {
       const itemJSON = await getData("selectedItem");
@@ -74,7 +70,6 @@ const Details = () => {
 
       await storeData("shoppingBagItems", JSON.stringify(bagItems));
       // console.log("Item added to shopping bag!");
-      handleAddToBagCallback();
     } catch (error) {
       console.error("Error adding item to shopping bag:", error);
     }

@@ -25,9 +25,6 @@ export const ProductListCss = StyleSheet.create({
     flex: 1,
     backgroundColor: "black",
   },
-  listContainer: {
-    alignItems: "center",
-  },
   image: {
     width: "100%",
     height: 225,

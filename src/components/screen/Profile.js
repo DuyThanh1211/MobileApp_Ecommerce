@@ -45,7 +45,7 @@ const Profile = () => {
 
   const handleSignOut = () => {
     clearShoppingBagItems();
-    navigate.navigate("Begin");
+    navigate.navigate("Login");
   };
 
   useEffect(() => {
