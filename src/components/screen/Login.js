@@ -325,7 +325,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   footerTextBot: {
-    marginTop: 100,
+    marginTop: 50,
     flexDirection: "row",
     alignSelf: "center",
   },
