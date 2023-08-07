@@ -11,25 +11,32 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { AntDesign, Entypo } from "@expo/vector-icons";
-import { apiApp, apiKey } from "../features/ApiKey";
+import { apiKey, apiApp } from "../../features/ApiKey";
 
+import { useNavigation } from "@react-navigation/core";
+import { storeData } from "../../features/MyA";
 const { width, height } = Dimensions.get("screen");
+
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [getpassword, setpasswordvi] = useState(false);
 
+  const navigate = useNavigation();
+  const navigateToRegister = () => {
+    navigate.navigate("Register");
+  };
   const handleLogin = () => {
-    if (!username || !password) {
-      Alert.alert("Lỗi", "Bạn hãy điền đầy đủ thông tin!");
+    if (!username.trim() || !password.trim()) {
+      Alert.alert("Lỗi", "Bạn hãy điền đầy đủ thông tin để có thể mua hàng!");
       return;
-    } else if (!username.endsWith("@gmail.com")) {
-      Alert.alert("Lỗi", "Bạn hãy điền email hợp lệ(ví dụ: abcxyz@gmail.com)!");
+    } else if (username.includes(" ") || password.includes(" ")) {
+      Alert.alert("Lỗi", "Vui lòng không nhập space");
       return;
     }
 
     fetch(
-      `https://api.backendless.com/${apiApp}/${apiKey}/data/Users?where=gmail%3D'${username}'`,
+      `https://api.backendless.com/${apiApp}/${apiKey}/data/Users?where=phonenumber%3D'${username}'`,
       {
         method: "GET",
         headers: {
@@ -54,8 +61,17 @@ const Login = () => {
           })
             .then((response) => response.json())
             .then((data) => {
+              const user = data;
+              if (user.status && user.status === "xoa") {
+                console.log("Tài khoản đã bị xoá");
+                Alert.alert("Lỗi", "Tài khoản của bạn đang bị khoá tạm thời.");
+                navigate.navigate("Lockacc");
+                return;
+              }
               if (data.objectId) {
                 console.log("objectId:", data.objectId);
+                storeData("idUser", data.objectId);
+                navigate.navigate("Home");
               } else {
                 console.log("Sai Mật Khẩu");
                 Alert.alert("Lỗi", "Sai Mật Khẩu");
@@ -80,7 +96,7 @@ const Login = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={navigate.goBack}>
           <View style={styles.IconLeft}>
             <AntDesign name="left" size={25} color="black" />
           </View>
@@ -97,7 +113,8 @@ const Login = () => {
         <View style={styles.bodyUser}>
           <TextInput
             style={styles.textinput}
-            placeholder=" Enter your email"
+            placeholder=" Enter your phone number"
+            keyboardType="phone-pad"
             value={username}
             onChangeText={(text) => setUsername(text)}
           />
@@ -134,11 +151,15 @@ const Login = () => {
             )}
           </TouchableOpacity>
         </View>
-        <View style={styles.bodyForgot}>
-          <TouchableOpacity>
+        {/* <View style={styles.bodyForgot}>
+          <TouchableOpacity
+          // onPress={() => {
+          //   navigate.navigate("Forgot");
+          // }}
+          >
             <Text style={styles.bodyTextFor}> Forgot Password?</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
         <TouchableOpacity onPress={handleLogin}>
           <View style={styles.bodyButton}>
             <Text style={styles.bodyLogin}> Login</Text>
@@ -157,28 +178,28 @@ const Login = () => {
             <TouchableOpacity>
               <View style={styles.borderimg}>
                 <View style={styles.footerAnh1}>
-                  <Image source={require("../../assets/fb.png")} />
+                  <Image source={require("../../../assets/fb.png")} />
                 </View>
               </View>
             </TouchableOpacity>
             <TouchableOpacity>
               <View style={styles.borderimg}>
                 <View style={styles.footerAnh1}>
-                  <Image source={require("../../assets/google_ic.png")} />
+                  <Image source={require("../../../assets/google_ic.png")} />
                 </View>
               </View>
             </TouchableOpacity>
             <TouchableOpacity>
               <View style={styles.borderimg}>
                 <View style={styles.footerAnh1}>
-                  <Image source={require("../../assets/Ios.png")} />
+                  <Image source={require("../../../assets/Ios.png")} />
                 </View>
               </View>
             </TouchableOpacity>
           </View>
           <View style={styles.footerTextBot}>
             <Text style={styles.Textbot}> Dont't have an account?</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={navigateToRegister}>
               <Text style={[styles.Textbot, { color: "#35C2C1" }]}>
                 {" "}
                 Register Now

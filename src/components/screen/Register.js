@@ -10,7 +10,8 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { AntDesign, Entypo } from "@expo/vector-icons";
-import { apiApp, apiKey } from "../features/ApiKey";
+import { apiApp, apiKey } from "../../features/ApiKey";
+import { useNavigation } from "@react-navigation/core";
 
 const { width, height } = Dimensions.get("screen");
 const Register = () => {
@@ -21,26 +22,71 @@ const Register = () => {
   const [getpassword, setpasswordvi] = useState(false);
   const [getconfirmpassword, setconfirmpasswordvi] = useState(false);
 
+  const navigate = useNavigation();
+  const navigateToLogin = () => {
+    navigate.navigate("Login");
+  };
+
   const handleRegister = () => {
     if (!fullname || !username || !password || !confirmPassword) {
+      Alert.alert("Lỗi", "Vui lòng không để trống thông tin.");
+      return;
+    } else if (
+      username.includes(" ") ||
+      password.includes(" ") ||
+      confirmPassword.includes(" ")
+    ) {
+      Alert.alert("Lỗi", "Vui lòng không nhập space");
+      return;
+    } else if (fullname.length > 30) {
+      Alert.alert("Lỗi", "Tối đa tên của bạn được 30 ký tự.");
+      return;
+    } else if (fullname.trim().length === 0) {
+      Alert.alert("Lỗi", "Vui lòng nhập tên đầy đủ");
+      return;
+    } else if (!/^[a-zA-Z0-9\s]+$/.test(fullname)) {
+      Alert.alert("Lỗi", "Tên của bạn không được chứa ký tự đặc biệt.");
+      return;
+    } else if (/\d/.test(fullname)) {
       Alert.alert(
         "Lỗi",
-        "Vui lòng điền đầy đủ thông tin và mật khẩu để đăng ký."
+        "Bạn hãy nhập tên hợp lệ( Không được có số và ký tự đặc biệt)."
       );
       return;
-    } else if (!username.endsWith("@gmail.com")) {
+    } else if (!username > 10) {
       Alert.alert(
         "Lỗi",
-        "Vui lòng điền email hợp lệ (ví dụ: abcxyz@gmail.com)."
+        "Vui lòng nhập số điện thoại hợp lệ (gồm 10: chữ số)."
+      );
+      return;
+    } else if (username.toString()[0] !== "0") {
+      Alert.alert("Lỗi", "Vui lòng nhập số điện thoại hợp lệ .");
+      return;
+    } else if (!/^[0-9\s]+$/.test(username)) {
+      Alert.alert(
+        "Lỗi",
+        "Số điện thoại của bạn không hợp lệ(Không được chứa ký tự đặc biệt và chữ cái )."
+      );
+      return;
+    } else if (!/^[0-9\s]+$/.test(username)) {
+      Alert.alert(
+        "Lỗi",
+        "Số điện thoại của bạn không hợp lệ(Không được chứa ký tự đặc biệt và chữ cái )."
+      );
+      return;
+    } else if (password?.length < 6 || password?.length > 16) {
+      Alert.alert(
+        "Lỗi",
+        "Mật khẩu mới của bạn phải có ít nhất 6 ký tự và tối đa là 16 ký tự."
       );
       return;
     } else if (password != confirmPassword) {
-      Alert.alert("Lỗi", "Vui lòng điền mật khẩu giống nhau.");
+      Alert.alert("Lỗi", "Vui lòng điền mật khẩu trùng khớp.");
       return;
     }
 
     fetch(
-      `https://api.backendless.com/${apiApp}/${apiKey}/data/Users?where=gmail%3D'${username}'`,
+      `https://api.backendless.com/${apiApp}/${apiKey}/data/Users?where=phonenumber%3D'${username}'`,
       {
         method: "GET",
         headers: {
@@ -54,7 +100,8 @@ const Register = () => {
         console.log(data);
         if (data.length > 0) {
           console.log("Tài Khoảng đã Tồn Tại");
-          Alert.alert("Lỗi", "Email đã tồn tại");
+          Alert.alert("Lỗi", "Tài khoảng đã tồn tại");
+          return;
         } else {
           fetch(
             `https://api.backendless.com/${apiApp}/${apiKey}/users/register`,
@@ -65,7 +112,7 @@ const Register = () => {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                gmail: username,
+                phonenumber: username,
                 password: password,
                 confirmPassword: confirmPassword,
                 name: fullname,
@@ -77,8 +124,9 @@ const Register = () => {
               console.log(data);
               if (data.objectId) {
                 console.log("objectId:", data.objectId);
-                // navigation.navigate('Login');
-                Alert.alert("Thông báo:", "Đăng Ký Thành Công");
+
+                // Alert.alert("Thông báo:", "Đăng Ký Thành Công");
+                navigate.navigate("Login");
               } else {
                 Alert.alert("Lỗi", "Đăng Ký Không Thành Công.");
               }
@@ -94,13 +142,7 @@ const Register = () => {
   };
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity>
-          <View style={styles.IconLeft}>
-            <AntDesign name="left" size={25} color="black" />
-          </View>
-        </TouchableOpacity>
-      </View>
+      <View style={styles.header}></View>
 
       <View style={styles.headerTitle}>
         <Text style={styles.headerText}>Hello! Register to get started</Text>
@@ -118,7 +160,8 @@ const Register = () => {
         <View style={styles.bodyUser}>
           <TextInput
             style={styles.textinput}
-            placeholder="Email"
+            placeholder="Phone Number"
+            keyboardType="phone-pad"
             value={username}
             onChangeText={(text) => setUsername(text)}
           />
@@ -206,28 +249,28 @@ const Register = () => {
             <TouchableOpacity>
               <View style={styles.borderimg}>
                 <View style={styles.footerAnh1}>
-                  <Image source={require("../../assets/fb.png")} />
+                  <Image source={require("../../../assets/fb.png")} />
                 </View>
               </View>
             </TouchableOpacity>
             <TouchableOpacity>
               <View style={styles.borderimg}>
                 <View style={styles.footerAnh1}>
-                  <Image source={require("../../assets/google_ic.png")} />
+                  <Image source={require("../../../assets/google_ic.png")} />
                 </View>
               </View>
             </TouchableOpacity>
             <TouchableOpacity>
               <View style={styles.borderimg}>
                 <View style={styles.footerAnh1}>
-                  <Image source={require("../../assets/Ios.png")} />
+                  <Image source={require("../../../assets/Ios.png")} />
                 </View>
               </View>
             </TouchableOpacity>
           </View>
           <View style={styles.footerTextBot}>
             <Text style={styles.Textbot}> Dont't have an account?</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={navigateToLogin}>
               <Text style={[styles.Textbot, { color: "#35C2C1" }]}>
                 {" "}
                 Login Now
@@ -245,6 +288,7 @@ export default Register;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginVertical: -50,
   },
   header: {
     width: width,
@@ -340,7 +384,7 @@ const styles = StyleSheet.create({
   },
   borderimg: {
     borderWidth: 1,
-    borderColor: "#E8ECF4",
+    borderColor: "#5F9EA0",
     borderRadius: 10,
   },
   footerTextBot: {
